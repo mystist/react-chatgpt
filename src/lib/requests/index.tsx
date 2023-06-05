@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const baseUrl = ''
+export const baseUrl = 'gpt-service'
 export const maxTokens = 1200 // Should not less than 2 * chunkSize(200)
 export const model = 'gpt-3.5-turbo'
 
