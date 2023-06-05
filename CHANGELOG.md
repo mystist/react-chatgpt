@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://github.com/mystist/react-chatgpt/compare/v0.0.10...v0.0.11) (2023-06-05)
+
+
+### Features
+
+* use different tailwind config for lib and application ([e3d8252](https://github.com/mystist/react-chatgpt/commit/e3d82529d5c6ac891f0ac78f778e8a5d5645db5e))
+
 ### [0.0.10](https://github.com/mystist/react-chatgpt/compare/v0.0.9...v0.0.10) (2023-06-05)
 
 
