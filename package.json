@@ -20,7 +20,7 @@
       "import": "./dist/react-chatgpt.es.js",
       "require": "./dist/react-chatgpt.umd.js"
     },
-    "./dist/styles.css": "./dist/styles.css"
+    "./dist/style.css": "./dist/style.css"
   },
   "files": [
     "dist"
