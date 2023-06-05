@@ -14,49 +14,49 @@ export const postWhisper = async ({ blob, conversationUuid }: { blob: Blob; conv
   formData.append('file', file, fileName)
   formData.append('conversationUuid', conversationUuid)
 
-  const res = await request.post('/sentence/inputs/create', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+  const res = await request.post('/api/sentence/inputs/create', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
 
   return res.data
 }
 
 export const postWhisperByText = async ({ content, conversationUuid }: { content: string; conversationUuid: string }) => {
-  const res = await request.post('/sentence/inputs/create-by-text', { content, conversationUuid })
+  const res = await request.post('/api/sentence/inputs/create-by-text', { content, conversationUuid })
 
   return res.data
 }
 
 export const getConfiguration = async (identifier: string) => {
-  const res = await request.get(`/configuration?identifier=${identifier}`)
+  const res = await request.get(`/api/configuration?identifier=${identifier}`)
 
   return res.data
 }
 
 export const getConversation = async ({ userUuid, uuid }: { userUuid: string; uuid: string }) => {
-  const res = await request.get(`/conversation/conversations/${uuid}?userUuid=${userUuid}`)
+  const res = await request.get(`/api/conversation/conversations/${uuid}?userUuid=${userUuid}`)
 
   return res.data
 }
 
 export const postConversation = async (userUuid: string) => {
-  const res = await request.post('/conversation/conversations/create', { userUuid })
+  const res = await request.post('/api/conversation/conversations/create', { userUuid })
 
   return res.data
 }
 
 export const getWhispers = async (conversationUuid: string) => {
-  const res = await request.get(`/sentence/inputs?conversationUuid=${conversationUuid}`)
+  const res = await request.get(`/api/sentence/inputs?conversationUuid=${conversationUuid}`)
 
   return res.data
 }
 
 export const getReplies = async (conversationUuid: string) => {
-  const res = await request.get(`/sentence/outputs?conversationUuid=${conversationUuid}`)
+  const res = await request.get(`/api/sentence/outputs?conversationUuid=${conversationUuid}`)
 
   return res.data
 }
 
 export const postReply = async ({ conversationUuid, whisperUuid, content, identifier, onMessage }: { conversationUuid: string; whisperUuid: string; content: string; identifier: string; onMessage: (message: any) => void }) => {
-  const eventSource = new EventSource(`${baseUrl}/sentence/outputs/create?conversationUuid=${conversationUuid}&inputUuid=${whisperUuid}&content=${content}&identifier=${identifier}&maximum=${maxTokens}&model=${model}`)
+  const eventSource = new EventSource(`${baseUrl}/api/sentence/outputs/create?conversationUuid=${conversationUuid}&inputUuid=${whisperUuid}&content=${content}&identifier=${identifier}&maximum=${maxTokens}&model=${model}`)
 
   eventSource.onmessage = (e) => {
     try {
