@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.18](https://github.com/mystist/react-chatgpt/compare/v0.0.17...v0.0.18) (2023-06-05)
+
+
+### Bug Fixes
+
+* should seperate assets end points and api end points ([5e1ce85](https://github.com/mystist/react-chatgpt/commit/5e1ce85618a0a84f4c6ba3c79ae1e409be181b26))
+
 ### [0.0.17](https://github.com/mystist/react-chatgpt/compare/v0.0.16...v0.0.17) (2023-06-05)
 
 
