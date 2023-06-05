@@ -19,7 +19,7 @@ export const useConfiguration = () => {
     }
   }, [identifier, rawConfiguration])
 
-  const { data } = useQuery('configuration', getConfigurationFn, { enabled: !!identifier, refetchInterval: 100 })
+  const { data } = useQuery('configuration', getConfigurationFn, { enabled: !!identifier, cacheTime: 100 })
 
   useEffect(() => {
     if (data) {

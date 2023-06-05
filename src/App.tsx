@@ -26,7 +26,7 @@ function App() {
         </div>
       </div>
 
-      <ReactChatGPT status={status} setStatus={setStatus} identifier="" />
+      <ReactChatGPT status={status} setStatus={setStatus} identifier="<your identifier>" />
     </div>
   )
 }
