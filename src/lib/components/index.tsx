@@ -1,4 +1,4 @@
-import '../styles/globals.css'
+import '../style.css'
 
 import { QueryClient, QueryClientProvider } from 'react-query'
 

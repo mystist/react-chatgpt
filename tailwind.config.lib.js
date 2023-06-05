@@ -5,4 +5,8 @@ export default {
     extend: {},
   },
   plugins: [],
+  important: '#react-chatgpt',
+  corePlugins: {
+    preflight: false,
+  },
 }
