@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.16](https://github.com/mystist/react-chatgpt/compare/v0.0.15...v0.0.16) (2023-06-05)
+
+
+### Bug Fixes
+
+* disable retry fetch ([23da974](https://github.com/mystist/react-chatgpt/commit/23da974d906578bb41ad08075c9bfd8b8a9016e9))
+
 ### [0.0.15](https://github.com/mystist/react-chatgpt/compare/v0.0.14...v0.0.15) (2023-06-05)
 
 
