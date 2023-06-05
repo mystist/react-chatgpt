@@ -1,1 +1,1 @@
-import './styles/globals.css'
+export { default as ReactChatGPT } from './components'
