@@ -1,13 +1,13 @@
 {
   "name": "@mystist/react-chatgpt",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "release": "yarn build && yarn preprepack && standard-version && git push --follow-tags && npm publish",
+    "release": "yarn build && standard-version && git push --follow-tags && yarn preprepack && npm publish",
     "preprepack": "cp package.json package.json.bak",
     "prepack": "json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
     "postpublish": "mv package.json.bak package.json"
