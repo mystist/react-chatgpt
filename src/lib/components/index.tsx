@@ -2,7 +2,7 @@ import '../style.css'
 
 import { QueryClient, QueryClientProvider } from 'react-query'
 
-import Greeting from './Greeting'
+import SlideOver from './SlideOver'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
 export default function Index(props: any) {
   return (
     <QueryClientProvider client={queryClient}>
-      <Greeting {...props} />
+      <SlideOver {...props} />
     </QueryClientProvider>
   )
 }

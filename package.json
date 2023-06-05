@@ -31,11 +31,21 @@
   },
   "repository": "https://github.com/mystist/react-chatgpt",
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-query": "^3.39.3"
+    "@headlessui/react": "^1.7.15",
+    "@heroicons/react": "^2.0.18",
+    "audio-recorder-polyfill": "^0.4.1",
+    "axios": "^1.4.0",
+    "react": ">=18.2.0",
+    "react-dom": ">=18.2.0",
+    "react-hook-form": "^7.44.3",
+    "react-markdown": "^8.0.7",
+    "react-query": "^3.39.3",
+    "rehype-raw": "^6.1.1",
+    "remark-gfm": "^3.0.1"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.3",
+    "@tailwindcss/typography": "^0.5.9",
     "@types/node": "^20.2.5",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",

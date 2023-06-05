@@ -1,8 +1,5 @@
-/** @type {import('tailwindcss').Config} */
+import { sharedConfig } from './tailwind.config.lib'
+
 export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
+  ...sharedConfig,
 }
