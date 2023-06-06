@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.19](https://github.com/mystist/react-chatgpt/compare/v0.0.18...v0.0.19) (2023-06-06)
+
+
+### Features
+
+* generate class only of tailwindcss forms to avoid conflict of form styles ([4881c62](https://github.com/mystist/react-chatgpt/commit/4881c626f902ced622c280913ac861a5b94f2555))
+
 ### [0.0.18](https://github.com/mystist/react-chatgpt/compare/v0.0.17...v0.0.18) (2023-06-05)
 
 
