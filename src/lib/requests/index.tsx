@@ -83,7 +83,7 @@ export const postReply = async ({ conversationUuid, whisperUuid, content, identi
     try {
       const { statusCode, error: errorMsg } = JSON.parse(event.data)
       onMessage({ message: +statusCode === 403 ? errorMsg : null, isFinish: true })
-      console.log(errorMsg)
+      console.log(`Error: ${errorMsg}`)
     } catch (error) {
       onMessage({ message: null, isFinish: true })
       console.log(error)
