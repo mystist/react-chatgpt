@@ -1,7 +1,6 @@
 import axios from 'axios'
 
 export const baseUrl = 'gpt-service'
-export const maxTokens = 600 // Should not less than 2 * chunkSize(200)
 export const model = 'gpt-3.5-turbo'
 
 export const request = axios.create({ baseURL: baseUrl })
@@ -56,7 +55,7 @@ export const getReplies = async (conversationUuid: string) => {
 }
 
 export const postReply = async ({ conversationUuid, whisperUuid, content, identifier, onMessage }: { conversationUuid: string; whisperUuid: string; content: string; identifier: string; onMessage: (message: any) => void }) => {
-  const eventSource = new EventSource(`${baseUrl}/api/sentence/outputs/create?conversationUuid=${conversationUuid}&inputUuid=${whisperUuid}&content=${content}&identifier=${identifier}&maximum=${maxTokens}&model=${model}`)
+  const eventSource = new EventSource(`${baseUrl}/api/sentence/outputs/create?conversationUuid=${conversationUuid}&inputUuid=${whisperUuid}&content=${content}&identifier=${identifier}&model=${model}`)
 
   eventSource.onmessage = (e) => {
     try {

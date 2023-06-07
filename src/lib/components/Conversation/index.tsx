@@ -315,7 +315,7 @@ export default function Index() {
                               <div className="relative inline-flex h-7 w-7">
                                 {latestWhisper.uuid && !isWriting && (
                                   <AudioPlayer
-                                    isAutoplay={true}
+                                    isAutoplay={false}
                                     whisperUuid={latestWhisper.uuid}
                                     content={latestReplyContentState}
                                     nowPlayingWhisperUuidState={nowPlayingWhisperUuidState}
