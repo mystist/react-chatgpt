@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const baseUrl = 'gpt-service'
-export const maxTokens = 1200 // Should not less than 2 * chunkSize(200)
+export const maxTokens = 600 // Should not less than 2 * chunkSize(200)
 export const model = 'gpt-3.5-turbo'
 
 export const request = axios.create({ baseURL: baseUrl })
@@ -82,8 +82,9 @@ export const postReply = async ({ conversationUuid, whisperUuid, content, identi
 
   eventSource.onerror = (event: any) => {
     try {
-      const errorResponse = JSON.parse(event.data)
-      onMessage({ message: errorResponse.error, isFinish: true })
+      const { statusCode, error: errorMsg } = JSON.parse(event.data)
+      onMessage({ message: +statusCode === 403 ? errorMsg : null, isFinish: true })
+      console.log(errorMsg)
     } catch (error) {
       onMessage({ message: null, isFinish: true })
       console.log(error)

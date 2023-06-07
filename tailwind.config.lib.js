@@ -31,16 +31,16 @@ export const sharedConfig = {
       },
     },
   },
+}
+
+export default {
+  ...sharedConfig,
   plugins: [
     require('@tailwindcss/forms')({
       strategy: 'class',
     }),
     require('@tailwindcss/typography'),
   ],
-}
-
-export default {
-  ...sharedConfig,
   important: '#react-chatgpt',
   corePlugins: {
     preflight: false,
