@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.22](https://github.com/mystist/react-chatgpt/compare/v0.0.21...v0.0.22) (2023-06-12)
+
+
+### Features
+
+* remove avatar video ([06c0afe](https://github.com/mystist/react-chatgpt/commit/06c0afe1b588031fa31606e5b2555d671180d8f6))
+
 ### [0.0.21](https://github.com/mystist/react-chatgpt/compare/v0.0.20...v0.0.21) (2023-06-07)
 
 
