@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const baseUrl = 'gpt-service'
+export const baseUrl = '/gpt-service'
 export const model = 'gpt-3.5-turbo'
 
 export const request = axios.create({ baseURL: baseUrl })
