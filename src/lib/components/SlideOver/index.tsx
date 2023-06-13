@@ -9,7 +9,6 @@ export default function Index({ status, setStatus, identifier }: any) {
     localStorage.removeItem('configuration')
     localStorage.setItem('identifier', identifier)
   }
-  if (status === 'new') localStorage.removeItem('conversationUuid')
 
   const close = useCallback(() => {
     setStatus('')

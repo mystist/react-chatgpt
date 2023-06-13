@@ -11,7 +11,7 @@ export const useWhispers = (conversationUuid: string) => {
   const { data, refetch } = useQuery(`whispers:${conversationUuid}`, getWhispersFn, { enabled: !!conversationUuid })
 
   useEffect(() => {
-    if (data && data.length > 0) setDataState(data)
+    if (data) setDataState(data)
   }, [data])
 
   return { data: dataState, refetch }

@@ -11,7 +11,7 @@ export const useReplies = (conversationUuid: string) => {
   const { data, refetch } = useQuery(`replies:${conversationUuid}`, getRepliesFn, { enabled: !!conversationUuid })
 
   useEffect(() => {
-    if (data && data.length > 0) setDataState(data)
+    if (data) setDataState(data)
   }, [data])
 
   return { data: dataState, refetch }

@@ -1,5 +1,5 @@
 import { MicrophoneIcon } from '@heroicons/react/24/outline'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import ReactMarkdown from 'react-markdown'
 import { useMutation } from 'react-query'
@@ -15,6 +15,7 @@ import { baseUrl, postReply, postWhisperByText } from '../../requests'
 import { getIdentifier, timeSince } from '../../utils'
 import AiAvatar from '../AiAvatar'
 import AudioPlayer from '../AudioPlayer'
+import Divider from '../Divider'
 import SoundWave from '../SoundWave'
 import Spinner from '../Spinner'
 
@@ -49,17 +50,29 @@ export default function Index() {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isThinking, setIsThinking] = useState(false)
   const [isWriting, setIsWriting] = useState(false)
-  const [conversationUuidState, setConversationUuidState] = useState('')
-  const [latestReplyContentState, setLatestReplyContentState] = useState('')
   const [nowPlayingWhisperUuidState, setNowPlayingWhisperUuidState] = useState('')
   const [isIntroPlaying, setIsIntroPlaying] = useState(false)
+
+  const [latestWhisperContentState, setLatestWhisperContentState] = useState('')
+  const [latestReplyContentState, setLatestReplyContentState] = useState('')
+
+  const [conversationUuidState, setConversationUuidState] = useState('')
+  const [previousConversationUuidState, setPreviousConversationUuidState] = useState('')
+  const [isNewConversation, setIsNewConversation] = useState(false)
 
   const identifier = getIdentifier()
   const { agentName, questions } = useConfiguration()
 
-  const conversation = useConversation()
+  const {
+    data: [conversation, previousConversation],
+    refetch: refetchConversation,
+  } = useConversation({ isCreate: isNewConversation })
+
   const { data: whispers, refetch: refetchWhispers } = useWhispers(conversationUuidState)
   const { data: replies, refetch: refetchReplies } = useReplies(conversationUuidState)
+
+  const { data: previousWhispers } = useWhispers(previousConversationUuidState)
+  const { data: previousReplies } = useReplies(previousConversationUuidState)
 
   const { mutate: reply } = useMutation(postReply, { retry: false })
 
@@ -68,7 +81,8 @@ export default function Index() {
 
   useEffect(() => {
     if (conversation) setConversationUuidState(conversation.uuid)
-  }, [conversation])
+    if (previousConversation) setPreviousConversationUuidState(previousConversation.uuid)
+  }, [conversation, previousConversation])
 
   const isSafari = useCallback(() => /^((?!chrome|android).)*safari/i.test(navigator.userAgent), [])
 
@@ -108,10 +122,10 @@ export default function Index() {
   )
 
   const onConversationFull = useCallback(() => {
-    console.log('conversation is full')
+    setIsNewConversation(true)
   }, [])
 
-  const onFinish = useCallback(
+  const fetchWhispersAndReply = useCallback(
     ({ content, conversationUuid, whisperUuid }: any) => {
       setIsSpeaking(false)
 
@@ -125,13 +139,45 @@ export default function Index() {
     [identifier, onConversationFull, onMessage, refetchWhispers, reply, scroll],
   )
 
+  useEffect(() => {
+    if (isNewConversation)
+      refetchConversation().then(({ data }: any) => {
+        setIsNewConversation(false)
+
+        const conversation = data && data.length > 1 ? data[0] : null
+
+        whisperByText(
+          { content: latestWhisperContentState, conversationUuid: conversation.uuid },
+          {
+            onSuccess: (whisper: Whisper) => {
+              fetchWhispersAndReply({ content: whisper.content, conversationUuid: conversation.uuid, whisperUuid: whisper.uuid })
+            },
+          },
+        )
+      })
+  }, [conversationUuidState, fetchWhispersAndReply, isNewConversation, latestWhisperContentState, refetchConversation, whisperByText])
+
   const talks = useMemo(() => {
     const talks: Talk[] = []
 
     if (!whispers || !replies) return talks
 
-    return talks.concat(whispers).concat(replies)
+    return talks
+      .concat(whispers)
+      .concat(replies)
+      .sort((a: Talk, b: Talk) => (a.createdAt > b.createdAt ? 1 : -1))
   }, [whispers, replies])
+
+  const previousTalks = useMemo(() => {
+    const talks: Talk[] = []
+
+    if (!previousWhispers || !previousReplies) return talks
+
+    return talks
+      .concat(previousWhispers.slice(0, -1))
+      .concat(previousReplies)
+      .sort((a: Talk, b: Talk) => (a.createdAt > b.createdAt ? 1 : -1))
+  }, [previousWhispers, previousReplies])
 
   const latestWhisper = useMemo(() => {
     if (!whispers || whispers.length === 0) return
@@ -170,12 +216,13 @@ export default function Index() {
         { content, conversationUuid: conversationUuidState },
         {
           onSuccess: (whisper: Whisper) => {
-            onFinish({ content: whisper.content, conversationUuid: conversationUuidState, whisperUuid: whisper.uuid })
+            setLatestWhisperContentState(content)
+            fetchWhispersAndReply({ content: whisper.content, conversationUuid: conversationUuidState, whisperUuid: whisper.uuid })
           },
         },
       )
     },
-    [conversationUuidState, isThinking, isWriting, whisperByText, onFinish, refetchReplies, reset],
+    [conversationUuidState, isThinking, isWriting, whisperByText, fetchWhispersAndReply, refetchReplies, reset],
   )
 
   const onSelectQuestion = useCallback(
@@ -237,10 +284,9 @@ export default function Index() {
                         </div>
                       </div>
                     </li>
-                    {talks
-                      .sort((a: Talk, b: Talk) => (a.createdAt > b.createdAt ? 1 : -1))
-                      .map((item: any) => (
-                        <li key={item.createdAt}>
+                    {previousTalks.concat(talks).map((item: any, index: number) => (
+                      <Fragment key={index}>
+                        <li>
                           {item.role === 'assistant' && (
                             <div className="flex space-x-3">
                               <div className="flex-shrink-0">
@@ -290,7 +336,9 @@ export default function Index() {
                             </div>
                           )}
                         </li>
-                      ))}
+                        {index === previousTalks.length - 1 && <Divider className="top-2" text="New Conversation" />}
+                      </Fragment>
+                    ))}
                     {latestReplyContentState && latestWhisper && (
                       <li>
                         <div className="flex space-x-3">
@@ -364,7 +412,7 @@ export default function Index() {
               <div className="bg-gray-50 px-4 py-6 sm:px-6">
                 <div className="flex flex-col">
                   <div className="min-w-0 flex-1">
-                    {isSpeaking && <SoundWave onFinish={onFinish} />}
+                    {isSpeaking && <SoundWave onFinish={fetchWhispersAndReply} />}
                     {!isSpeaking && (
                       <div className="">
                         <form onSubmit={handleSubmit(send)} className="flex h-10 space-x-3">

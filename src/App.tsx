@@ -17,11 +17,8 @@ function App() {
         <p className="mt-1 text-sm text-gray-500">Get started by starting our conversation.</p>
 
         <div className="mt-6 flex flex-col space-y-3">
-          <button className="btn btn-primary" onClick={() => setStatus('start')}>
+          <button className="btn btn-primary" onClick={() => setStatus('open')}>
             <span>Start Conversation</span>
-          </button>
-          <button className="btn btn-secondary " onClick={() => setStatus('new')}>
-            <span>New Conversation</span>
           </button>
         </div>
       </div>

@@ -16,7 +16,9 @@ export default function Index({ onFinish }: { onFinish: (content: any) => void }
   const [audioChunksState, setAudioChunksState] = useState([]) as any
   const [isDone, setIsDone] = useState(false)
 
-  const conversation = useConversation()
+  const {
+    data: [conversation],
+  } = useConversation()
 
   const { mutate: whisper, isLoading: isWhispering } = useMutation(postWhisper, { retry: false })
 
@@ -98,7 +100,7 @@ export default function Index({ onFinish }: { onFinish: (content: any) => void }
   return (
     <>
       <div className="flex h-10 items-center space-x-4">
-        <div className="bg-linear-purple-pink flex h-full items-center rounded-full px-3 py-2 text-white shadow-sm">
+        <div className="flex h-full items-center rounded-full bg-linear-purple-pink px-3 py-2 text-white shadow-sm">
           <div style={{ height: isCatchingVoice ? `${(thresholdInPercent + volumeState) * 100}%` : `${silentPercent * 100}%` }} className="flex items-center">
             <div className={classNames(isCatchingVoice ? 'animation-delay-0 animate-sound-wave ' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
             <div className={classNames(isCatchingVoice ? 'animation-delay-300 animate-sound-wave' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>

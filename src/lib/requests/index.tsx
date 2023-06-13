@@ -30,14 +30,8 @@ export const getConfiguration = async (identifier: string) => {
   return res.data
 }
 
-export const getConversation = async ({ userUuid, uuid }: { userUuid: string; uuid: string }) => {
-  const res = await request.get(`/api/conversation/conversations/${uuid}?userUuid=${userUuid}`)
-
-  return res.data
-}
-
-export const postConversation = async (userUuid: string) => {
-  const res = await request.post('/api/conversation/conversations/create', { userUuid })
+export const getLatestConversationList = async ({ userUuid, count = 2, isCreate }: any) => {
+  const res = await request.get(`/api/conversation/conversations/latest-list?userUuid=${userUuid}&count=${count}&create=${isCreate}`)
 
   return res.data
 }
