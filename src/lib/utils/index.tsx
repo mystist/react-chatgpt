@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid/non-secure'
+
 export const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(' ')
 }
@@ -31,3 +33,14 @@ export const timeSince = (date: number) => {
 }
 
 export const getIdentifier = () => localStorage.getItem('identifier') || ''
+
+export const getOrCreateUserUuid = () => {
+  let userUuid = localStorage.getItem('userUuid') || ''
+
+  if (!userUuid) {
+    userUuid = nanoid()
+    localStorage.setItem('userUuid', userUuid)
+  }
+
+  return userUuid
+}
