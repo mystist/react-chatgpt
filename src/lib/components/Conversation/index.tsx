@@ -64,7 +64,7 @@ export default function Index() {
   const { mutate: reply } = useMutation(postReply, { retry: false })
 
   const { register, handleSubmit, reset, setValue } = useForm()
-  const { mutate, isLoading } = useMutation(postWhisperByText, { retry: false })
+  const { mutate: whisperByText, isLoading } = useMutation(postWhisperByText, { retry: false })
 
   useEffect(() => {
     if (conversation) setConversationUuidState(conversation.uuid)
@@ -107,6 +107,10 @@ export default function Index() {
     [scroll],
   )
 
+  const onConversationFull = useCallback(() => {
+    console.log('conversation is full')
+  }, [])
+
   const onFinish = useCallback(
     ({ content, conversationUuid, whisperUuid }: any) => {
       setIsSpeaking(false)
@@ -116,9 +120,9 @@ export default function Index() {
       refetchWhispers().then(scroll)
 
       setIsThinking(true)
-      reply({ conversationUuid, whisperUuid, content, identifier, onMessage })
+      reply({ conversationUuid, whisperUuid, content, identifier, onMessage, onConversationFull })
     },
-    [identifier, onMessage, refetchWhispers, reply, scroll],
+    [identifier, onConversationFull, onMessage, refetchWhispers, reply, scroll],
   )
 
   const talks = useMemo(() => {
@@ -162,7 +166,7 @@ export default function Index() {
       reset()
       refetchReplies().then(() => setLatestReplyContentState(''))
 
-      mutate(
+      whisperByText(
         { content, conversationUuid: conversationUuidState },
         {
           onSuccess: (whisper: Whisper) => {
@@ -171,7 +175,7 @@ export default function Index() {
         },
       )
     },
-    [conversationUuidState, isThinking, isWriting, mutate, onFinish, refetchReplies, reset],
+    [conversationUuidState, isThinking, isWriting, whisperByText, onFinish, refetchReplies, reset],
   )
 
   const onSelectQuestion = useCallback(

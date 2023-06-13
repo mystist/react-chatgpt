@@ -54,7 +54,7 @@ export const getReplies = async (conversationUuid: string) => {
   return res.data
 }
 
-export const postReply = async ({ conversationUuid, whisperUuid, content, identifier, onMessage }: { conversationUuid: string; whisperUuid: string; content: string; identifier: string; onMessage: (message: any) => void }) => {
+export const postReply = async ({ conversationUuid, whisperUuid, content, identifier, onMessage, onConversationFull }: any) => {
   const eventSource = new EventSource(`${baseUrl}/api/sentence/outputs/create?conversationUuid=${conversationUuid}&inputUuid=${whisperUuid}&content=${content}&identifier=${identifier}&model=${model}`)
 
   eventSource.onmessage = (e) => {
@@ -81,8 +81,13 @@ export const postReply = async ({ conversationUuid, whisperUuid, content, identi
 
   eventSource.onerror = (event: any) => {
     try {
-      const { statusCode, error: errorMsg } = JSON.parse(event.data)
-      onMessage({ message: +statusCode === 403 ? errorMsg : null, isFinish: true })
+      const { statusCode: rawStatusCode, error: errorMsg } = JSON.parse(event.data)
+      const statusCode = +rawStatusCode
+
+      onMessage({ message: statusCode === 403 ? errorMsg : null, isFinish: true })
+
+      if (statusCode === 400) onConversationFull()
+
       console.log(`Error: ${errorMsg}`)
     } catch (error) {
       onMessage({ message: null, isFinish: true })
