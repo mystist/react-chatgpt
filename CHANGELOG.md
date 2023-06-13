@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.24](https://github.com/mystist/react-chatgpt/compare/v0.0.23...v0.0.24) (2023-06-13)
+
+
+### Features
+
+* get or create user uuid ([9dbe128](https://github.com/mystist/react-chatgpt/commit/9dbe1285eb40612c890608ead5fa7f28eec92ab3))
+* infinite covnersation ([b69a704](https://github.com/mystist/react-chatgpt/commit/b69a704fa8b1d134c330efba6390c83d6fc27caa))
+* on conversation full ([98eb4e2](https://github.com/mystist/react-chatgpt/commit/98eb4e24637f9871bffea544e9ae4fb927622aa4))
+
 ### [0.0.23](https://github.com/mystist/react-chatgpt/compare/v0.0.22...v0.0.23) (2023-06-12)
 
 ### [0.0.22](https://github.com/mystist/react-chatgpt/compare/v0.0.21...v0.0.22) (2023-06-12)
