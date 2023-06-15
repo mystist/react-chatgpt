@@ -8,7 +8,7 @@ module.exports = {
   plugins: ['react-refresh', 'simple-import-sort'],
   rules: {
     '@typescript-eslint/no-explicit-any': 'off',
-    'react-refresh/only-export-components': 'warn',
+    'react-refresh/only-export-components': 'off',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
   },

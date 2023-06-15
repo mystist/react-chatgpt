@@ -2,12 +2,13 @@ import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { Fragment, useCallback, useMemo } from 'react'
 
+import { removeConfig, setIdentifier } from '../../utils'
 import Conversation from '../Conversation'
 
 export default function Index({ status, setStatus, identifier }: any) {
   if (status && identifier) {
-    localStorage.removeItem('configuration')
-    localStorage.setItem('identifier', identifier)
+    removeConfig()
+    setIdentifier(identifier)
   }
 
   const close = useCallback(() => {

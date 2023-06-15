@@ -3,13 +3,13 @@ import { useQuery } from 'react-query'
 
 import { Configuration } from '../interfaces'
 import { getConfiguration } from '../requests'
-import { getIdentifier } from '../utils'
+import { getConfig, getIdentifier, setConfig } from '../utils'
 
 export const useConfiguration = () => {
   const identifier = getIdentifier()
   const [dataState, setDataState] = useState<Configuration>({} as Configuration)
 
-  const rawConfiguration = localStorage.getItem('configuration')
+  const rawConfiguration = getConfig()
 
   const getConfigurationFn = useCallback(() => {
     if (rawConfiguration) {
@@ -23,7 +23,7 @@ export const useConfiguration = () => {
 
   useEffect(() => {
     if (data) {
-      localStorage.setItem('configuration', JSON.stringify(data))
+      setConfig(JSON.stringify(data))
       setDataState(data)
     }
   }, [data])
