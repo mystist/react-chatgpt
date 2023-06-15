@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.27](https://github.com/mystist/react-chatgpt/compare/v0.0.26...v0.0.27) (2023-06-15)
+
+
+### Bug Fixes
+
+* infinite covnersation for whisper with voice ([d1abb29](https://github.com/mystist/react-chatgpt/commit/d1abb2901042bde79718889dd74612026e17df77))
+
 ### [0.0.26](https://github.com/mystist/react-chatgpt/compare/v0.0.25...v0.0.26) (2023-06-15)
 
 
