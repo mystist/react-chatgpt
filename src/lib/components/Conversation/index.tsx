@@ -131,10 +131,13 @@ export default function Index() {
 
       if (!content) return
 
-      refetchWhispers().then(scroll)
+      setLatestWhisperContentState(content)
+      refetchWhispers().then(() => {
+        setIsThinking(true)
+        reply({ conversationUuid, whisperUuid, content, identifier, onMessage, onConversationFull })
 
-      setIsThinking(true)
-      reply({ conversationUuid, whisperUuid, content, identifier, onMessage, onConversationFull })
+        scroll()
+      })
     },
     [identifier, onConversationFull, onMessage, refetchWhispers, reply, scroll],
   )
@@ -216,7 +219,6 @@ export default function Index() {
         { content, conversationUuid: conversationUuidState },
         {
           onSuccess: (whisper: Whisper) => {
-            setLatestWhisperContentState(content)
             fetchWhispersAndReply({ content: whisper.content, conversationUuid: conversationUuidState, whisperUuid: whisper.uuid })
           },
         },
