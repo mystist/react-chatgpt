@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.25](https://github.com/mystist/react-chatgpt/compare/v0.0.24...v0.0.25) (2023-06-15)
+
+
+### Features
+
+* tweak placeholder video ([4fa3b9b](https://github.com/mystist/react-chatgpt/commit/4fa3b9b730184db140be38ae0b016cc125143842))
+
 ### [0.0.24](https://github.com/mystist/react-chatgpt/compare/v0.0.23...v0.0.24) (2023-06-13)
 
 
