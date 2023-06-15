@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.26](https://github.com/mystist/react-chatgpt/compare/v0.0.25...v0.0.26) (2023-06-15)
+
+
+### Features
+
+* add user uuid expire time ([a9ef0c8](https://github.com/mystist/react-chatgpt/commit/a9ef0c8691fe08eec257a61b2af9cba809debfff))
+
 ### [0.0.25](https://github.com/mystist/react-chatgpt/compare/v0.0.24...v0.0.25) (2023-06-15)
 
 
