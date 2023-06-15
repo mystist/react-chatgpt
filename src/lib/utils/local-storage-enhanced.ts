@@ -13,14 +13,18 @@ const getWithExpiry = (key: string) => {
 
   if (!itemStr) return
 
-  const item = JSON.parse(itemStr)
-  const now = new Date()
+  try {
+    const item = JSON.parse(itemStr)
+    const now = new Date()
 
-  if (now.getTime() > item.expiry) {
-    localStorage.removeItem(key)
-    return null
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return null
+    }
+    return item.value
+  } catch (error) {
+    return
   }
-  return item.value
 }
 
 const getItem = (key: string) => localStorage.getItem(key)
