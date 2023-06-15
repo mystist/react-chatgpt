@@ -1,7 +1,6 @@
 import axios from 'axios'
 
 export const baseUrl = '/gpt-service'
-export const model = 'gpt-3.5-turbo'
 
 export const request = axios.create({ baseURL: baseUrl })
 
@@ -49,7 +48,7 @@ export const getReplies = async (conversationUuid: string) => {
 }
 
 export const postReply = async ({ conversationUuid, whisperUuid, content, identifier, onMessage, onConversationFull }: any) => {
-  const eventSource = new EventSource(`${baseUrl}/api/sentence/outputs/create?conversationUuid=${conversationUuid}&inputUuid=${whisperUuid}&content=${content}&identifier=${identifier}&model=${model}`)
+  const eventSource = new EventSource(`${baseUrl}/api/sentence/outputs/create?conversationUuid=${conversationUuid}&inputUuid=${whisperUuid}&content=${content}&identifier=${identifier}`)
 
   eventSource.onmessage = (e) => {
     try {

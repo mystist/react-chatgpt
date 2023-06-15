@@ -255,7 +255,7 @@ export default function Index() {
                               {agentName}
                             </a>
                           </div>
-                          <div className="relative mt-1 -translate-x-5 transform text-sm text-gray-700">
+                          <div className="relative mt-1 overflow-hidden rounded text-sm text-gray-700">
                             <video className="w-full" ref={introRef} onEnded={() => setIsIntroPlaying(false)}>
                               <source src={`${baseUrl}/uploads/placeholder/videos/default-talk-${identifier}.mp4`} type="video/mp4" />
                             </video>
