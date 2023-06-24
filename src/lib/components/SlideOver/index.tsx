@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { ChatBubbleBottomCenterTextIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Fragment, useCallback, useMemo } from 'react'
 
 import { removeConfig, setIdentifier } from '../../utils'
@@ -40,11 +40,13 @@ export default function Index({ status, setStatus, identifier }: any) {
                   <div className="flex h-full flex-col overflow-y-scroll rounded-md bg-white shadow-xl">
                     <div className="bg-gray-100 px-4 py-6 sm:px-6">
                       <div className="flex items-start justify-between">
-                        <Dialog.Title className="flex items-center space-x-3 text-base font-medium leading-6 text-gray-900">
-                          <span>Conversation</span>
+                        <Dialog.Title className="flex items-center space-x-3 font-medium leading-6 text-gray-700">
+                          <ChatBubbleBottomCenterTextIcon className="h-[26px] w-[23px]" />
+                          <span>Ai Agent</span>
                         </Dialog.Title>
+
                         <div className="ml-3 flex h-6 items-center">
-                          <button type="button" className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onClick={close}>
+                          <button type="button" className="rounded-md text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onClick={close}>
                             <span className="sr-only">Close panel</span>
                             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                           </button>
