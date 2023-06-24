@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useMutation } from 'react-query'
 
 import { useConversation } from '../../hooks'
+import { useLocale } from '../../hooks/useLocale'
 import { Whisper } from '../../interfaces'
 import { postWhisper } from '../../requests'
 import { classNames } from '../../utils'
@@ -15,6 +16,8 @@ export default function Index({ onFinish }: { onFinish: (content: any) => void }
   const [recorderState, setRecorderState] = useState<null | MediaRecorder>(null)
   const [audioChunksState, setAudioChunksState] = useState([]) as any
   const [isDone, setIsDone] = useState(false)
+
+  const i18n = useLocale()
 
   const {
     data: [conversation],
@@ -120,7 +123,7 @@ export default function Index({ onFinish }: { onFinish: (content: any) => void }
           className="btn btn-secondary h-full w-fit min-w-[80px]"
         >
           {isLoading && <Spinner className="mr-2 text-gray-400" />}
-          <span>Done</span>
+          <span>{i18n.done}</span>
         </button>
         <button
           type="button"
@@ -130,7 +133,7 @@ export default function Index({ onFinish }: { onFinish: (content: any) => void }
           }}
           className="btn btn-secondary h-full w-20"
         >
-          <span>Cancel</span>
+          <span>{i18n.cancel}</span>
         </button>
       </div>
     </>

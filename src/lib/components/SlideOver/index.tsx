@@ -2,13 +2,17 @@ import { Dialog, Transition } from '@headlessui/react'
 import { ChatBubbleBottomCenterTextIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Fragment, useCallback, useMemo } from 'react'
 
-import { removeConfig, setIdentifier } from '../../utils'
+import { useLocale } from '../../hooks/useLocale'
+import { removeConfig, setIdentifier, setLang } from '../../utils'
 import Conversation from '../Conversation'
 
-export default function Index({ status, setStatus, identifier }: any) {
+export default function Index({ status, setStatus, identifier, lang = 'en' }: any) {
+  const i18n = useLocale(lang)
+
   if (status && identifier) {
     removeConfig()
     setIdentifier(identifier)
+    setLang(lang)
   }
 
   const close = useCallback(() => {
@@ -42,12 +46,11 @@ export default function Index({ status, setStatus, identifier }: any) {
                       <div className="flex items-start justify-between">
                         <Dialog.Title className="flex items-center space-x-3 font-medium leading-6 text-gray-700">
                           <ChatBubbleBottomCenterTextIcon className="h-[26px] w-[23px]" />
-                          <span>Ai Agent</span>
+                          <span>{i18n.aiAgent}</span>
                         </Dialog.Title>
 
                         <div className="ml-3 flex h-6 items-center">
                           <button type="button" className="rounded-md text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onClick={close}>
-                            <span className="sr-only">Close panel</span>
                             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                           </button>
                         </div>

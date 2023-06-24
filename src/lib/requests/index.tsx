@@ -77,7 +77,7 @@ export const postReply = async ({ conversationUuid, whisperUuid, content, identi
       const { statusCode: rawStatusCode, error: errorMsg } = JSON.parse(event.data)
       const statusCode = +rawStatusCode
 
-      onMessage({ message: statusCode === 403 ? errorMsg : null, isFinish: true })
+      onMessage({ message: statusCode !== 400 ? errorMsg : null, isFinish: true })
 
       if (statusCode === 400) onConversationFull()
 

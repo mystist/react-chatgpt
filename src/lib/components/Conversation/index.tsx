@@ -8,6 +8,7 @@ import remarkGfm from 'remark-gfm'
 
 import { useConversation } from '../../hooks'
 import { useConfiguration } from '../../hooks/useConfiguration'
+import { useLocale } from '../../hooks/useLocale'
 import { useReplies } from '../../hooks/useReplies'
 import { useWhispers } from '../../hooks/useWhispers'
 import { Talk, Whisper } from '../../interfaces'
@@ -46,6 +47,8 @@ const PulseSpinner = () => (
 export default function Index() {
   const divRef = useRef<HTMLDivElement | null>(null)
   const introRef = useRef<any>()
+
+  const i18n = useLocale()
 
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isThinking, setIsThinking] = useState(false)
@@ -277,7 +280,7 @@ export default function Index() {
                             </video>
                           </div>
                           <div className="mt-4 flex items-center space-x-4 text-sm">
-                            <span className="text-gray-500">Intro</span>
+                            <span className="text-gray-500">{i18n.intro}</span>
                             <span className="text-gray-500">&middot;</span>
                             <div className="relative inline-flex h-7 w-7">
                               <button onClick={() => setIsIntroPlaying((prev) => !prev)} className="group absolute flex h-full w-full flex-shrink-0 rounded-full bg-linear-purple-pink opacity-100 hover:opacity-90">
@@ -328,7 +331,7 @@ export default function Index() {
                                   </div>
                                   {!!item.createdAt && (
                                     <div className="mt-2 flex items-center space-x-4 text-sm">
-                                      <span className="text-gray-500">{timeSince(item.createdAt)}</span>
+                                      <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
                                       <span className="text-gray-500">&middot;</span>
                                       <div className="relative inline-flex h-7 w-7">
                                         {item.whisperUuid && <AudioPlayer whisperUuid={item.whisperUuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />}
@@ -346,7 +349,7 @@ export default function Index() {
                                     <div className="prose prose-sm prose-slate text-white prose-p:my-2 prose-thead:whitespace-nowrap">{item.content}</div>
                                   </div>
                                   <div className="mt-2 flex items-center justify-end space-x-4 text-sm">
-                                    <span className="text-gray-500">{timeSince(item.createdAt)}</span>
+                                    <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
                                   </div>
                                 </div>
                                 <div className="flex-shrink-0">
@@ -355,7 +358,7 @@ export default function Index() {
                               </div>
                             )}
                           </li>
-                          {previousTalks.length > 0 && index - 1 === previousTalks.length - 1 && <Divider className="top-2" text="New Conversation" />}
+                          {previousTalks.length > 0 && index - 1 === previousTalks.length - 1 && <Divider className="top-2" text={i18n.newConversation} />}
                         </Fragment>
                       ))}
                     {latestReplyContentState && latestWhisper && (
@@ -381,7 +384,7 @@ export default function Index() {
                             </div>
 
                             <div className="mt-2 flex items-center space-x-4 text-sm">
-                              <span className="text-gray-500">{timeSince(new Date().getTime())}</span>
+                              <span className="text-gray-500">{timeSince(new Date().getTime(), i18n)}</span>
                               <span className="text-gray-500">&middot;</span>
                               <div className="relative inline-flex h-7 w-7">
                                 {latestWhisper.uuid && !isWriting && (
@@ -410,7 +413,7 @@ export default function Index() {
                               <a href="#" className="font-medium text-gray-900">
                                 {agentName}
                               </a>
-                              <span className="text-xs text-gray-500"> is thinking...</span>
+                              <span className="text-xs text-gray-500">{i18n.isThinking}...</span>
                             </div>
                             <div className="mt-2 text-sm text-gray-700">
                               <PulseSpinner />
@@ -441,7 +444,7 @@ export default function Index() {
                           </div>
                           <button type="submit" className="btn btn-secondary h-full w-fit min-w-[80px]">
                             {isLoading && <Spinner className="mr-2 text-gray-400" />}
-                            <span>Send</span>
+                            <span>{i18n.send}</span>
                           </button>
                         </form>
                         {questions && questions.length > 0 && (

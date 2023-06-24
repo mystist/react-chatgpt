@@ -8,48 +8,51 @@ export const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(' ')
 }
 
-export const timeSince = (date: number) => {
+export const timeSince = (date: number, i18n: any) => {
   date = date.toString().length === 13 ? date / 1000 : date
   const seconds = Math.floor(new Date().getTime() / 1000 - date)
 
   let interval = seconds / 31536000
 
   if (interval > 1) {
-    return Math.floor(interval) + ' years ago'
+    return i18n.yearsAgo(Math.floor(interval))
   }
   interval = seconds / 2592000
   if (interval > 1) {
-    return Math.floor(interval) + ' months ago'
+    return i18n.monthsAgo(Math.floor(interval))
   }
   interval = seconds / 86400
   if (interval > 1) {
-    return Math.floor(interval) + ' days ago'
+    return i18n.daysAgo(Math.floor(interval))
   }
   interval = seconds / 3600
   if (interval > 1) {
-    return Math.floor(interval) + ' hours ago'
+    return i18n.hoursAgo(Math.floor(interval))
   }
   interval = seconds / 60
   if (interval > 1) {
-    return Math.floor(interval) + ' minutes ago'
+    return i18n.minutesAgo(Math.floor(interval))
   }
-  return seconds <= 3 ? 'Just now' : Math.floor(seconds) + ' seconds ago'
+  return seconds <= 20 ? i18n.justNow : i18n.secondsAgo(Math.floor(seconds))
 }
 
 export const getOrCreateUserUuid = () => {
-  let userUuid = localStorageEnhanced.getWithExpiry('userUuid') || ''
+  let userUuid = localStorageEnhanced.getWithExpiry('react-chatgpt-userUuid') || ''
 
   if (!userUuid) {
     userUuid = nanoid()
-    localStorageEnhanced.setWithExpiry('userUuid', userUuid, oneDay)
+    localStorageEnhanced.setWithExpiry('react-chatgpt-userUuid', userUuid, oneDay)
   }
 
   return userUuid
 }
 
-export const getIdentifier = () => localStorageEnhanced.getItem('identifier') || ''
-export const setIdentifier = (value: string) => localStorageEnhanced.setItem('identifier', value)
+export const getIdentifier = () => localStorageEnhanced.getItem('react-chatgpt-identifier') || ''
+export const setIdentifier = (value: string) => localStorageEnhanced.setItem('react-chatgpt-identifier', value)
 
-export const getConfig = () => localStorageEnhanced.getItem('configuration') || ''
-export const setConfig = (value: string) => localStorageEnhanced.setItem('configuration', value)
-export const removeConfig = () => localStorageEnhanced.removeItem('configuration')
+export const getConfig = () => localStorageEnhanced.getItem('react-chatgpt-configuration') || ''
+export const setConfig = (value: string) => localStorageEnhanced.setItem('react-chatgpt-configuration', value)
+export const removeConfig = () => localStorageEnhanced.removeItem('react-chatgpt-configuration')
+
+export const setLang = (value: string) => localStorageEnhanced.setItem('react-chatgpt-lang', value)
+export const getLang = () => localStorageEnhanced.getItem('react-chatgpt-lang') || ''
