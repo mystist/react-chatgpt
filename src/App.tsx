@@ -23,7 +23,7 @@ function App() {
         </div>
       </div>
 
-      <ReactChatGPT status={status} setStatus={setStatus} identifier={import.meta.env.VITE_IDENTIFIER} lang="zh-CN" />
+      <ReactChatGPT status={status} setStatus={setStatus} identifier={import.meta.env.VITE_IDENTIFIER} lang="ja" />
     </div>
   )
 }

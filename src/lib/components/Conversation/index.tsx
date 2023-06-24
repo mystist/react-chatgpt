@@ -343,19 +343,22 @@ export default function Index() {
                             )}
 
                             {item.role === 'user' && (
-                              <div className="flex justify-end space-x-3">
-                                <div className="flex flex-col items-end">
-                                  <div className="flex rounded-2xl bg-opacity-[0.85] bg-linear-purple-pink px-4 py-2">
-                                    <div className="prose prose-sm prose-slate text-white prose-p:my-2 prose-thead:whitespace-nowrap">{item.content}</div>
+                              <>
+                                {index === introTalks.length + previousTalks.length + talks.length - 1 && <div ref={divRef} />}
+                                <div className="flex justify-end space-x-3">
+                                  <div className="flex flex-col items-end">
+                                    <div className="flex rounded-2xl bg-opacity-[0.85] bg-linear-purple-pink px-4 py-2">
+                                      <div className="prose prose-sm prose-slate text-white prose-p:my-2 prose-thead:whitespace-nowrap">{item.content}</div>
+                                    </div>
+                                    <div className="mt-2 flex items-center justify-end space-x-4 text-sm">
+                                      <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
+                                    </div>
                                   </div>
-                                  <div className="mt-2 flex items-center justify-end space-x-4 text-sm">
-                                    <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
+                                  <div className="flex-shrink-0">
+                                    <DefaultAvatar />
                                   </div>
                                 </div>
-                                <div className="flex-shrink-0">
-                                  <DefaultAvatar />
-                                </div>
-                              </div>
+                              </>
                             )}
                           </li>
                           {previousTalks.length > 0 && index - 1 === previousTalks.length - 1 && <Divider className="top-2" text={i18n.newConversation} />}
@@ -464,7 +467,6 @@ export default function Index() {
                 </div>
               </div>
             </div>
-            <div ref={divRef} />
           </section>
         </div>
       )}

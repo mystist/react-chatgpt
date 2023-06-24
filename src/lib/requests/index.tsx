@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import { getLang } from '../utils'
+
 export const baseUrl = '/gpt-service'
 
 export const request = axios.create({ baseURL: baseUrl })
@@ -24,7 +26,8 @@ export const postWhisperByText = async ({ content, conversationUuid }: { content
 }
 
 export const getConfiguration = async (identifier: string) => {
-  const res = await request.get(`/api/configuration?identifier=${identifier}`)
+  const lang = getLang()
+  const res = await request.get(`/api/configuration?identifier=${identifier}&lang=${lang}`)
 
   return res.data
 }

@@ -1,4 +1,6 @@
-export const i18n = {
+import { transformI18n } from '.'
+
+export const messages = {
   aiAgent: 'AI Agent',
   intro: 'Intro',
   send: 'Send',
@@ -14,3 +16,5 @@ export const i18n = {
   secondsAgo: '${0} seconds ago',
   newConversation: 'New conversation',
 }
+
+export const i18n = transformI18n(messages)

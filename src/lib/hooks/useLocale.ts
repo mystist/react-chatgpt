@@ -12,7 +12,7 @@ export const useLocale = (language = '') => {
     ;(async () => {
       if (!lang || lang === 'en') return
 
-      const { i18n } = await import(`../locales/${lang}`)
+      const { i18n } = await import(/* @vite-ignore */ `../locales/${lang}.ts`)
       if (i18n) setI18nState(i18n)
     })()
   }, [lang])
