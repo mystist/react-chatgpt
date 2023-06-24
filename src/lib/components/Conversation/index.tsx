@@ -61,7 +61,7 @@ export default function Index() {
   const [isNewConversation, setIsNewConversation] = useState(false)
 
   const identifier = getIdentifier()
-  const { agentName, questions } = useConfiguration()
+  const { agentName, questions, introduction } = useConfiguration()
 
   const {
     data: [conversation, previousConversation],
@@ -76,7 +76,7 @@ export default function Index() {
 
   const { mutate: reply } = useMutation(postReply, { retry: false })
 
-  const { register, handleSubmit, reset, setValue } = useForm()
+  const { register, handleSubmit, resetField, setValue } = useForm()
   const { mutate: whisperByText, isLoading } = useMutation(postWhisperByText, { retry: false })
 
   useEffect(() => {
@@ -182,6 +182,20 @@ export default function Index() {
       .sort((a: Talk, b: Talk) => (a.createdAt > b.createdAt ? 1 : -1))
   }, [previousWhispers, previousReplies])
 
+  const introTalks = useMemo(() => {
+    if (!conversationUuidState || !introduction) return []
+
+    const talk: Talk = {
+      conversationUuid: conversationUuidState,
+      createdAt: 0,
+      role: 'assistant',
+      uuid: 'fake-uuid',
+      content: introduction,
+    }
+
+    return [talk]
+  }, [conversationUuidState, introduction])
+
   const latestWhisper = useMemo(() => {
     if (!whispers || whispers.length === 0) return
 
@@ -212,7 +226,7 @@ export default function Index() {
     ({ content }: any) => {
       if (!content || isWriting || isThinking) return
 
-      reset()
+      resetField('content')
       refetchReplies().then(() => setLatestReplyContentState(''))
 
       whisperByText(
@@ -224,7 +238,7 @@ export default function Index() {
         },
       )
     },
-    [conversationUuidState, isThinking, isWriting, whisperByText, fetchWhispersAndReply, refetchReplies, reset],
+    [isWriting, isThinking, resetField, refetchReplies, whisperByText, conversationUuidState, fetchWhispersAndReply],
   )
 
   const onSelectQuestion = useCallback(
@@ -286,61 +300,64 @@ export default function Index() {
                         </div>
                       </div>
                     </li>
-                    {previousTalks.concat(talks).map((item: any, index: number) => (
-                      <Fragment key={index}>
-                        <li>
-                          {item.role === 'assistant' && (
-                            <div className="flex space-x-3">
-                              <div className="flex-shrink-0">
-                                <div className="relative flex flex-col">
-                                  <AiAvatar whisperUuid={item.whisperUuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} />
-                                </div>
-                              </div>
-                              <div>
-                                <div className="text-sm">
-                                  <a href="#" className="font-medium text-gray-900">
-                                    {agentName}
-                                  </a>
-                                </div>
-                                <div className="mt-1 text-gray-700">
-                                  <div className="prose prose-sm prose-slate prose-p:my-2 prose-thead:whitespace-nowrap">
-                                    <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
-                                      {item.content}
-                                    </ReactMarkdown>
+                    {introTalks
+                      .concat(previousTalks)
+                      .concat(talks)
+                      .map((item: any, index: number) => (
+                        <Fragment key={index}>
+                          <li>
+                            {item.role === 'assistant' && (
+                              <div className="flex space-x-3">
+                                <div className="flex-shrink-0">
+                                  <div className="relative flex flex-col">
+                                    <AiAvatar whisperUuid={item.whisperUuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} />
                                   </div>
                                 </div>
-                                <div className="mt-1 flex items-center space-x-4 text-sm">
-                                  <span className="text-gray-500">{timeSince(item.createdAt)}</span>
-                                  <span className="text-gray-500">&middot;</span>
-                                  <div className="relative inline-flex h-7 w-7">
-                                    {item.whisperUuid && (
-                                      <AudioPlayer whisperUuid={item.whisperUuid} content={item.content} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />
-                                    )}
+                                <div>
+                                  <div className="text-sm">
+                                    <a href="#" className="font-medium text-gray-900">
+                                      {agentName}
+                                    </a>
                                   </div>
+                                  <div className="mt-2 flex rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
+                                    <div className="prose prose-sm prose-slate prose-p:my-2 prose-thead:whitespace-nowrap">
+                                      <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
+                                        {item.content}
+                                      </ReactMarkdown>
+                                    </div>
+                                  </div>
+                                  {!!item.createdAt && (
+                                    <div className="mt-2 flex items-center space-x-4 text-sm">
+                                      <span className="text-gray-500">{timeSince(item.createdAt)}</span>
+                                      <span className="text-gray-500">&middot;</span>
+                                      <div className="relative inline-flex h-7 w-7">
+                                        {item.whisperUuid && <AudioPlayer whisperUuid={item.whisperUuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />}
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
-                            </div>
-                          )}
+                            )}
 
-                          {item.role === 'user' && (
-                            <div className="flex justify-end space-x-3">
-                              <div className="flex flex-col items-end">
-                                <div className="mt-1 text-gray-700">
-                                  <div className="prose prose-sm prose-slate prose-p:my-2 prose-thead:whitespace-nowrap">{item.content}</div>
+                            {item.role === 'user' && (
+                              <div className="flex justify-end space-x-3">
+                                <div className="flex flex-col items-end">
+                                  <div className="flex rounded-2xl bg-opacity-[0.85] bg-linear-purple-pink px-4 py-2">
+                                    <div className="prose prose-sm prose-slate text-white prose-p:my-2 prose-thead:whitespace-nowrap">{item.content}</div>
+                                  </div>
+                                  <div className="mt-2 flex items-center justify-end space-x-4 text-sm">
+                                    <span className="text-gray-500">{timeSince(item.createdAt)}</span>
+                                  </div>
                                 </div>
-                                <div className="mt-1 flex items-center justify-end space-x-4 text-sm">
-                                  <span className="text-gray-500">{timeSince(item.createdAt)}</span>
+                                <div className="flex-shrink-0">
+                                  <DefaultAvatar />
                                 </div>
                               </div>
-                              <div className="flex-shrink-0">
-                                <DefaultAvatar />
-                              </div>
-                            </div>
-                          )}
-                        </li>
-                        {index === previousTalks.length - 1 && <Divider className="top-2" text="New Conversation" />}
-                      </Fragment>
-                    ))}
+                            )}
+                          </li>
+                          {previousTalks.length > 0 && index - 1 === previousTalks.length - 1 && <Divider className="top-2" text="New Conversation" />}
+                        </Fragment>
+                      ))}
                     {latestReplyContentState && latestWhisper && (
                       <li>
                         <div className="flex space-x-3">
@@ -355,7 +372,7 @@ export default function Index() {
                                 {agentName}
                               </a>
                             </div>
-                            <div className="mt-1 flex text-gray-700">
+                            <div className="mt-2 rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
                               <div className="prose prose-sm prose-slate prose-p:my-2 prose-thead:whitespace-nowrap">
                                 <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
                                   {latestReplyContentState + (isWriting ? caretHtml : '')}
@@ -363,18 +380,12 @@ export default function Index() {
                               </div>
                             </div>
 
-                            <div className="mt-1 flex items-center space-x-4 text-sm">
+                            <div className="mt-2 flex items-center space-x-4 text-sm">
                               <span className="text-gray-500">{timeSince(new Date().getTime())}</span>
                               <span className="text-gray-500">&middot;</span>
                               <div className="relative inline-flex h-7 w-7">
                                 {latestWhisper.uuid && !isWriting && (
-                                  <AudioPlayer
-                                    isAutoplay={false}
-                                    whisperUuid={latestWhisper.uuid}
-                                    content={latestReplyContentState}
-                                    nowPlayingWhisperUuidState={nowPlayingWhisperUuidState}
-                                    setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState}
-                                  />
+                                  <AudioPlayer isAutoplay={false} whisperUuid={latestWhisper.uuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />
                                 )}
                               </div>
                             </div>
@@ -401,7 +412,7 @@ export default function Index() {
                               </a>
                               <span className="text-xs text-gray-500"> is thinking...</span>
                             </div>
-                            <div className="mt-1 text-sm text-gray-700">
+                            <div className="mt-2 text-sm text-gray-700">
                               <PulseSpinner />
                             </div>
                           </div>
@@ -411,35 +422,39 @@ export default function Index() {
                   </ul>
                 }
               </div>
-              <div className="bg-gray-50 px-4 py-6 sm:px-6">
+              <div className="bg-gray-100 px-4 py-6 sm:px-6">
                 <div className="flex flex-col">
                   <div className="min-w-0 flex-1">
                     {isSpeaking && <SoundWave onFinish={fetchWhispersAndReply} />}
                     {!isSpeaking && (
-                      <div className="">
+                      <div className="relative">
                         <form onSubmit={handleSubmit(send)} className="flex h-10 space-x-3">
-                          <button type="button" onClick={onSpeaking} className="rounded-full bg-linear-purple-pink p-2 text-white opacity-100 hover:opacity-90">
-                            <MicrophoneIcon className="h-6 w-6" aria-hidden="true" />
-                          </button>
-                          <input
-                            type="text"
-                            {...register('content')}
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.5px] focus:ring-primary-purple sm:text-sm sm:leading-6"
-                          />
-                          <button type="submit" className="btn btn-secondary h-full w-20">
+                          <div className="relative flex w-full">
+                            <input
+                              type="text"
+                              {...register('content')}
+                              className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.5px] focus:ring-primary-purple sm:text-sm sm:leading-6"
+                            />
+                            <button type="button" onClick={onSpeaking} className="absolute right-[4px] rounded-full p-2 text-primary-pink opacity-100 hover:opacity-90">
+                              <MicrophoneIcon className="h-6 w-6" aria-hidden="true" />
+                            </button>
+                          </div>
+                          <button type="submit" className="btn btn-secondary h-full w-fit min-w-[80px]">
                             {isLoading && <Spinner className="mr-2 text-gray-400" />}
                             <span>Send</span>
                           </button>
                         </form>
-                        <div className="mb-2 mt-3">
-                          <div className="flex flex-wrap gap-x-4 gap-y-4 pt-4">
-                            {questions.map((item: any, index: number) => (
-                              <button key={index} type="button" className="rounded-md bg-white px-2.5 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" onClick={onSelectQuestion}>
-                                {item}
-                              </button>
-                            ))}
+                        {questions && questions.length > 0 && (
+                          <div className="mb-2 mt-3">
+                            <div className="flex flex-wrap gap-x-3 gap-y-4 pt-4">
+                              {questions.map((item: any, index: number) => (
+                                <button key={index} type="button" className="rounded-full bg-gray-200 px-2.5 py-2 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:opacity-80" onClick={onSelectQuestion}>
+                                  {item}
+                                </button>
+                              ))}
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     )}
                   </div>

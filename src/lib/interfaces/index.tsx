@@ -2,7 +2,7 @@ export interface Configuration {
   identifier: string
   agentName: string
   questions: string[]
-  inappropriateContentReply: string
+  introduction?: string
 }
 
 export interface Talk {
@@ -26,7 +26,6 @@ export interface Reply extends Talk {
 export interface User {
   uuid: string
   email: string
-  inappropriateContentReply: string
 }
 
 export interface Conversation {

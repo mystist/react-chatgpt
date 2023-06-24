@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { useConfiguration } from '../../hooks/useConfiguration'
 import { baseUrl } from '../../requests'
 import { getIdentifier } from '../../utils'
 
-export default function Index({ isAutoplay = false, whisperUuid, nowPlayingWhisperUuidState, setNowPlayingWhisperUuidState, content }: any) {
+export default function Index({ isAutoplay = false, whisperUuid, nowPlayingWhisperUuidState, setNowPlayingWhisperUuidState }: any) {
   const identifier = getIdentifier()
-  const { inappropriateContentReply } = useConfiguration()
 
   const [isPlaying, setIsPlaying] = useState(false)
 
@@ -48,8 +46,6 @@ export default function Index({ isAutoplay = false, whisperUuid, nowPlayingWhisp
     setIsPlaying(isAutoplay)
   }, [isAutoplay])
 
-  const isInappropriate = useCallback(() => content === inappropriateContentReply, [content, inappropriateContentReply])
-
   return (
     <>
       {identifier && (
@@ -69,7 +65,7 @@ export default function Index({ isAutoplay = false, whisperUuid, nowPlayingWhisp
               </svg>
             )}
           </button>
-          <audio src={isInappropriate() ? `${baseUrl}/uploads/placeholder/audios/inappropriate-${identifier}.wav` : `${baseUrl}/uploads/outputs/${whisperUuid}-output.wav`} ref={audioRef} onEnded={onEnded} className="hidden"></audio>
+          <audio src={`${baseUrl}/uploads/outputs/${whisperUuid}-output.wav`} ref={audioRef} onEnded={onEnded} className="hidden"></audio>
         </>
       )}
     </>

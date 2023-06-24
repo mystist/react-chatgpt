@@ -117,7 +117,7 @@ export default function Index({ onFinish }: { onFinish: (content: any) => void }
             stop()
             setIsDone(true)
           }}
-          className="btn btn-secondary h-full w-20"
+          className="btn btn-secondary h-full w-fit min-w-[80px]"
         >
           {isLoading && <Spinner className="mr-2 text-gray-400" />}
           <span>Done</span>

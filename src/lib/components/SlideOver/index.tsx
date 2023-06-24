@@ -21,7 +21,7 @@ export default function Index({ status, setStatus, identifier }: any) {
 
   return (
     <Transition.Root show={isShow} as={Fragment}>
-      <Dialog as="div" id="react-chatgpt" className="relative z-10" onClose={close}>
+      <Dialog as="div" id="react-chatgpt" className="relative z-50" onClose={close}>
         <div className="fixed inset-0" />
 
         <div className="fixed inset-0 overflow-hidden">
@@ -37,19 +37,21 @@ export default function Index({ status, setStatus, identifier }: any) {
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-lg">
-                  <div className="flex h-full flex-col divide-y divide-gray-200 overflow-y-scroll bg-white pt-6 shadow-xl">
-                    <div className="px-4 sm:px-6">
+                  <div className="flex h-full flex-col overflow-y-scroll rounded-md bg-white shadow-xl">
+                    <div className="bg-gray-100 px-4 py-6 sm:px-6">
                       <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">Conversation</Dialog.Title>
+                        <Dialog.Title className="flex items-center space-x-3 text-base font-medium leading-6 text-gray-900">
+                          <span>Conversation</span>
+                        </Dialog.Title>
                         <div className="ml-3 flex h-6 items-center">
-                          <button type="button" className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onClick={close}>
+                          <button type="button" className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onClick={close}>
                             <span className="sr-only">Close panel</span>
                             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                           </button>
                         </div>
                       </div>
                     </div>
-                    <div className="relative mt-6 flex-1">
+                    <div className="relative flex-1">
                       <Conversation />
                     </div>
                   </div>
