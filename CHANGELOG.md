@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.29](https://github.com/mystist/react-chatgpt/compare/v0.0.28...v0.0.29) (2023-06-24)
+
+
+### Features
+
+* get configuration with lang ([f5522f7](https://github.com/mystist/react-chatgpt/commit/f5522f774c7b81ea5df7260a3073a7681f22070e))
+* i18n support ([2bf2099](https://github.com/mystist/react-chatgpt/commit/2bf2099c047e18829bbb53e21e892f177fd857c2))
+* tweak style ([b2fc7ab](https://github.com/mystist/react-chatgpt/commit/b2fc7ab714148e6ce3517c81e8ec8acb43c63ec2))
+
 ### [0.0.28](https://github.com/mystist/react-chatgpt/compare/v0.0.27...v0.0.28) (2023-06-24)
 
 
