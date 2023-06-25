@@ -451,7 +451,7 @@ export default function Index() {
                           </button>
                         </form>
                         {questions && questions.length > 0 && (
-                          <div className="mb-2 mt-3">
+                          <div className="mb-2 mt-3 max-h-[156px] overflow-y-auto">
                             <div className="flex flex-wrap gap-x-3 gap-y-4 pt-4">
                               {questions.map((item: any, index: number) => (
                                 <button key={index} type="button" className="rounded-full bg-gray-200 px-2.5 py-2 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:opacity-80" onClick={onSelectQuestion}>
