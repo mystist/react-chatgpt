@@ -283,7 +283,7 @@ export default function Index() {
                             <span className="text-gray-500">{i18n.intro}</span>
                             <span className="text-gray-500">&middot;</span>
                             <div className="relative inline-flex h-7 w-7">
-                              <button onClick={() => setIsIntroPlaying((prev) => !prev)} className="group absolute flex h-full w-full flex-shrink-0 rounded-full bg-linear-purple-pink opacity-100 hover:opacity-90">
+                              <button onClick={() => setIsIntroPlaying((prev) => !prev)} className="group absolute flex h-full w-full flex-shrink-0 rounded-full bg-linear-color opacity-100 hover:opacity-90">
                                 {isIntroPlaying ? (
                                   <svg aria-hidden="true" viewBox="0 0 22 28" className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 transform fill-gray-200">
                                     <path
@@ -347,7 +347,7 @@ export default function Index() {
                                 {index === introTalks.length + previousTalks.length + talks.length - 1 && <div ref={divRef} />}
                                 <div className="flex justify-end space-x-3">
                                   <div className="flex flex-col items-end">
-                                    <div className="flex rounded-2xl bg-opacity-[0.85] bg-linear-purple-pink px-4 py-2">
+                                    <div className="flex rounded-2xl bg-opacity-[0.85] bg-linear-color px-4 py-2">
                                       <div className="prose prose-sm prose-slate text-white prose-p:my-2 prose-thead:whitespace-nowrap">{item.content}</div>
                                     </div>
                                     <div className="mt-2 flex items-center justify-end space-x-4 text-sm">
@@ -406,8 +406,8 @@ export default function Index() {
                             <div className="relative">
                               <AiAvatar />
                               <span className="absolute bottom-0 right-0 flex h-3 w-3">
-                                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-linear-purple-pink opacity-50"></span>
-                                <span className="relative inline-flex h-3 w-3 rounded-full bg-linear-purple-pink opacity-70"></span>
+                                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-linear-color opacity-50"></span>
+                                <span className="relative inline-flex h-3 w-3 rounded-full bg-linear-color opacity-70"></span>
                               </span>
                             </div>
                           </div>
@@ -439,9 +439,9 @@ export default function Index() {
                             <input
                               type="text"
                               {...register('content')}
-                              className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.5px] focus:ring-primary-purple sm:text-sm sm:leading-6"
+                              className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.5px] focus:ring-secondary-color sm:text-sm sm:leading-6"
                             />
-                            <button type="button" onClick={onSpeaking} className="absolute right-[4px] rounded-full p-2 text-primary-pink opacity-100 hover:opacity-90">
+                            <button type="button" onClick={onSpeaking} className="absolute right-[4px] rounded-full p-2 text-primary-color opacity-100 hover:opacity-90">
                               <MicrophoneIcon className="h-6 w-6" aria-hidden="true" />
                             </button>
                           </div>

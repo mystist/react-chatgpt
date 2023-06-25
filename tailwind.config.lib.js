@@ -8,11 +8,11 @@ export const sharedConfig = {
   theme: {
     extend: {
       colors: {
-        'primary-pink': '#a801ff',
-        'primary-purple': '#4f46e5',
+        'primary-color': '#a801ff',
+        'secondary-color': '#4f46e5',
       },
       backgroundImage: () => ({
-        'linear-purple-pink': 'linear-gradient(45deg, #4f46e5, #a801ff);',
+        'linear-color': 'linear-gradient(45deg, #4f46e5, #a801ff);',
       }),
       animation: {
         'sound-wave': 'sound-wave 1.2s linear infinite;',

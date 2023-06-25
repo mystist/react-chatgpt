@@ -50,7 +50,7 @@ export default function Index({ isAutoplay = false, whisperUuid, nowPlayingWhisp
     <>
       {identifier && (
         <>
-          <button onClick={playPause} className="group absolute flex h-full w-full flex-shrink-0 rounded-full bg-linear-purple-pink opacity-100 hover:opacity-90">
+          <button onClick={playPause} className="group absolute flex h-full w-full flex-shrink-0 rounded-full bg-linear-color opacity-100 hover:opacity-90">
             {isPlaying ? (
               <svg aria-hidden="true" viewBox="0 0 22 28" className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 transform fill-gray-200">
                 <path
