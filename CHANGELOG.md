@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.30](https://github.com/mystist/react-chatgpt/compare/v0.0.29...v0.0.30) (2023-06-25)
+
+
+### Features
+
+* set max height for questions ([fcf394c](https://github.com/mystist/react-chatgpt/commit/fcf394ca76a52167265ddb930915e1343022759a))
+* whisper with specified lang ([ff24b62](https://github.com/mystist/react-chatgpt/commit/ff24b62b6c672d7ff824656b6d38eb9f8c204652))
+
 ### [0.0.29](https://github.com/mystist/react-chatgpt/compare/v0.0.28...v0.0.29) (2023-06-24)
 
 
