@@ -9,10 +9,12 @@ export const request = axios.create({ baseURL: baseUrl })
 export const postWhisper = async ({ blob, conversationUuid }: { blob: Blob; conversationUuid: string }) => {
   const formData = new FormData()
   const fileName = 'voice.wav'
+  const lang = getLang()
 
   const file = new File([blob], fileName)
   formData.append('file', file, fileName)
   formData.append('conversationUuid', conversationUuid)
+  if (lang) formData.append('language', getLang())
 
   const res = await request.post('/api/sentence/inputs/create', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
 
