@@ -3,6 +3,7 @@ export interface Configuration {
   agentName: string
   questions: string[]
   introduction?: string
+  disclaimer?: string
 }
 
 export interface Talk {

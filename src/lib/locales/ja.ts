@@ -15,6 +15,11 @@ export const messages = {
   minutesAgo: '${0} 分前',
   secondsAgo: '${0} 秒前',
   newConversation: '新しい対話',
+  disclaimer: '免責申し立てます',
+  agree: 'Agree',
+  disagree: 'Disagree',
+  readFullDisclaimer: 'Read full disclaimer',
+  clickButtonToAgree: 'Click the "Agree" button to indicate that you have read and agree to the above disclaimer.',
 }
 
 export const i18n = transformI18n(messages)

@@ -15,6 +15,11 @@ export const messages = {
   minutesAgo: '${0} minutes ago',
   secondsAgo: '${0} seconds ago',
   newConversation: 'New conversation',
+  disclaimer: 'Disclaimer',
+  agree: 'Agree',
+  disagree: 'Disagree',
+  readFullDisclaimer: 'Read full disclaimer',
+  clickButtonToAgree: 'Click the "Agree" button to indicate that you have read and agree to the above disclaimer.',
 }
 
 export const i18n = transformI18n(messages)

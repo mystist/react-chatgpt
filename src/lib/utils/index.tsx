@@ -56,3 +56,6 @@ export const removeConfig = () => localStorageEnhanced.removeItem('react-chatgpt
 
 export const setLang = (value: string) => localStorageEnhanced.setItem('react-chatgpt-lang', value)
 export const getLang = () => localStorageEnhanced.getItem('react-chatgpt-lang') || ''
+
+export const setAgreement = (value: string) => localStorageEnhanced.setWithExpiry('react-chatgpt-agreement', value, oneDay)
+export const getAgreement = () => localStorageEnhanced.getWithExpiry('react-chatgpt-agreement') || ''
