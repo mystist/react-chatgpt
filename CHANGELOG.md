@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.33](https://github.com/mystist/react-chatgpt/compare/v0.0.32...v0.0.33) (2023-06-26)
+
+
+### Bug Fixes
+
+* add scope id ([2b6a0da](https://github.com/mystist/react-chatgpt/commit/2b6a0da50d72bb590a9337b87c359acdc26f1790))
+
 ### [0.0.32](https://github.com/mystist/react-chatgpt/compare/v0.0.31...v0.0.32) (2023-06-26)
 
 
