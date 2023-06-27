@@ -261,6 +261,15 @@ export default function Index() {
     setIsShowClaim(false)
   }, [])
 
+  const showDisclaimer = useCallback((e: any) => {
+    setIsShowClaim(true)
+    e.preventDefault()
+  }, [])
+
+  const shouldShowDisclaimer = useCallback(() => {
+    return disclaimer && getAgreement() !== 'agree'
+  }, [disclaimer])
+
   return (
     <>
       {agentName && (
@@ -446,27 +455,24 @@ export default function Index() {
                             <input
                               type="text"
                               {...register('content')}
+                              onKeyDown={(e) => {
+                                if (shouldShowDisclaimer() && e.key === 'Enter') {
+                                  showDisclaimer(e)
+                                }
+                              }}
                               className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.5px] focus:ring-secondary-color sm:text-sm sm:leading-6"
                             />
                             <button type="button" onClick={onSpeaking} className="absolute right-[4px] rounded-full p-2 text-primary-color opacity-100 hover:opacity-90">
                               <MicrophoneIcon className="h-6 w-6" aria-hidden="true" />
                             </button>
                           </div>
-                          {!disclaimer || getAgreement() === 'agree' ? (
-                            <button type="submit" className="btn btn-secondary h-full w-fit min-w-[80px]">
-                              {isLoading && <Spinner className="mr-2 text-gray-400" />}
+                          {shouldShowDisclaimer() ? (
+                            <button type="button" onClick={showDisclaimer} className="btn btn-secondary h-full w-fit min-w-[80px]" tabIndex={1}>
                               <span>{i18n.send}</span>
                             </button>
                           ) : (
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                setIsShowClaim(true)
-                                e.preventDefault()
-                              }}
-                              className="btn btn-secondary h-full w-fit min-w-[80px]"
-                              tabIndex={1}
-                            >
+                            <button type="submit" className="btn btn-secondary h-full w-fit min-w-[80px]">
+                              {isLoading && <Spinner className="mr-2 text-gray-400" />}
                               <span>{i18n.send}</span>
                             </button>
                           )}
@@ -528,7 +534,17 @@ export default function Index() {
                     </div>
                   </div>
                   <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                    <button type="button" className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" onClick={agree}>
+                    <button
+                      type="button"
+                      className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                      onKeyDown={(e) => {
+                        console.log(e.key)
+                        if (e.key === 'Enter') {
+                          agree()
+                        }
+                      }}
+                      onClick={agree}
+                    >
                       {i18n.agree}
                     </button>
                     <button
