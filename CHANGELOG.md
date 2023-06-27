@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.35](https://github.com/mystist/react-chatgpt/compare/v0.0.34...v0.0.35) (2023-06-27)
+
+
+### Bug Fixes
+
+* should always set locale state for lang switcher ([b3b9140](https://github.com/mystist/react-chatgpt/commit/b3b91407fb30e845172367c968fac14018bf86d1))
+
 ### [0.0.34](https://github.com/mystist/react-chatgpt/compare/v0.0.33...v0.0.34) (2023-06-27)
 
 
