@@ -1,9 +1,9 @@
 export interface Configuration {
-  identifier: string
   agentName: string
   questions: string[]
   introduction?: string
   disclaimer?: string
+  disclaimerPath?: string
 }
 
 export interface Talk {

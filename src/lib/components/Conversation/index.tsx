@@ -66,7 +66,7 @@ export default function Index() {
   const [isNewConversation, setIsNewConversation] = useState(false)
 
   const identifier = getIdentifier()
-  const { agentName, questions, introduction, disclaimer } = useConfiguration()
+  const { agentName, questions, introduction, disclaimer, disclaimerPath } = useConfiguration()
 
   const {
     data: [conversation, previousConversation],
@@ -286,9 +286,7 @@ export default function Index() {
                         </div>
                         <div className="z-10">
                           <div className="text-sm">
-                            <a href="#" className="font-medium text-gray-900">
-                              {agentName}
-                            </a>
+                            <span className="font-medium text-gray-900">{agentName}</span>
                           </div>
                           <div className="relative mt-1 overflow-hidden rounded text-sm text-gray-700">
                             <video className="w-full" ref={introRef} onEnded={() => setIsIntroPlaying(false)}>
@@ -334,9 +332,7 @@ export default function Index() {
                                 </div>
                                 <div>
                                   <div className="text-sm">
-                                    <a href="#" className="font-medium text-gray-900">
-                                      {agentName}
-                                    </a>
+                                    <span className="font-medium text-gray-900">{agentName}</span>
                                   </div>
                                   <div className="mt-2 flex rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
                                     <div className="prose prose-sm prose-slate prose-p:my-2 prose-thead:whitespace-nowrap">
@@ -390,9 +386,7 @@ export default function Index() {
                           </div>
                           <div>
                             <div className="text-sm">
-                              <a href="#" className="font-medium text-gray-900">
-                                {agentName}
-                              </a>
+                              <span className="font-medium text-gray-900">{agentName}</span>
                             </div>
                             <div className="mt-2 rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
                               <div className="prose prose-sm prose-slate prose-p:my-2 prose-thead:whitespace-nowrap">
@@ -429,9 +423,7 @@ export default function Index() {
                           </div>
                           <div className="flex w-full max-w-[200px] flex-col">
                             <div className="flex items-baseline space-x-1 text-sm">
-                              <a href="#" className="font-medium text-gray-900">
-                                {agentName}
-                              </a>
+                              <span className="font-medium text-gray-900">{agentName}</span>
                               <span className="text-xs text-gray-500">{i18n.isThinking}...</span>
                             </div>
                             <div className="mt-2 text-sm text-gray-700">
@@ -526,7 +518,7 @@ export default function Index() {
                       </Dialog.Title>
                       <div className="mt-2 space-y-2">
                         <p className="text-sm text-gray-500">{disclaimer}</p>
-                        <a href="#" className="text-xs font-medium text-indigo-600 hover:text-indigo-500">
+                        <a href={disclaimerPath} target="_blank" className="text-xs font-medium text-indigo-600 hover:text-indigo-500">
                           {i18n.readFullDisclaimer}
                         </a>
                         <p className="text-sm text-gray-500">{i18n.clickButtonToAgree}</p>
