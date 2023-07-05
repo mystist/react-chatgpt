@@ -13,7 +13,7 @@ import { useLocale } from '../../hooks/useLocale'
 import { useReplies } from '../../hooks/useReplies'
 import { useWhispers } from '../../hooks/useWhispers'
 import { Talk, Whisper } from '../../interfaces'
-import { baseUrl, postReply, postWhisperByText } from '../../requests'
+import { postReply, postWhisperByText } from '../../requests'
 import { getAgreement, getIdentifier, setAgreement, timeSince } from '../../utils'
 import AiAvatar from '../AiAvatar'
 import AudioPlayer from '../AudioPlayer'
@@ -66,7 +66,7 @@ export default function Index() {
   const [isNewConversation, setIsNewConversation] = useState(false)
 
   const identifier = getIdentifier()
-  const { agentName, questions, introduction, disclaimer, disclaimerPath } = useConfiguration()
+  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath } = useConfiguration()
 
   const {
     data: [conversation, previousConversation],
@@ -289,9 +289,11 @@ export default function Index() {
                             <span className="font-medium text-gray-900">{agentName}</span>
                           </div>
                           <div className="relative mt-1 overflow-hidden rounded text-sm text-gray-700">
-                            <video className="w-full" ref={introRef} onEnded={() => setIsIntroPlaying(false)}>
-                              <source src={`${baseUrl}/uploads/placeholder/videos/default-talk-${identifier}.mp4`} type="video/mp4" />
-                            </video>
+                            {videoPath && (
+                              <video className="w-full" ref={introRef} onEnded={() => setIsIntroPlaying(false)}>
+                                <source src={videoPath} type="video/mp4" />
+                              </video>
+                            )}
                           </div>
                           <div className="mt-4 flex items-center space-x-4 text-sm">
                             <span className="text-gray-500">{i18n.intro}</span>
@@ -473,7 +475,7 @@ export default function Index() {
                           <div className="mb-2 mt-3 max-h-[156px] overflow-y-auto">
                             <div className="flex flex-wrap gap-x-3 gap-y-4 pt-4">
                               {questions.map((item: any, index: number) => (
-                                <button key={index} type="button" className="rounded-full bg-gray-200 px-2.5 py-2 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:opacity-80" onClick={onSelectQuestion}>
+                                <button key={index} type="button" className="rounded-full bg-gray-200 px-4 py-2 text-left text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:opacity-80" onClick={onSelectQuestion}>
                                   {item}
                                 </button>
                               ))}

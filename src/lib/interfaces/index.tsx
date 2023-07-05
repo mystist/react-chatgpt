@@ -1,4 +1,6 @@
 export interface Configuration {
+  avatarPath: string
+  videoPath: string
   agentName: string
   questions: string[]
   introduction?: string

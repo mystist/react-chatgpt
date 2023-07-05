@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { baseUrl } from '../../requests'
-import { getIdentifier } from '../../utils'
+import { useConfiguration } from '../../hooks/useConfiguration'
 
 export default function Index({ whisperUuid, nowPlayingWhisperUuidState }: any) {
-  const identifier = getIdentifier()
   const [isPlaying, setIsPlaying] = useState(false)
+  const { avatarPath } = useConfiguration()
 
   useEffect(() => {
     setIsPlaying(whisperUuid && whisperUuid === nowPlayingWhisperUuidState)
@@ -25,9 +24,9 @@ export default function Index({ whisperUuid, nowPlayingWhisperUuidState }: any) 
 
   return (
     <>
-      {identifier && (
+      {avatarPath && (
         <div className="relative flex h-12 w-12 flex-col overflow-hidden rounded-full">
-          <img src={`${baseUrl}/uploads/placeholder/images/avatar-${identifier}.png`} alt="avatar" className="h-12 w-12 scale-105 rounded-full bg-[#bfbdbe]" />
+          <img src={avatarPath} alt="avatar" className="h-12 w-12 scale-105 rounded-full bg-[#bfbdbe]" />
         </div>
       )}
     </>
