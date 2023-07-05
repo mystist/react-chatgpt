@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.36](https://github.com/mystist/react-chatgpt/compare/v0.0.35...v0.0.36) (2023-07-05)
+
+
+### Features
+
+* leverage configuration as much as possible ([d82cdc9](https://github.com/mystist/react-chatgpt/commit/d82cdc91b26103851e3f43a85eb50580a5fea296))
+* use disclaimer path ([36fcddf](https://github.com/mystist/react-chatgpt/commit/36fcddf46b4ae9cfaf7e0b14d8104631ee444fce))
+
 ### [0.0.35](https://github.com/mystist/react-chatgpt/compare/v0.0.34...v0.0.35) (2023-06-27)
 
 
