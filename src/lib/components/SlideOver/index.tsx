@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { ChatBubbleBottomCenterTextIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { ChatBubbleLeftEllipsisIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Fragment, useCallback, useMemo } from 'react'
 
 import { useLocale } from '../../hooks/useLocale'
@@ -45,7 +45,7 @@ export default function Index({ status, setStatus, identifier, lang = 'en' }: an
                     <div className="bg-gray-100 px-4 py-6 sm:px-6">
                       <div className="flex items-start justify-between">
                         <Dialog.Title className="flex items-center space-x-3 font-medium leading-6 text-gray-700">
-                          <ChatBubbleBottomCenterTextIcon className="h-[26px] w-[23px]" />
+                          <ChatBubbleLeftEllipsisIcon className="h-[26px] w-[23px]" />
                           <span>{i18n.aiAgent}</span>
                         </Dialog.Title>
 
