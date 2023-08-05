@@ -58,6 +58,7 @@ export default function Index({ overlayMode }: any) {
   const [isIntroPlaying, setIsIntroPlaying] = useState(false)
   const [isShowClaim, setIsShowClaim] = useState(false)
   const [isShowSend, setIsShowSend] = useState(false)
+  const [contentBreakCount, setContentBreakCount] = useState(0)
 
   const [latestWhisperContentState, setLatestWhisperContentState] = useState('')
   const [latestReplyContentState, setLatestReplyContentState] = useState('')
@@ -233,7 +234,7 @@ export default function Index({ overlayMode }: any) {
 
   const send = useCallback(
     ({ content }: any) => {
-      if (!content || isWriting || isThinking) return
+      if (!content || !content.trim() || isWriting || isThinking) return
 
       resetField('content')
       refetchReplies().then(() => setLatestReplyContentState(''))
@@ -275,7 +276,7 @@ export default function Index({ overlayMode }: any) {
   }, [disclaimer])
 
   useEffect(() => {
-    setIsShowSend(!!watchedContent)
+    setIsShowSend(watchedContent && watchedContent.trim())
   }, [watchedContent])
 
   const newChat = useCallback(() => {
@@ -291,6 +292,19 @@ export default function Index({ overlayMode }: any) {
       })
     }
   }, [isNewChat, isNewConversation, refetchConversation, refetchWhispers])
+
+  useEffect(() => {
+    if (!watchedContent || !watchedContent.trim()) {
+      setContentBreakCount(0)
+      resetField('content')
+      return
+    }
+
+    const matches = watchedContent.match(/\n/g)
+    const count = matches ? matches.length : 0
+
+    setContentBreakCount(count >= 5 ? 5 : count)
+  }, [resetField, watchedContent])
 
   return (
     <>
@@ -359,7 +373,7 @@ export default function Index({ overlayMode }: any) {
                                     <span className="font-medium text-gray-900">{agentName}</span>
                                   </div>
                                   <div className="mt-2 flex rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
-                                    <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate prose-p:my-2 prose-thead:whitespace-nowrap')}>
+                                    <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate prose-thead:whitespace-nowrap')}>
                                       <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
                                         {item.content}
                                       </ReactMarkdown>
@@ -384,7 +398,11 @@ export default function Index({ overlayMode }: any) {
                                 <div className="flex justify-end space-x-3">
                                   <div className="flex flex-col items-end">
                                     <div className="flex rounded-2xl bg-opacity-[0.85] bg-linear-color px-4 py-2">
-                                      <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate text-white prose-p:my-2 prose-thead:whitespace-nowrap')}>{item.content}</div>
+                                      <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate text-white prose-p:my-0 prose-thead:whitespace-nowrap')}>
+                                        {item.content.split('\n').map((p: string, index: number) => (
+                                          <p key={index}>{p}</p>
+                                        ))}
+                                      </div>
                                     </div>
                                     <div className="mt-2 flex items-center justify-end space-x-4 text-sm">
                                       <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
@@ -413,7 +431,7 @@ export default function Index({ overlayMode }: any) {
                               <span className="font-medium text-gray-900">{agentName}</span>
                             </div>
                             <div className="mt-2 rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
-                              <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate prose-p:my-2 prose-thead:whitespace-nowrap')}>
+                              <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate prose-thead:whitespace-nowrap')}>
                                 <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
                                   {latestReplyContentState + (isWriting ? caretHtml : '')}
                                 </ReactMarkdown>
@@ -445,7 +463,7 @@ export default function Index({ overlayMode }: any) {
                               </span>
                             </div>
                           </div>
-                          <div className="flex w-full max-w-[200px] flex-col">
+                          <div className="flex w-full max-w-xs flex-col">
                             <div className="flex items-baseline space-x-1 text-sm">
                               <span className="font-medium text-gray-900">{agentName}</span>
                               <span className="text-xs text-gray-500">{i18n.isThinking}...</span>
@@ -466,40 +484,47 @@ export default function Index({ overlayMode }: any) {
                     {isSpeaking && <SoundWave onFinish={fetchWhispersAndReply} />}
                     {!isSpeaking && (
                       <div className="relative">
-                        <form onSubmit={handleSubmit(send)} className="flex h-10 space-x-3">
-                          <div className="relative flex flex-1">
-                            <input
-                              type="text"
+                        <form onSubmit={handleSubmit(send)} className="flex space-x-3">
+                          <div className="relative flex min-h-[40px] flex-1">
+                            <textarea
+                              defaultValue={''}
+                              rows={contentBreakCount + 1}
                               {...register('content')}
                               onKeyDown={(e) => {
-                                if (shouldShowDisclaimer() && e.key === 'Enter') {
-                                  showDisclaimer(e)
+                                if (e.key === 'Enter') {
+                                  if (shouldShowDisclaimer()) {
+                                    showDisclaimer(e)
+                                  } else if (!e.shiftKey) {
+                                    handleSubmit(send)()
+                                  }
                                 }
                               }}
-                              className="block w-full rounded-md border-0 py-1.5 pr-10 text-sm leading-6 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]"
+                              className="block w-full rounded-md border-0 py-1.5 pr-10 text-sm leading-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]"
                             />
                             <button type="button" onClick={onSpeaking} className="absolute right-[4px] rounded-full p-2 text-primary-color opacity-100 hover:opacity-90">
                               <MicrophoneIcon className="h-6 w-6" aria-hidden="true" />
                             </button>
                           </div>
-                          {isShowSend ? (
-                            <>
-                              {shouldShowDisclaimer() ? (
-                                <button type="button" onClick={showDisclaimer} className="btn btn-primary h-full w-fit min-w-[80px]" tabIndex={1}>
-                                  <span>{i18n.send}</span>
-                                </button>
-                              ) : (
-                                <button type="submit" className="btn btn-primary h-full w-fit min-w-[80px]">
-                                  {isLoading && <Spinner className="mr-2 text-gray-400" />}
-                                  <span>{i18n.send}</span>
-                                </button>
-                              )}
-                            </>
-                          ) : (
-                            <button onClick={newChat} className="btn btn-secondary flex h-full w-fit min-w-[80px]">
-                              <span>{i18n.newChat}</span>
-                            </button>
-                          )}
+                          <div className="flex h-10">
+                            {isShowSend ? (
+                              <>
+                                {shouldShowDisclaimer() ? (
+                                  <button type="button" onClick={showDisclaimer} className="btn btn-primary h-full w-fit min-w-[80px]" tabIndex={1}>
+                                    <span>{i18n.send}</span>
+                                  </button>
+                                ) : (
+                                  <button type="submit" className="btn btn-primary h-full w-fit min-w-[80px]">
+                                    {isLoading && <Spinner className="mr-2 text-gray-400" />}
+                                    <span>{i18n.send}</span>
+                                  </button>
+                                )}
+                              </>
+                            ) : (
+                              <button onClick={newChat} className="btn btn-secondary flex h-full w-fit min-w-[80px]">
+                                <span>{i18n.newChat}</span>
+                              </button>
+                            )}
+                          </div>
                         </form>
                         {questions && questions.length > 0 && (
                           <div className="mb-2 mt-3 max-h-[156px] overflow-y-auto">
