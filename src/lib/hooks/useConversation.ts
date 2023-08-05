@@ -14,7 +14,7 @@ export const useConversation = ({ isCreate = false } = {}) => {
     return getLatestConversationList({ userUuid, isCreate })
   }, [isCreate, userUuid])
 
-  const { data, refetch } = useQuery(`conversation:${userUuid}:latest-previous`, getLatestConversationFn, { cacheTime: 100 }) as any
+  const { data, refetch } = useQuery(`conversation:${userUuid}:latest-and-previous`, getLatestConversationFn, { cacheTime: 100 }) as any
 
   useEffect(() => {
     if (data) setDataState(data)

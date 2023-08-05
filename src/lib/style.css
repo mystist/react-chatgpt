@@ -10,7 +10,7 @@
       @apply inline-flex w-full items-center justify-center rounded-md px-2.5 py-2 text-sm font-medium opacity-100 shadow-sm hover:opacity-90 focus-visible:outline-secondary-color;
     }
     .btn-primary {
-      @apply bg-linear-color text-white;
+      @apply border bg-linear-color text-white;
     }
     .btn-secondary {
       @apply bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50;

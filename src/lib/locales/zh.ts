@@ -20,6 +20,7 @@ export const messages = {
   disagree: '不同意',
   readFullDisclaimer: '阅读完整的免责申明',
   clickButtonToAgree: '点击“同意”按钮，表示您已知情并同意以上免责申明。',
+  newChat: '新对话',
 }
 
 export const i18n = transformI18n(messages)

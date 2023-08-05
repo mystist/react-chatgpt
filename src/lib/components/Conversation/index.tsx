@@ -57,6 +57,7 @@ export default function Index() {
   const [nowPlayingWhisperUuidState, setNowPlayingWhisperUuidState] = useState('')
   const [isIntroPlaying, setIsIntroPlaying] = useState(false)
   const [isShowClaim, setIsShowClaim] = useState(false)
+  const [isShowSend, setIsShowSend] = useState(false)
 
   const [latestWhisperContentState, setLatestWhisperContentState] = useState('')
   const [latestReplyContentState, setLatestReplyContentState] = useState('')
@@ -64,6 +65,7 @@ export default function Index() {
   const [conversationUuidState, setConversationUuidState] = useState('')
   const [previousConversationUuidState, setPreviousConversationUuidState] = useState('')
   const [isNewConversation, setIsNewConversation] = useState(false)
+  const [isNewChat, setIsNewChat] = useState(false)
 
   const identifier = getIdentifier()
   const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath } = useConfiguration()
@@ -81,8 +83,9 @@ export default function Index() {
 
   const { mutate: reply } = useMutation(postReply, { retry: false })
 
-  const { register, handleSubmit, resetField, setValue } = useForm()
+  const { register, handleSubmit, resetField, setValue, watch } = useForm()
   const { mutate: whisperByText, isLoading } = useMutation(postWhisperByText, { retry: false })
+  const watchedContent = watch('content')
 
   useEffect(() => {
     if (conversation) setConversationUuidState(conversation.uuid)
@@ -148,7 +151,7 @@ export default function Index() {
   )
 
   useEffect(() => {
-    if (isNewConversation)
+    if (isNewConversation && !isNewChat)
       refetchConversation().then(({ data }: any) => {
         setIsNewConversation(false)
 
@@ -163,7 +166,7 @@ export default function Index() {
           },
         )
       })
-  }, [conversationUuidState, fetchWhispersAndReply, isNewConversation, latestWhisperContentState, refetchConversation, whisperByText])
+  }, [conversationUuidState, fetchWhispersAndReply, isNewChat, isNewConversation, latestWhisperContentState, refetchConversation, whisperByText])
 
   const talks = useMemo(() => {
     const talks: Talk[] = []
@@ -182,9 +185,10 @@ export default function Index() {
     if (!previousWhispers || !previousReplies) return talks
 
     return talks
-      .concat(previousWhispers.slice(0, -1))
+      .concat(previousWhispers)
       .concat(previousReplies)
       .sort((a: Talk, b: Talk) => (a.createdAt > b.createdAt ? 1 : -1))
+      .slice(-2 * 3)
   }, [previousWhispers, previousReplies])
 
   const introTalks = useMemo(() => {
@@ -269,6 +273,24 @@ export default function Index() {
   const shouldShowDisclaimer = useCallback(() => {
     return disclaimer && getAgreement() !== 'agree'
   }, [disclaimer])
+
+  useEffect(() => {
+    setIsShowSend(!!watchedContent)
+  }, [watchedContent])
+
+  const newChat = useCallback(() => {
+    setIsNewChat(true)
+    setIsNewConversation(true)
+  }, [])
+
+  useEffect(() => {
+    if (isNewChat && isNewConversation) {
+      refetchConversation().then(() => {
+        setIsNewConversation(false)
+        setIsNewChat(false)
+      })
+    }
+  }, [isNewChat, isNewConversation, refetchConversation, refetchWhispers])
 
   return (
     <>
@@ -438,14 +460,14 @@ export default function Index() {
                   </ul>
                 }
               </div>
-              <div className="bg-gray-100 px-4 py-6 sm:px-6">
+              <div className="mt-4 bg-gray-100 px-4 py-6 sm:px-6">
                 <div className="flex flex-col">
                   <div className="min-w-0 flex-1">
                     {isSpeaking && <SoundWave onFinish={fetchWhispersAndReply} />}
                     {!isSpeaking && (
                       <div className="relative">
                         <form onSubmit={handleSubmit(send)} className="flex h-10 space-x-3">
-                          <div className="relative flex w-full">
+                          <div className="relative flex flex-1">
                             <input
                               type="text"
                               {...register('content')}
@@ -454,20 +476,28 @@ export default function Index() {
                                   showDisclaimer(e)
                                 }
                               }}
-                              className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.5px] focus:ring-secondary-color sm:text-sm sm:leading-6"
+                              className="block w-full rounded-md border-0 py-1.5 pr-10 text-sm leading-6 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]"
                             />
                             <button type="button" onClick={onSpeaking} className="absolute right-[4px] rounded-full p-2 text-primary-color opacity-100 hover:opacity-90">
                               <MicrophoneIcon className="h-6 w-6" aria-hidden="true" />
                             </button>
                           </div>
-                          {shouldShowDisclaimer() ? (
-                            <button type="button" onClick={showDisclaimer} className="btn btn-secondary h-full w-fit min-w-[80px]" tabIndex={1}>
-                              <span>{i18n.send}</span>
-                            </button>
+                          {isShowSend ? (
+                            <>
+                              {shouldShowDisclaimer() ? (
+                                <button type="button" onClick={showDisclaimer} className="btn btn-primary h-full w-fit min-w-[80px]" tabIndex={1}>
+                                  <span>{i18n.send}</span>
+                                </button>
+                              ) : (
+                                <button type="submit" className="btn btn-primary h-full w-fit min-w-[80px]">
+                                  {isLoading && <Spinner className="mr-2 text-gray-400" />}
+                                  <span>{i18n.send}</span>
+                                </button>
+                              )}
+                            </>
                           ) : (
-                            <button type="submit" className="btn btn-secondary h-full w-fit min-w-[80px]">
-                              {isLoading && <Spinner className="mr-2 text-gray-400" />}
-                              <span>{i18n.send}</span>
+                            <button onClick={newChat} className="btn btn-secondary flex h-full w-fit min-w-[80px]">
+                              <span>{i18n.newChat}</span>
                             </button>
                           )}
                         </form>
@@ -532,7 +562,6 @@ export default function Index() {
                       type="button"
                       className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                       onKeyDown={(e) => {
-                        console.log(e.key)
                         if (e.key === 'Enter') {
                           agree()
                         }
