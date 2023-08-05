@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.39](https://github.com/mystist/react-chatgpt/compare/v0.0.38...v0.0.39) (2023-08-05)
+
+
+### Features
+
+* new chat ([7296818](https://github.com/mystist/react-chatgpt/commit/72968180c9015d359df648820527406e04678981))
+* support overlay mode: modal and slide-over ([fbff296](https://github.com/mystist/react-chatgpt/commit/fbff29623a2e7a717e12aa6eb5f76a5903703d19))
+* use textarea for input box to support multi line ([bec15fa](https://github.com/mystist/react-chatgpt/commit/bec15fa5861c1cccb45d892c6a8c8dcf2608de6c))
+
 ### [0.0.38](https://github.com/mystist/react-chatgpt/compare/v0.0.37...v0.0.38) (2023-07-18)
 
 ### [0.0.37](https://github.com/mystist/react-chatgpt/compare/v0.0.36...v0.0.37) (2023-07-18)
