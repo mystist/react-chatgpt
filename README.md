@@ -11,7 +11,7 @@ Embedding your chatgpt agent into your react application, option in tailwindcss,
 - **Infinite conversation:** Start new conversation automatically when reach rate limit.
 - **Out of the box:** Built in i18n support, built in disclaimer support, ready to use out of the box.
 - **Voice interaction:** Supports voice input and output, and voice also supports multiple languages.
-- **Responsive:** Optimized for various screen sizes and automatically adapts.
+- **Responsive:** Optimized for various screen sizes and adapt automatically.
 
 ## Quick start
 
@@ -80,11 +80,11 @@ export default function Index() {
 
 ## Options
 
-`status`: The React state represent the opening of the ReactChatGPT component.
-`setStatus`: The React state set function controls the opening of the ReactChatGPT component.
-`identifier`: To retrieve the specified data from the API endpoint with this identifier param.
-`lang`: Specify the language, such as 'en' for English, 'zh' for Chinese, and 'ja' for Japanese.
-`overlayMode`<'auto'(default) | 'modal' | 'slide-over'>: Specify the overlay mode. The default is 'auto', which will use 'modal' for large screens and 'slide-over' for smaller screens.
+- `status`: The React state represent the opening of the ReactChatGPT component.
+- `setStatus`: The React state set function controls the opening of the ReactChatGPT component.
+- `identifier`: To retrieve the specified data from the API endpoint with this identifier param.
+- `lang`: Specify the language, such as 'en' for English, 'zh' for Chinese, and 'ja' for Japanese.
+- `overlayMode`<'auto'(default) | 'modal' | 'slide-over'>: Specify the overlay mode. The default is 'auto', which will use 'modal' for large screens and 'slide-over' for smaller screens.
 
 ## API dependencies
 
