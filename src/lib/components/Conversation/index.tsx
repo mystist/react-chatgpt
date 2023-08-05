@@ -14,7 +14,7 @@ import { useReplies } from '../../hooks/useReplies'
 import { useWhispers } from '../../hooks/useWhispers'
 import { Talk, Whisper } from '../../interfaces'
 import { postReply, postWhisperByText } from '../../requests'
-import { getAgreement, getIdentifier, setAgreement, timeSince } from '../../utils'
+import { classNames, getAgreement, getIdentifier, setAgreement, timeSince } from '../../utils'
 import AiAvatar from '../AiAvatar'
 import AudioPlayer from '../AudioPlayer'
 import Divider from '../Divider'
@@ -45,7 +45,7 @@ const PulseSpinner = () => (
   </div>
 )
 
-export default function Index() {
+export default function Index({ overlayMode }: any) {
   const divRef = useRef<HTMLDivElement | null>(null)
   const introRef = useRef<any>()
 
@@ -310,7 +310,7 @@ export default function Index() {
                           <div className="text-sm">
                             <span className="font-medium text-gray-900">{agentName}</span>
                           </div>
-                          <div className="relative mt-1 overflow-hidden rounded text-sm text-gray-700">
+                          <div className="relative mt-1 max-w-md overflow-hidden rounded text-sm text-gray-700">
                             {videoPath && (
                               <video className="w-full" ref={introRef} onEnded={() => setIsIntroPlaying(false)}>
                                 <source src={videoPath} type="video/mp4" />
@@ -359,7 +359,7 @@ export default function Index() {
                                     <span className="font-medium text-gray-900">{agentName}</span>
                                   </div>
                                   <div className="mt-2 flex rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
-                                    <div className="prose prose-sm prose-slate prose-p:my-2 prose-thead:whitespace-nowrap">
+                                    <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate prose-p:my-2 prose-thead:whitespace-nowrap')}>
                                       <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
                                         {item.content}
                                       </ReactMarkdown>
@@ -384,7 +384,7 @@ export default function Index() {
                                 <div className="flex justify-end space-x-3">
                                   <div className="flex flex-col items-end">
                                     <div className="flex rounded-2xl bg-opacity-[0.85] bg-linear-color px-4 py-2">
-                                      <div className="prose prose-sm prose-slate text-white prose-p:my-2 prose-thead:whitespace-nowrap">{item.content}</div>
+                                      <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate text-white prose-p:my-2 prose-thead:whitespace-nowrap')}>{item.content}</div>
                                     </div>
                                     <div className="mt-2 flex items-center justify-end space-x-4 text-sm">
                                       <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
@@ -413,7 +413,7 @@ export default function Index() {
                               <span className="font-medium text-gray-900">{agentName}</span>
                             </div>
                             <div className="mt-2 rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
-                              <div className="prose prose-sm prose-slate prose-p:my-2 prose-thead:whitespace-nowrap">
+                              <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate prose-p:my-2 prose-thead:whitespace-nowrap')}>
                                 <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
                                   {latestReplyContentState + (isWriting ? caretHtml : '')}
                                 </ReactMarkdown>

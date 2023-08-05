@@ -1,28 +1,10 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { ChatBubbleLeftEllipsisIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Fragment, useCallback, useMemo } from 'react'
+import { Fragment } from 'react'
 
-import { useLocale } from '../../hooks/useLocale'
-import { removeConfig, setIdentifier, setLang } from '../../utils'
 import Conversation from '../Conversation'
 
-export default function Index({ status, setStatus, identifier, lang = 'en' }: any) {
-  const i18n = useLocale(lang)
-
-  if (status && identifier) {
-    removeConfig()
-    setIdentifier(identifier)
-    setLang(lang)
-  }
-
-  const close = useCallback(() => {
-    setStatus('')
-  }, [setStatus])
-
-  const isShow = useMemo(() => {
-    return !!identifier && !!status
-  }, [identifier, status])
-
+export default function Index({ isShow, i18n, close, overlayMode }: any) {
   return (
     <Transition.Root show={isShow} as={Fragment}>
       <Dialog as="div" id="react-chatgpt" className="relative z-50" onClose={close}>
@@ -57,7 +39,7 @@ export default function Index({ status, setStatus, identifier, lang = 'en' }: an
                       </div>
                     </div>
                     <div className="relative flex-1">
-                      <Conversation />
+                      <Conversation overlayMode={overlayMode} />
                     </div>
                   </div>
                 </Dialog.Panel>
