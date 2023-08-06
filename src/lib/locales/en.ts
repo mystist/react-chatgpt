@@ -21,6 +21,8 @@ export const messages = {
   readFullDisclaimer: 'Read full disclaimer',
   clickButtonToAgree: 'Click the "Agree" button to indicate that you have read and agree to the above disclaimer.',
   newChat: 'New Chat',
+  taskMode: 'Task Mode',
+  chatMode: 'Chat Mode',
 }
 
 export const i18n = transformI18n(messages)

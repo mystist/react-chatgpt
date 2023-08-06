@@ -21,6 +21,8 @@ export const messages = {
   readFullDisclaimer: '阅读完整的免责申明',
   clickButtonToAgree: '点击“同意”按钮，表示您已知情并同意以上免责申明。',
   newChat: '新对话',
+  taskMode: '任务模式',
+  chatMode: '对话模式',
 }
 
 export const i18n = transformI18n(messages)

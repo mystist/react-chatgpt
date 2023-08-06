@@ -1,4 +1,5 @@
-import { Dialog, Transition } from '@headlessui/react'
+import { Dialog, Menu, Transition } from '@headlessui/react'
+import { ChatBubbleBottomCenterTextIcon, CheckCircleIcon, ChevronDownIcon, PlusIcon } from '@heroicons/react/20/solid'
 import { ExclamationTriangleIcon, MicrophoneIcon } from '@heroicons/react/24/outline'
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -59,6 +60,7 @@ export default function Index({ overlayMode }: any) {
   const [isShowClaim, setIsShowClaim] = useState(false)
   const [isShowSend, setIsShowSend] = useState(false)
   const [contentBreakCount, setContentBreakCount] = useState(0)
+  const [chatMode, setChatMode] = useState('task')
 
   const [latestWhisperContentState, setLatestWhisperContentState] = useState('')
   const [latestReplyContentState, setLatestReplyContentState] = useState('')
@@ -143,12 +145,12 @@ export default function Index({ overlayMode }: any) {
       setLatestWhisperContentState(content)
       refetchWhispers().then(() => {
         setIsThinking(true)
-        reply({ conversationUuid, whisperUuid, content, identifier, onMessage, onConversationFull })
+        reply({ conversationUuid, whisperUuid, content, identifier, onMessage, onConversationFull, chatMode })
 
         scroll()
       })
     },
-    [identifier, onConversationFull, onMessage, refetchWhispers, reply, scroll],
+    [chatMode, identifier, onConversationFull, onMessage, refetchWhispers, reply, scroll],
   )
 
   useEffect(() => {
@@ -520,9 +522,66 @@ export default function Index({ overlayMode }: any) {
                                 )}
                               </>
                             ) : (
-                              <button onClick={newChat} className="btn btn-secondary flex h-full w-fit min-w-[80px]">
-                                <span>{i18n.newChat}</span>
-                              </button>
+                              <Menu as="div" className="relative inline-block h-full text-left">
+                                <Menu.Button className="btn btn-secondary flex h-full w-fit min-w-[80px] gap-x-1.5 font-normal">
+                                  <div className="flex">
+                                    {chatMode === 'task' && (
+                                      <>
+                                        <CheckCircleIcon className="mr-2 h-5 w-5 text-green-400" />
+                                        {i18n.taskMode}
+                                      </>
+                                    )}
+                                    {chatMode === 'chat' && (
+                                      <>
+                                        <ChatBubbleBottomCenterTextIcon className="mr-2 h-5 w-5 text-primary-color" />
+                                        {i18n.chatMode}
+                                      </>
+                                    )}
+                                  </div>
+                                  <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" />
+                                </Menu.Button>
+
+                                <Transition
+                                  as={Fragment}
+                                  enter="transition ease-out duration-100"
+                                  enterFrom="transform opacity-0 scale-95"
+                                  enterTo="transform opacity-100 scale-100"
+                                  leave="transition ease-in duration-75"
+                                  leaveFrom="transform opacity-100 scale-100"
+                                  leaveTo="transform opacity-0 scale-95"
+                                >
+                                  <Menu.Items className="absolute bottom-full right-0 z-10 mb-2 w-fit origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <div className="py-1">
+                                      <Menu.Item>
+                                        {({ active }) => (
+                                          <button onClick={() => setChatMode('chat')} className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex w-full items-center whitespace-nowrap px-4 py-2 text-sm')}>
+                                            <ChatBubbleBottomCenterTextIcon className="mr-3 h-5 w-5 text-primary-color" />
+                                            {i18n.chatMode}
+                                          </button>
+                                        )}
+                                      </Menu.Item>
+                                      <Menu.Item>
+                                        {({ active }) => (
+                                          <button onClick={() => setChatMode('task')} className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex w-full items-center whitespace-nowrap px-4 py-2 text-sm')}>
+                                            <CheckCircleIcon className="mr-3 h-5 w-5 text-green-400" />
+                                            {i18n.taskMode}
+                                          </button>
+                                        )}
+                                      </Menu.Item>
+                                    </div>
+                                    <div className="py-1">
+                                      <Menu.Item>
+                                        {({ active }) => (
+                                          <button onClick={newChat} className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex w-full items-center whitespace-nowrap px-4 py-2 text-sm')}>
+                                            <PlusIcon className="mr-3 h-5 w-5 text-gray-500" />
+                                            {i18n.newChat}
+                                          </button>
+                                        )}
+                                      </Menu.Item>
+                                    </div>
+                                  </Menu.Items>
+                                </Transition>
+                              </Menu>
                             )}
                           </div>
                         </form>
