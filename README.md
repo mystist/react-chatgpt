@@ -16,6 +16,13 @@ Embedding your chatgpt agent into your react application, option in tailwindcss,
 ## Quick start
 
 ```sh
+vim ~/.npmrc
+
+//npm.pkg.github.com/:_authToken=<Your Personal Access Token>
+//@mystist:registry=https://npm.pkg.github.com/
+```
+
+```sh
 yarn add @mystist/react-chatgpt
 ```
 
