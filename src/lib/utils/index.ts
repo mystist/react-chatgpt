@@ -38,11 +38,14 @@ export const timeSince = (date: number, i18n: any) => {
 }
 
 export const getOrCreateUserUuid = () => {
-  let userUuid = localStorageEnhanced.getWithExpiry('react-chatgpt-userUuid') || ''
+  const identifier = getIdentifier()
+
+  const key = `react-chatgpt-userUuid-${identifier}`
+  let userUuid = localStorageEnhanced.getWithExpiry(key) || ''
 
   if (!userUuid) {
-    userUuid = `${nanoid()}-${getIdentifier()}`
-    localStorageEnhanced.setWithExpiry('react-chatgpt-userUuid', userUuid, oneWeek)
+    userUuid = nanoid()
+    localStorageEnhanced.setWithExpiry(key, userUuid, oneWeek)
   }
 
   return userUuid
