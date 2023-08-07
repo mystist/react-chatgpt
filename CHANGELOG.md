@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.42](https://github.com/mystist/react-chatgpt/compare/v0.0.41...v0.0.42) (2023-08-07)
+
+
+### Features
+
+* set user uuid with identifier to support multi agents ([838cca4](https://github.com/mystist/react-chatgpt/commit/838cca453d425c37da538bb7ac3cb9b5fffae0f0))
+
 ### [0.0.41](https://github.com/mystist/react-chatgpt/compare/v0.0.40...v0.0.41) (2023-08-07)
 
 
