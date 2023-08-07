@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid/non-secure'
 import { localStorageEnhanced } from './local-storage-enhanced'
 
 const oneDay = 24 * 60 * 60 * 1000
+const oneWeek = 7 * oneDay
 
 export const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(' ')
@@ -40,8 +41,8 @@ export const getOrCreateUserUuid = () => {
   let userUuid = localStorageEnhanced.getWithExpiry('react-chatgpt-userUuid') || ''
 
   if (!userUuid) {
-    userUuid = nanoid()
-    localStorageEnhanced.setWithExpiry('react-chatgpt-userUuid', userUuid, oneDay)
+    userUuid = `${nanoid()}-${getIdentifier()}`
+    localStorageEnhanced.setWithExpiry('react-chatgpt-userUuid', userUuid, oneWeek)
   }
 
   return userUuid
