@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.43](https://github.com/mystist/react-chatgpt/compare/v0.0.42...v0.0.43) (2023-08-07)
+
+
+### Bug Fixes
+
+* should use uniq key ([33e7ad1](https://github.com/mystist/react-chatgpt/commit/33e7ad11ffff285f1b0c78d3ee46e748a40a87e5))
+
 ### [0.0.42](https://github.com/mystist/react-chatgpt/compare/v0.0.41...v0.0.42) (2023-08-07)
 
 
