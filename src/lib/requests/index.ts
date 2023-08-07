@@ -6,7 +6,7 @@ export const baseUrl = '/gpt-service'
 
 export const request = axios.create({ baseURL: baseUrl })
 
-export const postWhisper = async ({ blob, conversationUuid }: { blob: Blob; conversationUuid: string }) => {
+export const postWhisper = async ({ blob, conversationUuid, chatMode }: { blob: Blob; conversationUuid: string, chatMode: string }) => {
   const formData = new FormData()
   const fileName = 'voice.wav'
   const lang = getLang()
@@ -14,6 +14,7 @@ export const postWhisper = async ({ blob, conversationUuid }: { blob: Blob; conv
   const file = new File([blob], fileName)
   formData.append('file', file, fileName)
   formData.append('conversationUuid', conversationUuid)
+  formData.append('chatMode', chatMode)
   if (lang) formData.append('language', getLang())
 
   const res = await request.post('/api/sentence/inputs/create', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
@@ -21,8 +22,8 @@ export const postWhisper = async ({ blob, conversationUuid }: { blob: Blob; conv
   return res.data
 }
 
-export const postWhisperByText = async ({ content, conversationUuid }: { content: string; conversationUuid: string }) => {
-  const res = await request.post('/api/sentence/inputs/create-by-text', { content, conversationUuid })
+export const postWhisperByText = async ({ content, conversationUuid, chatMode }: { content: string; conversationUuid: string, chatMode: string }) => {
+  const res = await request.post('/api/sentence/inputs/create-by-text', { content, conversationUuid, chatMode })
 
   return res.data
 }

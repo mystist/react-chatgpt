@@ -11,7 +11,7 @@ import Spinner from '../Spinner'
 const thresholdInPercent = 0.4
 const silentPercent = 0.2 // This value should align with the animation keyframes 50% value, which is 20% for now
 
-export default function Index({ onFinish }: { onFinish: (content: any) => void }) {
+export default function Index({ onFinish, chatMode }: { onFinish: (content: any) => void; chatMode: string }) {
   const [volumeState, setVolumeState] = useState(0)
   const [recorderState, setRecorderState] = useState<null | MediaRecorder>(null)
   const [audioChunksState, setAudioChunksState] = useState([]) as any
@@ -83,13 +83,13 @@ export default function Index({ onFinish }: { onFinish: (content: any) => void }
     const conversationUuid = conversation.uuid
 
     whisper(
-      { blob: audioBlob, conversationUuid },
+      { blob: audioBlob, conversationUuid, chatMode },
       {
         onSuccess: (whisper: Whisper) => onFinish({ content: whisper.content, conversationUuid, whisperUuid: whisper.uuid }),
         onError: () => onFinish({}),
       },
     )
-  }, [audioChunksState, conversation, isDone, isLoading, onFinish, whisper])
+  }, [audioChunksState, chatMode, conversation, isDone, isLoading, onFinish, whisper])
 
   useEffect(() => {
     ;(async () => {

@@ -161,7 +161,7 @@ export default function Index({ overlayMode }: any) {
         const conversation = data && data.length > 1 ? data[0] : null
 
         whisperByText(
-          { content: latestWhisperContentState, conversationUuid: conversation.uuid },
+          { content: latestWhisperContentState, conversationUuid: conversation.uuid, chatMode },
           {
             onSuccess: (whisper: Whisper) => {
               fetchWhispersAndReply({ content: whisper.content, conversationUuid: conversation.uuid, whisperUuid: whisper.uuid })
@@ -169,7 +169,7 @@ export default function Index({ overlayMode }: any) {
           },
         )
       })
-  }, [conversationUuidState, fetchWhispersAndReply, isNewChat, isNewConversation, latestWhisperContentState, refetchConversation, whisperByText])
+  }, [chatMode, conversationUuidState, fetchWhispersAndReply, isNewChat, isNewConversation, latestWhisperContentState, refetchConversation, whisperByText])
 
   const talks = useMemo(() => {
     const talks: Talk[] = []
@@ -242,7 +242,7 @@ export default function Index({ overlayMode }: any) {
       refetchReplies().then(() => setLatestReplyContentState(''))
 
       whisperByText(
-        { content, conversationUuid: conversationUuidState },
+        { content, conversationUuid: conversationUuidState, chatMode },
         {
           onSuccess: (whisper: Whisper) => {
             fetchWhispersAndReply({ content: whisper.content, conversationUuid: conversationUuidState, whisperUuid: whisper.uuid })
@@ -250,7 +250,7 @@ export default function Index({ overlayMode }: any) {
         },
       )
     },
-    [isWriting, isThinking, resetField, refetchReplies, whisperByText, conversationUuidState, fetchWhispersAndReply],
+    [isWriting, isThinking, resetField, refetchReplies, whisperByText, conversationUuidState, chatMode, fetchWhispersAndReply],
   )
 
   const onSelectQuestion = useCallback(
@@ -483,7 +483,7 @@ export default function Index({ overlayMode }: any) {
               <div className="mt-4 bg-gray-100 px-4 py-6 sm:px-6">
                 <div className="flex flex-col">
                   <div className="min-w-0 flex-1">
-                    {isSpeaking && <SoundWave onFinish={fetchWhispersAndReply} />}
+                    {isSpeaking && <SoundWave onFinish={fetchWhispersAndReply} chatMode={chatMode} />}
                     {!isSpeaking && (
                       <div className="relative">
                         <form onSubmit={handleSubmit(send)} className="flex space-x-3">
