@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.41](https://github.com/mystist/react-chatgpt/compare/v0.0.40...v0.0.41) (2023-08-07)
+
+
+### Features
+
+* pass in chat mode when create input ([297583c](https://github.com/mystist/react-chatgpt/commit/297583c0be7cbee1aa7e35fdd45e5b7073e8b096))
+
 ### [0.0.40](https://github.com/mystist/react-chatgpt/compare/v0.0.39...v0.0.40) (2023-08-06)
 
 
