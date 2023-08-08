@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.44](https://github.com/mystist/react-chatgpt/compare/v0.0.43...v0.0.44) (2023-08-08)
+
+
+### Features
+
+* default to use task mode when is use embedding ([98294c4](https://github.com/mystist/react-chatgpt/commit/98294c47a9a9a8ecd5f44fa1d2feb3c111d3a0c1))
+
 ### [0.0.43](https://github.com/mystist/react-chatgpt/compare/v0.0.42...v0.0.43) (2023-08-07)
 
 
