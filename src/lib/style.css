@@ -13,7 +13,7 @@
       @apply border bg-linear-color text-white;
     }
     .btn-secondary {
-      @apply bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50;
+      @apply bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50;
     }
   }
 }

@@ -6,6 +6,7 @@ export interface Configuration {
   introduction?: string
   disclaimer?: string
   disclaimerPath?: string
+  isUseEmbedding?: boolean
 }
 
 export interface Talk {
