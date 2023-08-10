@@ -375,7 +375,7 @@ export default function Index({ overlayMode }: any) {
                                     <span className="font-medium text-gray-900">{agentName}</span>
                                   </div>
                                   <div className="mt-2 flex rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
-                                    <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate prose-thead:whitespace-nowrap')}>
+                                    <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate prose-pre:whitespace-pre-line prose-thead:whitespace-pre-line prose-td:break-all')}>
                                       <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
                                         {item.content}
                                       </ReactMarkdown>
