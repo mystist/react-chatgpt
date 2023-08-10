@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.45](https://github.com/mystist/react-chatgpt/compare/v0.0.44...v0.0.45) (2023-08-10)
+
+
+### Bug Fixes
+
+* should wrap pre ([f8fc7b4](https://github.com/mystist/react-chatgpt/commit/f8fc7b4d2db30d9a7b9504a9f479de4f3c0004aa))
+
 ### [0.0.44](https://github.com/mystist/react-chatgpt/compare/v0.0.43...v0.0.44) (2023-08-08)
 
 
