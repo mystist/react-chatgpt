@@ -1,6 +1,6 @@
 import { Dialog, Menu, Transition } from '@headlessui/react'
-import { ChatBubbleBottomCenterTextIcon, CheckCircleIcon, ChevronDownIcon, PlusIcon } from '@heroicons/react/20/solid'
-import { ExclamationTriangleIcon, MicrophoneIcon } from '@heroicons/react/24/outline'
+import { ChatBubbleBottomCenterTextIcon, CheckCircleIcon, ChevronDownIcon, EllipsisVerticalIcon, PaperClipIcon, PlusIcon } from '@heroicons/react/20/solid'
+import { ExclamationTriangleIcon, MicrophoneIcon, PlusCircleIcon } from '@heroicons/react/24/outline'
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import ReactMarkdown from 'react-markdown'
@@ -480,14 +480,104 @@ export default function Index({ overlayMode }: any) {
                   </ul>
                 }
               </div>
-              <div className="mt-4 bg-gray-100 px-4 py-6 sm:px-6">
-                <div className="flex flex-col">
-                  <div className="min-w-0 flex-1">
+              <div className="mt-4 bg-gray-100 px-4 py-6">
+                <div className="flex flex-col space-y-3">
+                  <ul role="list" className="flex flex-col divide-y divide-gray-100 rounded-md border border-gray-200 bg-white">
+                    <li className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
+                      <div className="flex w-0 flex-1 items-center">
+                        <div className="flex min-w-0 flex-1 justify-between gap-2">
+                          <span className="truncate">Resume_back_end_developer.pdf</span>
+                          <span className="flex-shrink-0 text-gray-400">
+                            <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Completed</span>
+                          </span>
+                        </div>
+                      </div>
+                      <Menu as="div" className="relative flex-none">
+                        <Menu.Button className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
+                          <EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
+                        </Menu.Button>
+                        <Transition
+                          as={Fragment}
+                          enter="transition ease-out duration-100"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <Menu.Items className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
+                            <Menu.Item>{({ active }) => <button className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>Add</button>}</Menu.Item>
+                            <Menu.Item>{({ active }) => <button className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>Training</button>}</Menu.Item>
+                            <Menu.Item>{({ active }) => <button className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>Delete</button>}</Menu.Item>
+                          </Menu.Items>
+                        </Transition>
+                      </Menu>
+                    </li>
+                    <li className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
+                      <div className="flex w-0 flex-1 items-center">
+                        <div className="flex min-w-0 flex-1 justify-between gap-2">
+                          <span className="truncate">testing.pdf</span>
+                          <span className="flex-shrink-0 text-gray-400">
+                            <span className="inline-flex items-center rounded-full bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">To be trained</span>
+                          </span>
+                        </div>
+                      </div>
+                      <Menu as="div" className="relative flex-none">
+                        <Menu.Button className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
+                          <EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
+                        </Menu.Button>
+                        <Transition
+                          as={Fragment}
+                          enter="transition ease-out duration-100"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <Menu.Items className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
+                            <Menu.Item>{({ active }) => <button className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>Add</button>}</Menu.Item>
+                            <Menu.Item>{({ active }) => <button className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>Training</button>}</Menu.Item>
+                            <Menu.Item>{({ active }) => <button className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>Delete</button>}</Menu.Item>
+                          </Menu.Items>
+                        </Transition>
+                      </Menu>
+                    </li>
+                    <li className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
+                      <div className="flex w-0 flex-1 items-center">
+                        <div className="flex min-w-0 flex-1 justify-between gap-2">
+                          <span className="truncate">test.pdf</span>
+                        </div>
+                      </div>
+                      <button className="pl-1 font-medium text-indigo-600 hover:text-indigo-500">Upload</button>
+                    </li>
+                    <li className="flex items-center justify-between py-3 pl-4 pr-5 text-sm leading-6">
+                      <button type="button" className="flex items-center space-x-2 text-sm font-medium leading-6 text-indigo-600 hover:text-indigo-500">
+                        <span>+ Add new file</span>
+                        <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                      </button>
+                    </li>
+                  </ul>
+                  <div className="flex flex-wrap items-baseline space-y-2">
+                    <span className="mr-2 inline-flex items-center gap-x-0.5 rounded-md bg-blue-100 px-2 py-1 text-sm text-blue-700">
+                      Badge
+                      <button type="button" className="group relative -mr-1 h-4 w-4 rounded-sm hover:bg-blue-600/20">
+                        <svg viewBox="0 0 14 14" className="h-4 w-4 stroke-blue-800/50 group-hover:stroke-blue-800/75">
+                          <path d="M4 4l6 6m0-6l-6 6" />
+                        </svg>
+                        <span className="absolute -inset-1" />
+                      </button>
+                    </span>
+                  </div>
+                  <div className="flex min-w-0 flex-1">
                     {isSpeaking && <SoundWave onFinish={fetchWhispersAndReply} chatMode={chatMode} />}
                     {!isSpeaking && (
                       <div className="relative">
                         <form onSubmit={handleSubmit(send)} className="flex space-x-3">
                           <div className="relative flex min-h-[40px] flex-1">
+                            <button type="button" className="absolute left-0.5 rounded-full p-2 text-gray-500 hover:text-gray-400">
+                              <PlusCircleIcon className="h-6 w-6" aria-hidden="true" />
+                            </button>
                             <textarea
                               defaultValue={''}
                               rows={contentBreakCount + 1}
@@ -501,9 +591,9 @@ export default function Index({ overlayMode }: any) {
                                   }
                                 }
                               }}
-                              className="block w-full rounded-md border-0 py-1.5 pr-10 text-sm leading-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]"
+                              className="block w-full rounded-md border-0 py-1.5 pl-10 pr-10 text-sm leading-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]"
                             />
-                            <button type="button" onClick={onSpeaking} className="absolute right-[4px] rounded-full p-2 text-primary-color opacity-100 hover:opacity-90">
+                            <button type="button" onClick={onSpeaking} className="absolute right-1 rounded-full p-2 text-primary-color opacity-100 hover:opacity-90">
                               <MicrophoneIcon className="h-6 w-6" aria-hidden="true" />
                             </button>
                           </div>
@@ -595,7 +685,7 @@ export default function Index({ overlayMode }: any) {
                           </div>
                         </form>
                         {questions && questions.length > 0 && (
-                          <div className="mb-2 mt-3 max-h-[156px] overflow-y-auto">
+                          <div className="my-2 max-h-[156px] overflow-y-auto">
                             <div className="flex flex-wrap gap-x-3 gap-y-4 pt-4">
                               {questions.map((item: any, index: number) => (
                                 <button key={index} type="button" className="rounded-full bg-gray-200 px-4 py-2 text-left text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:opacity-80" onClick={onSelectQuestion}>
