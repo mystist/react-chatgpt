@@ -507,7 +507,7 @@ export default function Index({ overlayMode }: any) {
                 }
               </div>
               <div className="mt-4 bg-gray-100 px-4 py-6">
-                <div className="flex flex-col space-y-3">
+                <div className="flex flex-col">
                   <ul role="list" className="hidden flex-col divide-y divide-gray-100 rounded-md border border-gray-200 bg-white">
                     <li className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
                       <div className="flex w-0 flex-1 items-center">
@@ -603,7 +603,7 @@ export default function Index({ overlayMode }: any) {
                   <div className="flex min-w-0 flex-1">
                     {isSpeaking && <SoundWave onFinish={fetchWhispersAndReply} chatMode={chatMode} />}
                     {!isSpeaking && (
-                      <div className="relative">
+                      <div className="relative w-full">
                         <form onSubmit={handleSubmit(send)} className="flex space-x-3">
                           <div className="relative flex min-h-[40px] flex-1">
                             <button type="button" className="absolute left-0.5 hidden rounded-full p-2 text-gray-500 hover:text-gray-400">
