@@ -19,6 +19,7 @@ import { classNames, getAgreement, getIdentifier, setAgreement, timeSince } from
 import AiAvatar from '../AiAvatar'
 import AudioPlayer from '../AudioPlayer'
 import Divider from '../Divider'
+import MermaidChart from '../MermaidChart'
 import SoundWave from '../SoundWave'
 import Spinner from '../Spinner'
 
@@ -334,6 +335,13 @@ export default function Index({ overlayMode }: any) {
     [identifier, mutateUpload],
   )
 
+  const getMermaidCode = useCallback((content: string) => {
+    const match = content.match(/<blockquote>\n([\s\S]*?)<\/blockquote>/)
+    const mermaidContent = match ? match[1] : ''
+
+    return mermaidContent
+  }, [])
+
   return (
     <>
       {agentName && (
@@ -400,12 +408,18 @@ export default function Index({ overlayMode }: any) {
                                   <div className="text-sm">
                                     <span className="font-medium text-gray-900">{agentName}</span>
                                   </div>
-                                  <div className="mt-2 flex rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
-                                    <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate prose-pre:whitespace-pre-line prose-thead:whitespace-pre-line prose-td:break-all')}>
+                                  <div className="mt-2 flex flex-col rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
+                                    <div
+                                      className={classNames(
+                                        overlayMode === 'slide-over' ? '' : 'lg:prose-base',
+                                        'prose prose-sm prose-slate prose-blockquote:hidden prose-pre:whitespace-pre-line prose-thead:whitespace-pre-line prose-td:break-all',
+                                      )}
+                                    >
                                       <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
                                         {item.content}
                                       </ReactMarkdown>
                                     </div>
+                                    {getMermaidCode(item.content) && <MermaidChart code={getMermaidCode(item.content)} />}
                                   </div>
                                   {!!item.createdAt && (
                                     <div className="mt-2 flex items-center space-x-4 text-sm">
@@ -458,11 +472,18 @@ export default function Index({ overlayMode }: any) {
                             <div className="text-sm">
                               <span className="font-medium text-gray-900">{agentName}</span>
                             </div>
-                            <div className="mt-2 rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
-                              <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate prose-thead:whitespace-nowrap')}>
+                            <div className="mt-2 flex flex-col rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
+                              <div
+                                className={classNames(
+                                  overlayMode === 'slide-over' ? '' : 'lg:prose-base',
+                                  'prose prose-sm prose-slate prose-blockquote:hidden prose-pre:whitespace-pre-line prose-thead:whitespace-pre-line prose-td:break-all',
+                                )}
+                              >
                                 <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
                                   {latestReplyContentState + (isWriting ? caretHtml : '')}
                                 </ReactMarkdown>
+
+                                {!isWriting && getMermaidCode(latestReplyContentState) && <MermaidChart code={getMermaidCode(latestReplyContentState)} />}
                               </div>
                             </div>
 
