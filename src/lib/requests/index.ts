@@ -5,6 +5,7 @@ import { getLang } from '../utils'
 export const baseUrl = '/gpt-service'
 
 export const request = axios.create({ baseURL: baseUrl })
+export const requestEmbedding = axios.create({ baseURL: '/embedding-service' })
 
 export const postWhisper = async ({ blob, conversationUuid, chatMode }: { blob: Blob; conversationUuid: string, chatMode: string }) => {
   const formData = new FormData()
@@ -95,4 +96,15 @@ export const postReply = async ({ conversationUuid, whisperUuid, content, identi
       eventSource.close()
     }
   }
+}
+
+export const postUpload = async ({ title, file, userCode }: any) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('title', title)
+  formData.append('userCode', userCode)
+
+  const res = await requestEmbedding.post('/embedding/guest-upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+
+  return res.data
 }

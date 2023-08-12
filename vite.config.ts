@@ -11,6 +11,11 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/gpt-service': env.VITE_API_BASE_URL,
+        '/embedding-service': {
+          target: env.VITE_API_BASE_URL_EMBEDDING,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/embedding-service/, ''),
+        },
       },
     },
     plugins: [

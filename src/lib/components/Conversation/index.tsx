@@ -14,7 +14,7 @@ import { useLocale } from '../../hooks/useLocale'
 import { useReplies } from '../../hooks/useReplies'
 import { useWhispers } from '../../hooks/useWhispers'
 import { Talk, Whisper } from '../../interfaces'
-import { postReply, postWhisperByText } from '../../requests'
+import { postReply, postUpload, postWhisperByText } from '../../requests'
 import { classNames, getAgreement, getIdentifier, setAgreement, timeSince } from '../../utils'
 import AiAvatar from '../AiAvatar'
 import AudioPlayer from '../AudioPlayer'
@@ -61,6 +61,7 @@ export default function Index({ overlayMode }: any) {
   const [isShowSend, setIsShowSend] = useState(false)
   const [contentBreakCount, setContentBreakCount] = useState(0)
   const [chatMode, setChatMode] = useState('task')
+  const [newFiles, setNewFiles] = useState<{ title: string; file: File }[]>([])
 
   const [latestWhisperContentState, setLatestWhisperContentState] = useState('')
   const [latestReplyContentState, setLatestReplyContentState] = useState('')
@@ -85,6 +86,7 @@ export default function Index({ overlayMode }: any) {
   const { data: previousReplies } = useReplies(previousConversationUuidState)
 
   const { mutate: reply } = useMutation(postReply, { retry: false })
+  const { mutate: mutateUpload, isLoading: isLoadingUpload } = useMutation(postUpload, { retry: false })
 
   const { register, handleSubmit, resetField, setValue, watch } = useForm()
   const { mutate: whisperByText, isLoading } = useMutation(postWhisperByText, { retry: false })
@@ -308,6 +310,30 @@ export default function Index({ overlayMode }: any) {
     setContentBreakCount(count >= 5 ? 5 : count)
   }, [resetField, watchedContent])
 
+  const addFile = useCallback(
+    (file: any) => {
+      if (!file) return
+
+      const isExist = newFiles.find((item: any) => item.title.trim() === file.name.trim())
+      if (!isExist) setNewFiles(newFiles.concat({ title: file.name.trim().replace(/\.[^/.]+$/, ''), file }))
+    },
+    [newFiles],
+  )
+
+  const upload = useCallback(
+    ({ title, file }: any) => {
+      mutateUpload(
+        { title, file, userCode: identifier },
+        {
+          onSuccess: () => {
+            console.log('ssss')
+          },
+        },
+      )
+    },
+    [identifier, mutateUpload],
+  )
+
   return (
     <>
       {agentName && (
@@ -482,7 +508,7 @@ export default function Index({ overlayMode }: any) {
               </div>
               <div className="mt-4 bg-gray-100 px-4 py-6">
                 <div className="flex flex-col space-y-3">
-                  <ul role="list" className="flex flex-col divide-y divide-gray-100 rounded-md border border-gray-200 bg-white">
+                  <ul role="list" className="hidden flex-col divide-y divide-gray-100 rounded-md border border-gray-200 bg-white">
                     <li className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
                       <div className="flex w-0 flex-1 items-center">
                         <div className="flex min-w-0 flex-1 justify-between gap-2">
@@ -543,22 +569,27 @@ export default function Index({ overlayMode }: any) {
                         </Transition>
                       </Menu>
                     </li>
-                    <li className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
-                      <div className="flex w-0 flex-1 items-center">
-                        <div className="flex min-w-0 flex-1 justify-between gap-2">
-                          <span className="truncate">test.pdf</span>
+                    {newFiles.map((item, index) => (
+                      <li key={index} className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
+                        <div className="flex w-0 flex-1 items-center">
+                          <div className="flex min-w-0 flex-1 justify-between gap-2">
+                            <span className="truncate">{item.title}.pdf</span>
+                          </div>
                         </div>
-                      </div>
-                      <button className="pl-1 font-medium text-indigo-600 hover:text-indigo-500">Upload</button>
-                    </li>
+                        <button onClick={() => upload(item)} className="pl-1 font-medium text-indigo-600 hover:text-indigo-500">
+                          Upload
+                        </button>
+                      </li>
+                    ))}
                     <li className="flex items-center justify-between py-3 pl-4 pr-5 text-sm leading-6">
-                      <button type="button" className="flex items-center space-x-2 text-sm font-medium leading-6 text-indigo-600 hover:text-indigo-500">
+                      <label htmlFor="file" className="flex cursor-pointer items-center space-x-2 text-sm font-medium leading-6 text-indigo-600 hover:text-indigo-500">
                         <span>+ Add new file</span>
                         <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                      </button>
+                        <input id="file" type="file" accept=".pdf" className="sr-only" onChange={(e: any) => addFile(e.target.files[0])} />
+                      </label>
                     </li>
                   </ul>
-                  <div className="flex flex-wrap items-baseline space-y-2">
+                  <div className="hidden flex-wrap items-baseline space-y-2">
                     <span className="mr-2 inline-flex items-center gap-x-0.5 rounded-md bg-blue-100 px-2 py-1 text-sm text-blue-700">
                       Badge
                       <button type="button" className="group relative -mr-1 h-4 w-4 rounded-sm hover:bg-blue-600/20">
@@ -575,7 +606,7 @@ export default function Index({ overlayMode }: any) {
                       <div className="relative">
                         <form onSubmit={handleSubmit(send)} className="flex space-x-3">
                           <div className="relative flex min-h-[40px] flex-1">
-                            <button type="button" className="absolute left-0.5 rounded-full p-2 text-gray-500 hover:text-gray-400">
+                            <button type="button" className="absolute left-0.5 hidden rounded-full p-2 text-gray-500 hover:text-gray-400">
                               <PlusCircleIcon className="h-6 w-6" aria-hidden="true" />
                             </button>
                             <textarea
@@ -591,7 +622,7 @@ export default function Index({ overlayMode }: any) {
                                   }
                                 }
                               }}
-                              className="block w-full rounded-md border-0 py-1.5 pl-10 pr-10 text-sm leading-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]"
+                              className="block w-full rounded-md border-0 py-1.5 pr-10 text-sm leading-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]"
                             />
                             <button type="button" onClick={onSpeaking} className="absolute right-1 rounded-full p-2 text-primary-color opacity-100 hover:opacity-90">
                               <MicrophoneIcon className="h-6 w-6" aria-hidden="true" />
