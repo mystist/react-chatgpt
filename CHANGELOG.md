@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.46](https://github.com/mystist/react-chatgpt/compare/v0.0.45...v0.0.46) (2023-08-12)
+
+
+### Features
+
+* hide upload pannel for the time ([8e50a9c](https://github.com/mystist/react-chatgpt/commit/8e50a9cbcf3607fb51c572dda4f82c01a207b981))
+* static upload file panel ([481c2e3](https://github.com/mystist/react-chatgpt/commit/481c2e3158c0889438b19f19c2704bc5b749b17a))
+* support mermaid ([dbfbf60](https://github.com/mystist/react-chatgpt/commit/dbfbf600c4190a91ed0587dbe643ac9b6c0d87b0))
+
 ### [0.0.45](https://github.com/mystist/react-chatgpt/compare/v0.0.44...v0.0.45) (2023-08-10)
 
 
