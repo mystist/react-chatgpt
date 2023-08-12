@@ -12,6 +12,7 @@ Embedding your chatgpt agent into your react application, option in tailwindcss,
 - **Out of the box:** Built in i18n support, built in disclaimer support, ready to use out of the box.
 - **Voice interaction:** Supports voice input and output, and voice also supports multiple languages.
 - **Responsive:** Optimized for various screen sizes and adapt automatically.
+- **Chart support:** Chart support with [Mermaid](https://mermaid.js.org/).
 
 ## Quick start
 
