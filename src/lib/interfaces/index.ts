@@ -7,6 +7,7 @@ export interface Configuration {
   disclaimer?: string
   disclaimerPath?: string
   isUseEmbedding?: boolean
+  prompt?: { system?: string; user?: string }
 }
 
 export interface Talk {

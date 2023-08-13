@@ -73,7 +73,7 @@ export default function Index({ overlayMode }: any) {
   const [isNewChat, setIsNewChat] = useState(false)
 
   const identifier = getIdentifier()
-  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, isUseEmbedding } = useConfiguration()
+  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, isUseEmbedding, prompt } = useConfiguration()
 
   const {
     data: [conversation, previousConversation],
@@ -341,6 +341,10 @@ export default function Index({ overlayMode }: any) {
 
     return mermaidContent
   }, [])
+
+  useEffect(() => {
+    if (prompt && !prompt.user) setChatMode('chat')
+  }, [prompt])
 
   return (
     <>
@@ -665,7 +669,7 @@ export default function Index({ overlayMode }: any) {
                               </>
                             ) : (
                               <>
-                                {isUseEmbedding ? (
+                                {isUseEmbedding || (prompt && !prompt.user) ? (
                                   <button onClick={newChat} className="btn btn-secondary h-full w-fit min-w-[80px]">
                                     <PlusIcon className="mr-1 h-5 w-5 text-gray-500" />
                                     {i18n.newChat}
