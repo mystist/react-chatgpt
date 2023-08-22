@@ -484,7 +484,7 @@ export default function Index({ overlayMode }: any) {
                                 )}
                               >
                                 <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
-                                  {latestReplyContentState + (isWriting ? caretHtml : '')}
+                                  {latestReplyContentState + (isWriting && !latestReplyContentState.includes('<') ? caretHtml : '')}
                                 </ReactMarkdown>
 
                                 {!isWriting && getMermaidCode(latestReplyContentState) && <MermaidChart code={getMermaidCode(latestReplyContentState)} />}
