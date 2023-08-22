@@ -412,7 +412,7 @@ export default function Index({ overlayMode }: any) {
                                   <div className="text-sm">
                                     <span className="font-medium text-gray-900">{agentName}</span>
                                   </div>
-                                  <div className="mt-2 flex flex-col rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
+                                  <div className="mt-2 flex w-fit flex-col rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
                                     <div
                                       className={classNames(
                                         overlayMode === 'slide-over' ? '' : 'lg:prose-base',
@@ -476,7 +476,7 @@ export default function Index({ overlayMode }: any) {
                             <div className="text-sm">
                               <span className="font-medium text-gray-900">{agentName}</span>
                             </div>
-                            <div className="mt-2 flex flex-col rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
+                            <div className="mt-2 flex w-fit flex-col rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
                               <div
                                 className={classNames(
                                   overlayMode === 'slide-over' ? '' : 'lg:prose-base',
