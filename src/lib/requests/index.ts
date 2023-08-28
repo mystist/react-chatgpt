@@ -54,8 +54,8 @@ export const getReplies = async (conversationUuid: string) => {
   return res.data
 }
 
-export const postReply = async ({ conversationUuid, whisperUuid, content, identifier, onMessage, onConversationFull, chatMode }: any) => {
-  const eventSource = new EventSource(`${baseUrl}/api/sentence/outputs/create?conversationUuid=${conversationUuid}&inputUuid=${whisperUuid}&content=${content}&identifier=${identifier}&chatMode=${chatMode}`)
+export const postReply = async ({ conversationUuid, whisperUuid, content, identifier, onMessage, onConversationFull, chatMode, userUuid, referenceCodesStr }: any) => {
+  const eventSource = new EventSource(`${baseUrl}/api/sentence/outputs/create?conversationUuid=${conversationUuid}&inputUuid=${whisperUuid}&content=${content}&identifier=${identifier}&chatMode=${chatMode}&clientIdentifier=${userUuid}&referenceCodesStr=${referenceCodesStr}`)
 
   eventSource.onmessage = (e) => {
     try {
@@ -98,13 +98,32 @@ export const postReply = async ({ conversationUuid, whisperUuid, content, identi
   }
 }
 
-export const postUpload = async ({ title, file, userCode }: any) => {
+export const postUpload = async ({ title, file, userCode, clientIdentifier }: any) => {
   const formData = new FormData()
   formData.append('file', file)
   formData.append('title', title)
   formData.append('userCode', userCode)
+  formData.append('clientIdentifier', clientIdentifier)
 
-  const res = await requestEmbedding.post('/embedding/guest-upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+  const res = await requestEmbedding.post('/embedding/member-upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+
+  return res.data
+}
+
+export const getReferences = async ({ identifier, userUuid }: any) => {
+  const res = await requestEmbedding.get(`/reference/member-references?userCode=${identifier}&clientIdentifier=${userUuid}`)
+
+  return res.data
+}
+
+export const postSection = async ({ code, identifier, userUuid }: any) => {
+  const res = await requestEmbedding.post('/embedding/member-section', { code, identifier, clientIdentifier: userUuid }, { timeout: 30 * 60 * 1000 })
+
+  return res.data
+}
+
+export const deleteReference = async ({ code, userUuid }: any) => {
+  const res = await requestEmbedding.delete(`/reference/member-references?code=${code}&clientIdentifier=${userUuid}`)
 
   return res.data
 }

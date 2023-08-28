@@ -1,10 +1,10 @@
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import { ChatBubbleBottomCenterTextIcon, CheckCircleIcon, ChevronDownIcon, EllipsisVerticalIcon, PaperClipIcon, PlusIcon } from '@heroicons/react/20/solid'
-import { ExclamationTriangleIcon, MicrophoneIcon, PlusCircleIcon } from '@heroicons/react/24/outline'
+import { ExclamationTriangleIcon, MicrophoneIcon, MinusCircleIcon, PlusCircleIcon } from '@heroicons/react/24/outline'
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import ReactMarkdown from 'react-markdown'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
 
@@ -14,8 +14,8 @@ import { useLocale } from '../../hooks/useLocale'
 import { useReplies } from '../../hooks/useReplies'
 import { useWhispers } from '../../hooks/useWhispers'
 import { Talk, Whisper } from '../../interfaces'
-import { postReply, postUpload, postWhisperByText } from '../../requests'
-import { classNames, getAgreement, getIdentifier, setAgreement, timeSince } from '../../utils'
+import { deleteReference, getReferences, postReply, postSection, postUpload, postWhisperByText } from '../../requests'
+import { classNames, getAgreement, getIdentifier, getUserUuid, setAgreement, timeSince } from '../../utils'
 import AiAvatar from '../AiAvatar'
 import AudioPlayer from '../AudioPlayer'
 import Divider from '../Divider'
@@ -62,7 +62,10 @@ export default function Index({ overlayMode }: any) {
   const [isShowSend, setIsShowSend] = useState(false)
   const [contentBreakCount, setContentBreakCount] = useState(0)
   const [chatMode, setChatMode] = useState('task')
-  const [newFiles, setNewFiles] = useState<{ title: string; file: File }[]>([])
+  const [newFile, setNewFile] = useState<{ title: string; file: File } | null>(null)
+  const [isShowPanel, setIsShowPanel] = useState(false)
+  const [isLoadingSectionIndex, setIsLoadingSectionIndex] = useState(-1)
+  const [selectedReferences, setSelectedReferences] = useState([])
 
   const [latestWhisperContentState, setLatestWhisperContentState] = useState('')
   const [latestReplyContentState, setLatestReplyContentState] = useState('')
@@ -73,7 +76,8 @@ export default function Index({ overlayMode }: any) {
   const [isNewChat, setIsNewChat] = useState(false)
 
   const identifier = getIdentifier()
-  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, isUseEmbedding, prompt } = useConfiguration()
+  const userUuid = getUserUuid()
+  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, isUseEmbedding, prompt, isUseSection } = useConfiguration()
 
   const {
     data: [conversation, previousConversation],
@@ -86,12 +90,16 @@ export default function Index({ overlayMode }: any) {
   const { data: previousWhispers } = useWhispers(previousConversationUuidState)
   const { data: previousReplies } = useReplies(previousConversationUuidState)
 
-  const { mutate: reply } = useMutation(postReply, { retry: false })
-  const { mutate: mutateUpload, isLoading: isLoadingUpload } = useMutation(postUpload, { retry: false })
+  const { mutate: reply } = useMutation(postReply)
+  const { mutate: mutateUpload, isLoading: isLoadingUpload } = useMutation(postUpload)
+  const { mutate: mutateSection } = useMutation(postSection)
+  const { mutate: mutateDeleteReference } = useMutation(deleteReference)
 
   const { register, handleSubmit, resetField, setValue, watch } = useForm()
-  const { mutate: whisperByText, isLoading } = useMutation(postWhisperByText, { retry: false })
+  const { mutate: whisperByText, isLoading } = useMutation(postWhisperByText)
   const watchedContent = watch('content')
+
+  const { data: references, refetch: refetchReferences } = useQuery('references', () => getReferences({ identifier, userUuid }), { enabled: isShowPanel && !!userUuid })
 
   useEffect(() => {
     if (conversation) setConversationUuidState(conversation.uuid)
@@ -148,12 +156,14 @@ export default function Index({ overlayMode }: any) {
       setLatestWhisperContentState(content)
       refetchWhispers().then(() => {
         setIsThinking(true)
-        reply({ conversationUuid, whisperUuid, content, identifier, onMessage, onConversationFull, chatMode })
+
+        const referenceCodesStr = selectedReferences.length > 0 ? selectedReferences.map((item: any) => item.code).join(',') : ''
+        reply({ conversationUuid, whisperUuid, content, identifier, onMessage, onConversationFull, chatMode, userUuid, referenceCodesStr })
 
         scroll()
       })
     },
-    [chatMode, identifier, onConversationFull, onMessage, refetchWhispers, reply, scroll],
+    [chatMode, identifier, onConversationFull, onMessage, refetchWhispers, reply, scroll, userUuid, selectedReferences],
   )
 
   useEffect(() => {
@@ -194,7 +204,7 @@ export default function Index({ overlayMode }: any) {
       .concat(previousWhispers)
       .concat(previousReplies)
       .sort((a: Talk, b: Talk) => (a.createdAt > b.createdAt ? 1 : -1))
-      .slice(-2 * 3)
+      .slice(-2 * 1)
   }, [previousWhispers, previousReplies])
 
   const introTalks = useMemo(() => {
@@ -311,28 +321,25 @@ export default function Index({ overlayMode }: any) {
     setContentBreakCount(count >= 5 ? 5 : count)
   }, [resetField, watchedContent])
 
-  const addFile = useCallback(
-    (file: any) => {
-      if (!file) return
+  const addFile = useCallback((file: any) => {
+    if (!file) return
 
-      const isExist = newFiles.find((item: any) => item.title.trim() === file.name.trim())
-      if (!isExist) setNewFiles(newFiles.concat({ title: file.name.trim().replace(/\.[^/.]+$/, ''), file }))
-    },
-    [newFiles],
-  )
+    setNewFile({ title: file.name.trim().replace(/\.[^/.]+$/, ''), file })
+  }, [])
 
   const upload = useCallback(
     ({ title, file }: any) => {
       mutateUpload(
-        { title, file, userCode: identifier },
+        { title, file, userCode: identifier, clientIdentifier: userUuid },
         {
           onSuccess: () => {
-            console.log('ssss')
+            setNewFile(null)
+            refetchReferences()
           },
         },
       )
     },
-    [identifier, mutateUpload],
+    [identifier, mutateUpload, refetchReferences, userUuid],
   )
 
   const getMermaidCode = useCallback((content: string) => {
@@ -345,6 +352,59 @@ export default function Index({ overlayMode }: any) {
   useEffect(() => {
     if (prompt && !prompt.user) setChatMode('chat')
   }, [prompt])
+
+  const training = useCallback(
+    ({ code, index }: any) => {
+      if (!code) return
+
+      setIsLoadingSectionIndex(index)
+      mutateSection(
+        { code, identifier, userUuid },
+        {
+          onSuccess: () => {
+            setIsLoadingSectionIndex(-1)
+            refetchReferences()
+          },
+        },
+      )
+    },
+    [identifier, mutateSection, refetchReferences, userUuid],
+  )
+
+  const doDelete = useCallback(
+    (code: string) => {
+      if (!code) return
+
+      mutateDeleteReference(
+        { code, userUuid },
+        {
+          onSuccess: () => {
+            refetchReferences()
+          },
+        },
+      )
+    },
+    [mutateDeleteReference, refetchReferences, userUuid],
+  )
+
+  const add = useCallback(
+    (reference: any) => {
+      if (!reference) return
+      if (selectedReferences.find((item: any) => item.code === reference.code)) return
+
+      setSelectedReferences(selectedReferences.concat(reference))
+    },
+    [selectedReferences],
+  )
+
+  const remove = useCallback(
+    (code: string) => {
+      if (!code) return
+
+      setSelectedReferences(selectedReferences.filter((item: any) => item.code !== code))
+    },
+    [selectedReferences],
+  )
 
   return (
     <>
@@ -532,108 +592,134 @@ export default function Index({ overlayMode }: any) {
                 }
               </div>
               <div className="mt-4 bg-gray-100 px-4 py-6">
-                <div className="flex flex-col">
-                  <ul role="list" className="hidden flex-col divide-y divide-gray-100 rounded-md border border-gray-200 bg-white">
-                    <li className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
-                      <div className="flex w-0 flex-1 items-center">
-                        <div className="flex min-w-0 flex-1 justify-between gap-2">
-                          <span className="truncate">Resume_back_end_developer.pdf</span>
-                          <span className="flex-shrink-0 text-gray-400">
-                            <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Completed</span>
+                <div className="flex flex-col space-y-3">
+                  {isShowPanel && (
+                    <div className="flex flex-col space-y-3">
+                      <ul role="list" className="max-h-[247px] flex-col divide-y divide-gray-100 overflow-y-auto rounded-md border border-gray-200 bg-white">
+                        {references &&
+                          references
+                            .sort((a: any, b: any) => (a.updatedAt > b.updatedAt ? 1 : -1))
+                            .map((item: any, index: number) => (
+                              <li key={index} className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
+                                <div className="flex w-0 flex-1 items-center">
+                                  <div className="flex min-w-0 flex-1 justify-between gap-2">
+                                    <span className="truncate">{item.title}</span>
+                                    {item.hasCompleted ? (
+                                      <span className="flex-shrink-0 text-gray-400">
+                                        <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Completed</span>
+                                      </span>
+                                    ) : (
+                                      <span className="flex flex-shrink-0 items-center text-gray-400">
+                                        {isLoadingSectionIndex === index && <Spinner className="mr-2 !h-4 !w-4 text-gray-400" />}
+                                        <span className="inline-flex items-center rounded-full bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">Training incomplete</span>
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                                <Menu as="div" className="relative flex-none">
+                                  <Menu.Button className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
+                                    <EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
+                                  </Menu.Button>
+                                  <Transition
+                                    as={Fragment}
+                                    enter="transition ease-out duration-100"
+                                    enterFrom="transform opacity-0 scale-95"
+                                    enterTo="transform opacity-100 scale-100"
+                                    leave="transition ease-in duration-75"
+                                    leaveFrom="transform opacity-100 scale-100"
+                                    leaveTo="transform opacity-0 scale-95"
+                                  >
+                                    <Menu.Items className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
+                                      {item.hasCompleted ? (
+                                        <Menu.Item>
+                                          {({ active }) => (
+                                            <button onClick={() => add(item)} className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>
+                                              Add
+                                            </button>
+                                          )}
+                                        </Menu.Item>
+                                      ) : (
+                                        <Menu.Item>
+                                          {({ active }) => (
+                                            <button onClick={() => training({ code: item.code, index })} className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>
+                                              Training
+                                            </button>
+                                          )}
+                                        </Menu.Item>
+                                      )}
+                                      <Menu.Item>
+                                        {({ active }) => (
+                                          <button onClick={() => doDelete(item.code)} className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>
+                                            Delete
+                                          </button>
+                                        )}
+                                      </Menu.Item>
+                                    </Menu.Items>
+                                  </Transition>
+                                </Menu>
+                              </li>
+                            ))}
+
+                        {newFile && (
+                          <li key={newFile.title} className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
+                            <div className="flex w-0 flex-1 items-center">
+                              <div className="flex min-w-0 flex-1 justify-between gap-2">
+                                <span className="truncate">{newFile.title}.pdf</span>
+                              </div>
+                            </div>
+                            {isLoadingUpload ? (
+                              <Spinner className="mr-2 !h-4 !w-4 text-gray-400" />
+                            ) : (
+                              <button onClick={() => upload(newFile)} className="flex items-center pl-1 font-medium text-indigo-600 hover:text-indigo-500">
+                                Upload
+                              </button>
+                            )}
+                          </li>
+                        )}
+                        <li className="flex items-center justify-between py-3 pl-4 pr-5 text-sm leading-6">
+                          <label htmlFor="file" className="flex cursor-pointer items-center space-x-2 text-sm font-medium leading-6 text-indigo-600 hover:text-indigo-500">
+                            <span>+ Add new file</span>
+                            <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                            <input id="file" type="file" accept=".pdf" className="sr-only" onChange={(e: any) => addFile(e.target.files[0])} />
+                          </label>
+                        </li>
+                      </ul>
+                      <div className="flex-wrap items-baseline space-y-2">
+                        {selectedReferences.map((item: any, index: number) => (
+                          <span key={index} className="mr-2 inline-flex items-center gap-x-0.5 rounded-md bg-blue-100 px-2 py-1 text-sm text-blue-700">
+                            {item.title}
+                            <button type="button" onClick={() => remove(item.code)} className="group relative -mr-1 h-4 w-4 rounded-sm hover:bg-blue-600/20">
+                              <svg viewBox="0 0 14 14" className="h-4 w-4 stroke-blue-800/50 group-hover:stroke-blue-800/75">
+                                <path d="M4 4l6 6m0-6l-6 6" />
+                              </svg>
+                              <span className="absolute -inset-1" />
+                            </button>
                           </span>
-                        </div>
+                        ))}
                       </div>
-                      <Menu as="div" className="relative flex-none">
-                        <Menu.Button className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
-                          <EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
-                        </Menu.Button>
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <Menu.Items className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-                            <Menu.Item>{({ active }) => <button className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>Add</button>}</Menu.Item>
-                            <Menu.Item>{({ active }) => <button className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>Training</button>}</Menu.Item>
-                            <Menu.Item>{({ active }) => <button className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>Delete</button>}</Menu.Item>
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
-                    </li>
-                    <li className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
-                      <div className="flex w-0 flex-1 items-center">
-                        <div className="flex min-w-0 flex-1 justify-between gap-2">
-                          <span className="truncate">testing.pdf</span>
-                          <span className="flex-shrink-0 text-gray-400">
-                            <span className="inline-flex items-center rounded-full bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">To be trained</span>
-                          </span>
-                        </div>
-                      </div>
-                      <Menu as="div" className="relative flex-none">
-                        <Menu.Button className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
-                          <EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
-                        </Menu.Button>
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <Menu.Items className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-                            <Menu.Item>{({ active }) => <button className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>Add</button>}</Menu.Item>
-                            <Menu.Item>{({ active }) => <button className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>Training</button>}</Menu.Item>
-                            <Menu.Item>{({ active }) => <button className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>Delete</button>}</Menu.Item>
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
-                    </li>
-                    {newFiles.map((item, index) => (
-                      <li key={index} className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
-                        <div className="flex w-0 flex-1 items-center">
-                          <div className="flex min-w-0 flex-1 justify-between gap-2">
-                            <span className="truncate">{item.title}.pdf</span>
-                          </div>
-                        </div>
-                        <button onClick={() => upload(item)} className="pl-1 font-medium text-indigo-600 hover:text-indigo-500">
-                          Upload
-                        </button>
-                      </li>
-                    ))}
-                    <li className="flex items-center justify-between py-3 pl-4 pr-5 text-sm leading-6">
-                      <label htmlFor="file" className="flex cursor-pointer items-center space-x-2 text-sm font-medium leading-6 text-indigo-600 hover:text-indigo-500">
-                        <span>+ Add new file</span>
-                        <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                        <input id="file" type="file" accept=".pdf" className="sr-only" onChange={(e: any) => addFile(e.target.files[0])} />
-                      </label>
-                    </li>
-                  </ul>
-                  <div className="hidden flex-wrap items-baseline space-y-2">
-                    <span className="mr-2 inline-flex items-center gap-x-0.5 rounded-md bg-blue-100 px-2 py-1 text-sm text-blue-700">
-                      Badge
-                      <button type="button" className="group relative -mr-1 h-4 w-4 rounded-sm hover:bg-blue-600/20">
-                        <svg viewBox="0 0 14 14" className="h-4 w-4 stroke-blue-800/50 group-hover:stroke-blue-800/75">
-                          <path d="M4 4l6 6m0-6l-6 6" />
-                        </svg>
-                        <span className="absolute -inset-1" />
-                      </button>
-                    </span>
-                  </div>
+                    </div>
+                  )}
+
                   <div className="flex min-w-0 flex-1">
                     {isSpeaking && <SoundWave onFinish={fetchWhispersAndReply} chatMode={chatMode} />}
                     {!isSpeaking && (
                       <div className="relative w-full">
                         <form onSubmit={handleSubmit(send)} className="flex space-x-3">
                           <div className="relative flex min-h-[40px] flex-1">
-                            <button type="button" className="absolute left-0.5 hidden rounded-full p-2 text-gray-500 hover:text-gray-400">
-                              <PlusCircleIcon className="h-6 w-6" aria-hidden="true" />
-                            </button>
+                            {isUseSection && (
+                              <>
+                                {isShowPanel ? (
+                                  <button type="button" onClick={() => setIsShowPanel(false)} className="absolute left-0.5 rounded-full p-2 text-gray-500 hover:text-gray-400">
+                                    <MinusCircleIcon className="h-6 w-6" aria-hidden="true" />
+                                  </button>
+                                ) : (
+                                  <button type="button" onClick={() => setIsShowPanel(true)} className="absolute left-0.5 rounded-full p-2 text-gray-500 hover:text-gray-400">
+                                    <PlusCircleIcon className="h-6 w-6" aria-hidden="true" />
+                                  </button>
+                                )}
+                              </>
+                            )}
+
                             <textarea
                               defaultValue={''}
                               rows={contentBreakCount + 1}
@@ -647,7 +733,10 @@ export default function Index({ overlayMode }: any) {
                                   }
                                 }
                               }}
-                              className="block w-full rounded-md border-0 py-1.5 pr-10 text-sm leading-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]"
+                              className={classNames(
+                                isUseSection ? 'pl-10' : '',
+                                'block w-full rounded-md border-0 py-1.5 pr-10 text-sm leading-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]',
+                              )}
                             />
                             <button type="button" onClick={onSpeaking} className="absolute right-1 rounded-full p-2 text-primary-color opacity-100 hover:opacity-90">
                               <MicrophoneIcon className="h-6 w-6" aria-hidden="true" />

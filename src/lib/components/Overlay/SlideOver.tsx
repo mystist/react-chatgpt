@@ -23,7 +23,7 @@ export default function Index({ isShow, i18n, close, overlayMode }: any) {
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-lg">
-                  <div className="flex h-full flex-col overflow-y-scroll rounded-md bg-white shadow-xl">
+                  <div className="flex h-full flex-col overflow-y-auto rounded-md bg-white shadow-xl">
                     <div className="bg-gray-100 px-4 py-6 sm:px-6">
                       <div className="flex items-start justify-between">
                         <Dialog.Title className="flex items-center space-x-3 font-medium leading-6 text-gray-700">
@@ -38,7 +38,7 @@ export default function Index({ isShow, i18n, close, overlayMode }: any) {
                         </div>
                       </div>
                     </div>
-                    <div className="relative flex-1">
+                    <div className="flex-1">
                       <Conversation overlayMode={overlayMode} />
                     </div>
                   </div>

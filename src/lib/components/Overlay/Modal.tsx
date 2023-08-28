@@ -36,7 +36,7 @@ export default function Index({ isShow, i18n, close, overlayMode }: any) {
                     </button>
                   </div>
                 </div>
-                <div className="relative flex-1">
+                <div className="flex-1">
                   <Conversation overlayMode={overlayMode} />
                 </div>
               </Dialog.Panel>

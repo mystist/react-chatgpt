@@ -23,7 +23,7 @@ export default function Index({ onFinish, chatMode }: { onFinish: (content: any)
     data: [conversation],
   } = useConversation()
 
-  const { mutate: whisper, isLoading: isWhispering } = useMutation(postWhisper, { retry: false })
+  const { mutate: whisper, isLoading: isWhispering } = useMutation(postWhisper)
 
   const initialize = useCallback(() => {
     navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then((stream) => {

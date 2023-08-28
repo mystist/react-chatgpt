@@ -51,6 +51,13 @@ export const getOrCreateUserUuid = () => {
   return userUuid
 }
 
+export const getUserUuid = () => {
+  const identifier = getIdentifier()
+
+  const key = `react-chatgpt-userUuid-${identifier}`
+  return localStorageEnhanced.getWithExpiry(key) || ''
+}
+
 export const getIdentifier = () => localStorageEnhanced.getItem('react-chatgpt-identifier') || ''
 export const setIdentifier = (value: string) => localStorageEnhanced.setItem('react-chatgpt-identifier', value)
 
