@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.50](https://github.com/mystist/react-chatgpt/compare/v0.0.49...v0.0.50) (2023-08-28)
+
+
+### Features
+
+* support upload files ([7c1fdd6](https://github.com/mystist/react-chatgpt/commit/7c1fdd63332eab1f5e97340fb3f052ae29782d00))
+
 ### [0.0.49](https://github.com/mystist/react-chatgpt/compare/v0.0.48...v0.0.49) (2023-08-22)
 
 
