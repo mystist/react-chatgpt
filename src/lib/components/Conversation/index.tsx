@@ -77,7 +77,7 @@ export default function Index({ overlayMode }: any) {
 
   const identifier = getIdentifier()
   const userUuid = getUserUuid()
-  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, isUseEmbedding, prompt, isUseSection } = useConfiguration()
+  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, isUseEmbedding, prompt, sectionType } = useConfiguration()
 
   const {
     data: [conversation, previousConversation],
@@ -706,7 +706,7 @@ export default function Index({ overlayMode }: any) {
                       <div className="relative w-full">
                         <form onSubmit={handleSubmit(send)} className="flex space-x-3">
                           <div className="relative flex min-h-[40px] flex-1">
-                            {isUseSection && (
+                            {sectionType && (
                               <>
                                 {isShowPanel ? (
                                   <button type="button" onClick={() => setIsShowPanel(false)} className="absolute left-0.5 rounded-full p-2 text-gray-500 hover:text-gray-400">
@@ -734,7 +734,7 @@ export default function Index({ overlayMode }: any) {
                                 }
                               }}
                               className={classNames(
-                                isUseSection ? 'pl-10' : '',
+                                sectionType ? 'pl-10' : '',
                                 'block w-full rounded-md border-0 py-1.5 pr-10 text-sm leading-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]',
                               )}
                             />

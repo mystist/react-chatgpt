@@ -7,7 +7,7 @@ export interface Configuration {
   disclaimer?: string
   disclaimerPath?: string
   isUseEmbedding?: boolean
-  isUseSection?: boolean
+  sectionType?: 'all' | 'points' | ' summary'
   prompt?: { system?: string; user?: string }
 }
 
