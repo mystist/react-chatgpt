@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.51](https://github.com/mystist/react-chatgpt/compare/v0.0.50...v0.0.51) (2023-08-29)
+
+
+### Features
+
+* use section type ([77476e3](https://github.com/mystist/react-chatgpt/commit/77476e343decb87afe8aafc1e52c6b8b5a0f0444))
+
 ### [0.0.50](https://github.com/mystist/react-chatgpt/compare/v0.0.49...v0.0.50) (2023-08-28)
 
 
