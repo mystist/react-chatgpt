@@ -1,6 +1,6 @@
 import { Dialog, Menu, Transition } from '@headlessui/react'
-import { ChatBubbleBottomCenterTextIcon, CheckCircleIcon, ChevronDownIcon, EllipsisVerticalIcon, PaperClipIcon, PlusIcon } from '@heroicons/react/20/solid'
-import { ExclamationTriangleIcon, MicrophoneIcon, MinusCircleIcon, PlusCircleIcon } from '@heroicons/react/24/outline'
+import { ChatBubbleBottomCenterTextIcon, CheckCircleIcon, ChevronDownIcon, PaperClipIcon } from '@heroicons/react/20/solid'
+import { ExclamationTriangleIcon, FireIcon, MicrophoneIcon, MinusCircleIcon, PlusCircleIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import ReactMarkdown from 'react-markdown'
@@ -324,7 +324,11 @@ export default function Index({ overlayMode }: any) {
   const addFile = useCallback((file: any) => {
     if (!file) return
 
-    setNewFile({ title: file.name.trim().replace(/\.[^/.]+$/, ''), file })
+    const maxSize = 30 * 1024 * 1024
+
+    if (file && file.size <= maxSize) {
+      setNewFile({ title: file.name.trim().replace(/\.[^/.]+$/, ''), file })
+    }
   }, [])
 
   const upload = useCallback(
@@ -600,8 +604,8 @@ export default function Index({ overlayMode }: any) {
                           references
                             .sort((a: any, b: any) => (a.updatedAt > b.updatedAt ? 1 : -1))
                             .map((item: any, index: number) => (
-                              <li key={index} className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
-                                <div className="flex w-0 flex-1 items-center">
+                              <li key={index} className="flex items-center justify-between px-4 py-3 text-sm leading-6">
+                                <div className="mr-3.5 flex w-0 flex-1 items-center">
                                   <div className="flex min-w-0 flex-1 justify-between gap-2">
                                     <span className="truncate">{item.title}</span>
                                     {item.hasCompleted ? (
@@ -616,47 +620,20 @@ export default function Index({ overlayMode }: any) {
                                     )}
                                   </div>
                                 </div>
-                                <Menu as="div" className="relative flex-none">
-                                  <Menu.Button className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
-                                    <EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
-                                  </Menu.Button>
-                                  <Transition
-                                    as={Fragment}
-                                    enter="transition ease-out duration-100"
-                                    enterFrom="transform opacity-0 scale-95"
-                                    enterTo="transform opacity-100 scale-100"
-                                    leave="transition ease-in duration-75"
-                                    leaveFrom="transform opacity-100 scale-100"
-                                    leaveTo="transform opacity-0 scale-95"
-                                  >
-                                    <Menu.Items className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-                                      {item.hasCompleted ? (
-                                        <Menu.Item>
-                                          {({ active }) => (
-                                            <button onClick={() => add(item)} className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>
-                                              Add
-                                            </button>
-                                          )}
-                                        </Menu.Item>
-                                      ) : (
-                                        <Menu.Item>
-                                          {({ active }) => (
-                                            <button onClick={() => training({ code: item.code, index })} className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>
-                                              Training
-                                            </button>
-                                          )}
-                                        </Menu.Item>
-                                      )}
-                                      <Menu.Item>
-                                        {({ active }) => (
-                                          <button onClick={() => doDelete(item.code)} className={classNames(active ? 'bg-gray-50' : '', 'flex w-full px-3 py-1 text-sm leading-6 text-gray-900')}>
-                                            Delete
-                                          </button>
-                                        )}
-                                      </Menu.Item>
-                                    </Menu.Items>
-                                  </Transition>
-                                </Menu>
+                                <div className="flex justify-center">
+                                  {item.hasCompleted ? (
+                                    <button onClick={() => add(item)} className="-mx-1 -my-2.5 block px-1 py-2.5 pr-3.5 text-gray-500 hover:text-gray-900" title="Add">
+                                      <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
+                                    </button>
+                                  ) : (
+                                    <button onClick={() => training({ code: item.code, index })} className="-mx-1 -my-2.5 block px-1 py-2.5 pr-3.5 text-gray-500 hover:text-gray-900" title="Training">
+                                      <FireIcon className="h-5 w-5" aria-hidden="true" />
+                                    </button>
+                                  )}
+                                  <button onClick={() => doDelete(item.code)} className="-mx-1 -my-2.5 block px-1 py-2.5 text-gray-500 hover:text-gray-900" title="Delete">
+                                    <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+                                  </button>
+                                </div>
                               </li>
                             ))}
 
@@ -664,7 +641,7 @@ export default function Index({ overlayMode }: any) {
                           <li key={newFile.title} className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
                             <div className="flex w-0 flex-1 items-center">
                               <div className="flex min-w-0 flex-1 justify-between gap-2">
-                                <span className="truncate">{newFile.title}.pdf</span>
+                                <span className="truncate">{newFile.title}</span>
                               </div>
                             </div>
                             {isLoadingUpload ? (
@@ -676,12 +653,13 @@ export default function Index({ overlayMode }: any) {
                             )}
                           </li>
                         )}
-                        <li className="flex items-center justify-between py-3 pl-4 pr-5 text-sm leading-6">
+                        <li className="flex items-center space-x-4 py-3 pl-4 pr-5 text-sm leading-6">
                           <label htmlFor="file" className="flex cursor-pointer items-center space-x-2 text-sm font-medium leading-6 text-indigo-600 hover:text-indigo-500">
                             <span>+ Add new file</span>
                             <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                             <input id="file" type="file" accept=".pdf" className="sr-only" onChange={(e: any) => addFile(e.target.files[0])} />
                           </label>
+                          <span className="text-xs">PDF file up to 30MB</span>
                         </li>
                       </ul>
                       <div className="flex-wrap items-baseline space-y-2">
