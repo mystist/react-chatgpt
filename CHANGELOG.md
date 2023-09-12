@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.53](https://github.com/mystist/react-chatgpt/compare/v0.0.52...v0.0.53) (2023-09-12)
+
+
+### Bug Fixes
+
+* should skip the focus for the invisible file input ([26150b6](https://github.com/mystist/react-chatgpt/commit/26150b69fe8d513ae1161c8d834e2305546a6a96))
+
 ### [0.0.52](https://github.com/mystist/react-chatgpt/compare/v0.0.51...v0.0.52) (2023-09-12)
 
 
