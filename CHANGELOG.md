@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.52](https://github.com/mystist/react-chatgpt/compare/v0.0.51...v0.0.52) (2023-09-12)
+
+
+### Features
+
+* i18n for file uploads ([e67c2c5](https://github.com/mystist/react-chatgpt/commit/e67c2c52b3da13b785cb43d164bbfa54bd1ed0ec))
+* use icon for file actions ([0eda390](https://github.com/mystist/react-chatgpt/commit/0eda390aee910e2ddd908e1a2564a8ff19eedd6a))
+
 ### [0.0.51](https://github.com/mystist/react-chatgpt/compare/v0.0.50...v0.0.51) (2023-08-29)
 
 
