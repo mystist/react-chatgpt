@@ -610,27 +610,27 @@ export default function Index({ overlayMode }: any) {
                                     <span className="truncate">{item.title}</span>
                                     {item.hasCompleted ? (
                                       <span className="flex-shrink-0 text-gray-400">
-                                        <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Completed</span>
+                                        <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">{i18n.completed}</span>
                                       </span>
                                     ) : (
                                       <span className="flex flex-shrink-0 items-center text-gray-400">
                                         {isLoadingSectionIndex === index && <Spinner className="mr-2 !h-4 !w-4 text-gray-400" />}
-                                        <span className="inline-flex items-center rounded-full bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">Training incomplete</span>
+                                        <span className="inline-flex items-center rounded-full bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">{i18n.trainingIncomplete}</span>
                                       </span>
                                     )}
                                   </div>
                                 </div>
                                 <div className="flex justify-center">
                                   {item.hasCompleted ? (
-                                    <button onClick={() => add(item)} className="-mx-1 -my-2.5 block px-1 py-2.5 pr-3.5 text-gray-500 hover:text-gray-900" title="Add">
+                                    <button onClick={() => add(item)} className="-mx-1 -my-2.5 block px-1 py-2.5 pr-3.5 text-gray-500 hover:text-gray-900" title={i18n.add}>
                                       <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
                                     </button>
                                   ) : (
-                                    <button onClick={() => training({ code: item.code, index })} className="-mx-1 -my-2.5 block px-1 py-2.5 pr-3.5 text-gray-500 hover:text-gray-900" title="Training">
+                                    <button onClick={() => training({ code: item.code, index })} className="-mx-1 -my-2.5 block px-1 py-2.5 pr-3.5 text-gray-500 hover:text-gray-900" title={i18n.training}>
                                       <FireIcon className="h-5 w-5" aria-hidden="true" />
                                     </button>
                                   )}
-                                  <button onClick={() => doDelete(item.code)} className="-mx-1 -my-2.5 block px-1 py-2.5 text-gray-500 hover:text-gray-900" title="Delete">
+                                  <button onClick={() => doDelete(item.code)} className="-mx-1 -my-2.5 block px-1 py-2.5 text-gray-500 hover:text-gray-900" title={i18n.delete}>
                                     <XMarkIcon className="h-5 w-5" aria-hidden="true" />
                                   </button>
                                 </div>
@@ -648,18 +648,18 @@ export default function Index({ overlayMode }: any) {
                               <Spinner className="mr-2 !h-4 !w-4 text-gray-400" />
                             ) : (
                               <button onClick={() => upload(newFile)} className="flex items-center pl-1 font-medium text-indigo-600 hover:text-indigo-500">
-                                Upload
+                                {i18n.upload}
                               </button>
                             )}
                           </li>
                         )}
                         <li className="flex items-center space-x-4 py-3 pl-4 pr-5 text-sm leading-6">
                           <label htmlFor="file" className="flex cursor-pointer items-center space-x-2 text-sm font-medium leading-6 text-indigo-600 hover:text-indigo-500">
-                            <span>+ Add new file</span>
+                            <span>+ {i18n.addNewFile}</span>
                             <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                             <input id="file" type="file" accept=".pdf" className="sr-only" onChange={(e: any) => addFile(e.target.files[0])} />
                           </label>
-                          <span className="text-xs">PDF file up to 30MB</span>
+                          <span className="text-xs">{i18n.fileUpTo}</span>
                         </li>
                       </ul>
                       <div className="flex-wrap items-baseline space-y-2">

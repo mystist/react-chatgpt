@@ -23,6 +23,14 @@ export const messages = {
   newChat: '新しい対話',
   taskMode: 'タスクモード',
   chatMode: 'チャットモード',
+  fileUpTo: '30MBまでPDFファイルを受け付けます',
+  addNewFile: '新しいファイルを追加します',
+  trainingIncomplete: '訓練は未完成です',
+  completed: '完成です',
+  add: '追加します',
+  training: '訓練します',
+  delete: '削除します',
+  upload: 'アップロードします'
 }
 
 export const i18n = transformI18n(messages)

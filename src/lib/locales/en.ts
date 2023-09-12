@@ -23,6 +23,14 @@ export const messages = {
   newChat: 'New Chat',
   taskMode: 'Task Mode',
   chatMode: 'Chat Mode',
+  fileUpTo: 'Accept PDF file up to 30MB',
+  addNewFile: 'Add new file',
+  trainingIncomplete: 'Training incomplete',
+  completed: 'Completed',
+  add: 'Add',
+  training: 'Training',
+  delete: 'Delete',
+  upload: 'Upload'
 }
 
 export const i18n = transformI18n(messages)
