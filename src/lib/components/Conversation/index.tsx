@@ -657,7 +657,7 @@ export default function Index({ overlayMode }: any) {
                           <label htmlFor="file" className="flex cursor-pointer items-center space-x-2 text-sm font-medium leading-6 text-indigo-600 hover:text-indigo-500">
                             <span>+ {i18n.addNewFile}</span>
                             <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                            <input id="file" type="file" accept=".pdf" className="sr-only" onChange={(e: any) => addFile(e.target.files[0])} />
+                            <input id="file" type="file" accept=".pdf" className="sr-only invisible" tabIndex={-1} onChange={(e: any) => addFile(e.target.files[0])} />
                           </label>
                           <span className="text-xs">{i18n.fileUpTo}</span>
                         </li>
