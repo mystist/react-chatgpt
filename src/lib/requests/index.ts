@@ -55,7 +55,7 @@ export const getReplies = async (conversationUuid: string) => {
 }
 
 export const postReply = async ({ conversationUuid, whisperUuid, content, identifier, onMessage, onConversationFull, chatMode, userUuid, referenceCodesStr }: any) => {
-  const eventSource = new EventSource(`${baseUrl}/api/sentence/outputs/create?conversationUuid=${conversationUuid}&inputUuid=${whisperUuid}&content=${content}&identifier=${identifier}&chatMode=${chatMode}&clientIdentifier=${userUuid}&referenceCodesStr=${referenceCodesStr}`)
+  const eventSource = new EventSource(`${baseUrl}/api/sentence/outputs/create?conversationUuid=${conversationUuid}&inputUuid=${whisperUuid}&content=${encodeURIComponent(content)}&identifier=${identifier}&chatMode=${chatMode}&clientIdentifier=${userUuid}&referenceCodesStr=${referenceCodesStr}`)
 
   eventSource.onmessage = (e) => {
     try {
