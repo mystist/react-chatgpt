@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { getLang } from '../utils'
+import { getIdentifier, getLang } from '../utils'
 
 export const baseUrl = '/gpt-service'
 
@@ -37,7 +37,9 @@ export const getConfiguration = async (identifier: string) => {
 }
 
 export const getLatestConversationList = async ({ userUuid, count = 2, isCreate }: any) => {
-  const res = await request.get(`/api/conversation/conversations/latest-list?userUuid=${userUuid}&count=${count}&create=${isCreate}`)
+  const identifier = getIdentifier()
+
+  const res = await request.get(`/api/conversation/conversations/latest-list?userUuid=${userUuid}&identifier=${identifier}&count=${count}&create=${isCreate}`)
 
   return res.data
 }
