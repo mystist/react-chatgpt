@@ -37,25 +37,29 @@ export const timeSince = (date: number, i18n: any) => {
   return seconds <= 20 ? i18n.justNow : i18n.secondsAgo(Math.floor(seconds))
 }
 
-export const getOrCreateUserUuid = () => {
-  const identifier = getIdentifier()
+const getUserUuidKey = () => `react-chatgpt-userUuid-${getIdentifier()}`
 
-  const key = `react-chatgpt-userUuid-${identifier}`
-  let userUuid = localStorageEnhanced.getWithExpiry(key) || ''
+export const getUserUuid = () => {
+  const key = getUserUuidKey()
+
+  return localStorageEnhanced.getWithExpiry(key) || ''
+}
+
+export const getOrCreateUserUuid = () => {
+  let userUuid = getUserUuid()
 
   if (!userUuid) {
     userUuid = nanoid()
-    localStorageEnhanced.setWithExpiry(key, userUuid, oneWeek)
+    setUserUuid(userUuid, oneWeek)
   }
 
   return userUuid
 }
 
-export const getUserUuid = () => {
-  const identifier = getIdentifier()
+export const setUserUuid = (userUuid: string, duration: number) => {
+  const key = getUserUuidKey()
 
-  const key = `react-chatgpt-userUuid-${identifier}`
-  return localStorageEnhanced.getWithExpiry(key) || ''
+  localStorageEnhanced.setWithExpiry(key, userUuid, duration)
 }
 
 export const getIdentifier = () => localStorageEnhanced.getItem('react-chatgpt-identifier') || ''
