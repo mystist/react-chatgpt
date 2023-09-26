@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.56](https://github.com/mystist/react-chatgpt/compare/v0.0.55...v0.0.56) (2023-09-26)
+
+
+### Features
+
+* enable user uuid ([9099db1](https://github.com/mystist/react-chatgpt/commit/9099db1228f12dfa6407e5f78005c3cd74d11bcc))
+
 ### [0.0.55](https://github.com/mystist/react-chatgpt/compare/v0.0.54...v0.0.55) (2023-09-20)
 
 
