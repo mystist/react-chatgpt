@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.59](https://github.com/mystist/react-chatgpt/compare/v0.0.58...v0.0.59) (2023-09-27)
+
+
+### Features
+
+* hide chat actions when conversation as param ([8f3c13f](https://github.com/mystist/react-chatgpt/commit/8f3c13f49c8f9578cb12f7215c30beb94cf3fe7f))
+
 ### [0.0.58](https://github.com/mystist/react-chatgpt/compare/v0.0.57...v0.0.58) (2023-09-27)
 
 
