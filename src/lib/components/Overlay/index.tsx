@@ -2,26 +2,37 @@ import { useCallback, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 import { useLocale } from '../../hooks/useLocale'
-import { removeConfig, setIdentifier, setLang, setUserUuid } from '../../utils'
+import { removeConfig, removeConversationUuid, removeIdentifier, removeLang, setConversationUuid, setIdentifier, setLang, setUserUuid } from '../../utils'
 import Modal from './Modal'
 import SlideOver from './SlideOver'
 
-export default function Index({ status, setStatus, identifier, lang = 'en', overlayMode = 'auto', userUuid = '' }: any) {
+export default function Index({ status, setStatus, identifier, lang = 'en', overlayMode = 'auto', userUuid = '', conversationUuid = '' }: any) {
   const i18n = useLocale(lang)
 
   const isMd = useMediaQuery({ query: '(min-width: 768px)' })
 
-  if (status && identifier) {
+  const cleanup = useCallback(() => {
+    removeLang()
+    removeConversationUuid()
+    removeIdentifier()
     removeConfig()
+  }, [])
+
+  if (status && identifier) {
+    cleanup()
+
     setIdentifier(identifier)
     setLang(lang)
 
-    if (userUuid) setUserUuid(userUuid, 20 * 60 * 1000)
+    if (userUuid) setUserUuid(userUuid)
+    if (conversationUuid) setConversationUuid(conversationUuid)
   }
 
   const close = useCallback(() => {
+    cleanup()
+
     setStatus('')
-  }, [setStatus])
+  }, [cleanup, setStatus])
 
   const isShow = useMemo(() => {
     return !!identifier && !!status
