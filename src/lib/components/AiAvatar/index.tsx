@@ -1,10 +1,11 @@
+import Avatar from 'boring-avatars'
 import { useEffect, useRef, useState } from 'react'
 
 import { useConfiguration } from '../../hooks/useConfiguration'
 
-export default function Index({ whisperUuid, nowPlayingWhisperUuidState }: any) {
+export default function Index({ whisperUuid, nowPlayingWhisperUuidState, name }: any) {
   const [isPlaying, setIsPlaying] = useState(false)
-  const { avatarPath } = useConfiguration()
+  const { avatarPath, agentName } = useConfiguration()
 
   useEffect(() => {
     setIsPlaying(whisperUuid && whisperUuid === nowPlayingWhisperUuidState)
@@ -24,9 +25,13 @@ export default function Index({ whisperUuid, nowPlayingWhisperUuidState }: any) 
 
   return (
     <>
-      {avatarPath && (
+      {avatarPath && agentName && (
         <div className="relative flex h-12 w-12 flex-col overflow-hidden rounded-full">
-          <img src={avatarPath} alt="avatar" className="h-12 w-12 scale-105 rounded-full bg-[#bfbdbe]" />
+          {!avatarPath || avatarPath === 'auto' ? (
+            <Avatar size={48} name={agentName} colors={['#59b6b9', '#63af56', '#f0d457', '#dd883a', '#d53932']} />
+          ) : (
+            <img src={avatarPath} alt="avatar" className="h-12 w-12 rounded-full bg-[#bfbdbe]" />
+          )}
         </div>
       )}
     </>
