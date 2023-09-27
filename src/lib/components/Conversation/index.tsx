@@ -15,7 +15,7 @@ import { useReplies } from '../../hooks/useReplies'
 import { useWhispers } from '../../hooks/useWhispers'
 import { Talk, Whisper } from '../../interfaces'
 import { deleteReference, getReferences, postReply, postSection, postUpload, postWhisperByText } from '../../requests'
-import { classNames, getAgreement, getIdentifier, getUserUuid, setAgreement, timeSince } from '../../utils'
+import { classNames, getAgreement, getConversationUuid, getIdentifier, getUserUuid, setAgreement, timeSince } from '../../utils'
 import AiAvatar from '../AiAvatar'
 import AudioPlayer from '../AudioPlayer'
 import Divider from '../Divider'
@@ -100,6 +100,8 @@ export default function Index({ overlayMode }: any) {
   const watchedContent = watch('content')
 
   const { data: references, refetch: refetchReferences } = useQuery('references', () => getReferences({ identifier, userUuid }), { enabled: isShowPanel && !!userUuid })
+
+  const isConversationUuidAsParam = !!getConversationUuid()
 
   useEffect(() => {
     if (conversation) setConversationUuidState(conversation.uuid)
@@ -736,72 +738,82 @@ export default function Index({ overlayMode }: any) {
                               </>
                             ) : (
                               <>
-                                {isUseEmbedding || (prompt && !prompt.user) ? (
-                                  <button onClick={newChat} className="btn btn-secondary h-full w-fit min-w-[80px]">
-                                    <PlusIcon className="mr-1 h-5 w-5 text-gray-500" />
-                                    {i18n.newChat}
-                                  </button>
-                                ) : (
-                                  <Menu as="div" className="relative inline-block h-full text-left">
-                                    <Menu.Button className="btn btn-secondary flex h-full w-fit min-w-[80px] gap-x-1.5 font-normal">
-                                      <div className="flex">
-                                        {chatMode === 'task' && (
-                                          <>
-                                            <CheckCircleIcon className="mr-2 h-5 w-5 text-green-400" />
-                                            {i18n.taskMode}
-                                          </>
-                                        )}
-                                        {chatMode === 'chat' && (
-                                          <>
-                                            <ChatBubbleBottomCenterTextIcon className="mr-2 h-5 w-5 text-primary-color" />
-                                            {i18n.chatMode}
-                                          </>
-                                        )}
-                                      </div>
-                                      <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" />
-                                    </Menu.Button>
-
-                                    <Transition
-                                      as={Fragment}
-                                      enter="transition ease-out duration-100"
-                                      enterFrom="transform opacity-0 scale-95"
-                                      enterTo="transform opacity-100 scale-100"
-                                      leave="transition ease-in duration-75"
-                                      leaveFrom="transform opacity-100 scale-100"
-                                      leaveTo="transform opacity-0 scale-95"
-                                    >
-                                      <Menu.Items className="absolute bottom-full right-0 z-10 mb-2 w-fit origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        <div className="py-1">
-                                          <Menu.Item>
-                                            {({ active }) => (
-                                              <button onClick={() => setChatMode('chat')} className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex w-full items-center whitespace-nowrap px-4 py-2 text-sm')}>
-                                                <ChatBubbleBottomCenterTextIcon className="mr-3 h-5 w-5 text-primary-color" />
-                                                {i18n.chatMode}
-                                              </button>
-                                            )}
-                                          </Menu.Item>
-                                          <Menu.Item>
-                                            {({ active }) => (
-                                              <button onClick={() => setChatMode('task')} className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex w-full items-center whitespace-nowrap px-4 py-2 text-sm')}>
-                                                <CheckCircleIcon className="mr-3 h-5 w-5 text-green-400" />
+                                {!isConversationUuidAsParam && (
+                                  <>
+                                    {isUseEmbedding || (prompt && !prompt.user) ? (
+                                      <button onClick={newChat} className="btn btn-secondary h-full w-fit min-w-[80px]">
+                                        <PlusIcon className="mr-1 h-5 w-5 text-gray-500" />
+                                        {i18n.newChat}
+                                      </button>
+                                    ) : (
+                                      <Menu as="div" className="relative inline-block h-full text-left">
+                                        <Menu.Button className="btn btn-secondary flex h-full w-fit min-w-[80px] gap-x-1.5 font-normal">
+                                          <div className="flex">
+                                            {chatMode === 'task' && (
+                                              <>
+                                                <CheckCircleIcon className="mr-2 h-5 w-5 text-green-400" />
                                                 {i18n.taskMode}
-                                              </button>
+                                              </>
                                             )}
-                                          </Menu.Item>
-                                        </div>
-                                        <div className="py-1">
-                                          <Menu.Item>
-                                            {({ active }) => (
-                                              <button onClick={newChat} className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex w-full items-center whitespace-nowrap px-4 py-2 text-sm')}>
-                                                <PlusIcon className="mr-3 h-5 w-5 text-gray-500" />
-                                                {i18n.newChat}
-                                              </button>
+                                            {chatMode === 'chat' && (
+                                              <>
+                                                <ChatBubbleBottomCenterTextIcon className="mr-2 h-5 w-5 text-primary-color" />
+                                                {i18n.chatMode}
+                                              </>
                                             )}
-                                          </Menu.Item>
-                                        </div>
-                                      </Menu.Items>
-                                    </Transition>
-                                  </Menu>
+                                          </div>
+                                          <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" />
+                                        </Menu.Button>
+
+                                        <Transition
+                                          as={Fragment}
+                                          enter="transition ease-out duration-100"
+                                          enterFrom="transform opacity-0 scale-95"
+                                          enterTo="transform opacity-100 scale-100"
+                                          leave="transition ease-in duration-75"
+                                          leaveFrom="transform opacity-100 scale-100"
+                                          leaveTo="transform opacity-0 scale-95"
+                                        >
+                                          <Menu.Items className="absolute bottom-full right-0 z-10 mb-2 w-fit origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                            <div className="py-1">
+                                              <Menu.Item>
+                                                {({ active }) => (
+                                                  <button
+                                                    onClick={() => setChatMode('chat')}
+                                                    className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex w-full items-center whitespace-nowrap px-4 py-2 text-sm')}
+                                                  >
+                                                    <ChatBubbleBottomCenterTextIcon className="mr-3 h-5 w-5 text-primary-color" />
+                                                    {i18n.chatMode}
+                                                  </button>
+                                                )}
+                                              </Menu.Item>
+                                              <Menu.Item>
+                                                {({ active }) => (
+                                                  <button
+                                                    onClick={() => setChatMode('task')}
+                                                    className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex w-full items-center whitespace-nowrap px-4 py-2 text-sm')}
+                                                  >
+                                                    <CheckCircleIcon className="mr-3 h-5 w-5 text-green-400" />
+                                                    {i18n.taskMode}
+                                                  </button>
+                                                )}
+                                              </Menu.Item>
+                                            </div>
+                                            <div className="py-1">
+                                              <Menu.Item>
+                                                {({ active }) => (
+                                                  <button onClick={newChat} className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex w-full items-center whitespace-nowrap px-4 py-2 text-sm')}>
+                                                    <PlusIcon className="mr-3 h-5 w-5 text-gray-500" />
+                                                    {i18n.newChat}
+                                                  </button>
+                                                )}
+                                              </Menu.Item>
+                                            </div>
+                                          </Menu.Items>
+                                        </Transition>
+                                      </Menu>
+                                    )}
+                                  </>
                                 )}
                               </>
                             )}
