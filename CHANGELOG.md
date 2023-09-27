@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.60](https://github.com/mystist/react-chatgpt/compare/v0.0.59...v0.0.60) (2023-09-27)
+
+
+### Features
+
+* add auto avatar ([c1e6522](https://github.com/mystist/react-chatgpt/commit/c1e652258de08919c2e4f2f67e9f98b0402fe0fb))
+
 ### [0.0.59](https://github.com/mystist/react-chatgpt/compare/v0.0.58...v0.0.59) (2023-09-27)
 
 
