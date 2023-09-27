@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.58](https://github.com/mystist/react-chatgpt/compare/v0.0.57...v0.0.58) (2023-09-27)
+
+
+### Features
+
+* enable conversation uuid as param ([d1f612b](https://github.com/mystist/react-chatgpt/commit/d1f612bd5f89a28831ef73f5a3f6b0858dab6742))
+
 ### [0.0.57](https://github.com/mystist/react-chatgpt/compare/v0.0.56...v0.0.57) (2023-09-26)
 
 
