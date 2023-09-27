@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { useConfiguration } from '../../hooks/useConfiguration'
 
-export default function Index({ whisperUuid, nowPlayingWhisperUuidState, name }: any) {
+export default function Index({ whisperUuid, nowPlayingWhisperUuidState }: any) {
   const [isPlaying, setIsPlaying] = useState(false)
   const { avatarPath, agentName } = useConfiguration()
 
