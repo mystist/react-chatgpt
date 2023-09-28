@@ -56,6 +56,7 @@ export default function Index({ overlayMode }: any) {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isThinking, setIsThinking] = useState(false)
   const [isWriting, setIsWriting] = useState(false)
+  const [isImeComposing, setIsImeComposing] = useState(false)
   const [nowPlayingWhisperUuidState, setNowPlayingWhisperUuidState] = useState('')
   const [isIntroPlaying, setIsIntroPlaying] = useState(false)
   const [isShowClaim, setIsShowClaim] = useState(false)
@@ -705,6 +706,11 @@ export default function Index({ overlayMode }: any) {
                               rows={contentBreakCount + 1}
                               {...register('content')}
                               onKeyDown={(e) => {
+                                if (isImeComposing || e.key === 'Escape') {
+                                  e.stopPropagation()
+                                  return
+                                }
+
                                 if (e.key === 'Enter') {
                                   if (shouldShowDisclaimer()) {
                                     showDisclaimer(e)
@@ -713,6 +719,8 @@ export default function Index({ overlayMode }: any) {
                                   }
                                 }
                               }}
+                              onCompositionStart={() => setIsImeComposing(true)}
+                              onCompositionEnd={() => setIsImeComposing(false)}
                               className={classNames(
                                 sectionType ? 'pl-10' : '',
                                 'block w-full resize-none rounded-md border-0 py-1.5 pr-10 text-sm leading-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]',
