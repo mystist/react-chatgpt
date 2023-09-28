@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.62](https://github.com/mystist/react-chatgpt/compare/v0.0.61...v0.0.62) (2023-09-28)
+
+
+### Bug Fixes
+
+* prevent ime event ([24a37d3](https://github.com/mystist/react-chatgpt/commit/24a37d3d2029032b978667781f8852283f153a1f))
+* tweak ([4036b79](https://github.com/mystist/react-chatgpt/commit/4036b7980cdcebbcadaf0abd846f2fec0cfff087))
+
 ### [0.0.61](https://github.com/mystist/react-chatgpt/compare/v0.0.60...v0.0.61) (2023-09-27)
 
 ### [0.0.60](https://github.com/mystist/react-chatgpt/compare/v0.0.59...v0.0.60) (2023-09-27)
