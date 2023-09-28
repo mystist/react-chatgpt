@@ -25,7 +25,7 @@ export default function Index({ whisperUuid, nowPlayingWhisperUuidState }: any) 
 
   return (
     <>
-      {avatarPath && agentName && (
+      {agentName && (
         <div className="relative flex h-12 w-12 flex-col overflow-hidden rounded-full">
           {!avatarPath || avatarPath === 'auto' ? (
             <Avatar size={48} name={agentName} colors={['#59b6b9', '#63af56', '#f0d457', '#dd883a', '#d53932']} />
