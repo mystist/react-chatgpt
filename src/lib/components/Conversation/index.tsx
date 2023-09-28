@@ -78,7 +78,7 @@ export default function Index({ overlayMode }: any) {
 
   const identifier = getIdentifier()
   const userUuid = getUserUuid()
-  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, isUseEmbedding, prompt, sectionType } = useConfiguration()
+  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, isUseEmbedding, prompt, sectionType, isAudioAutoPlay } = useConfiguration()
 
   const {
     data: [conversation, previousConversation],
@@ -563,7 +563,7 @@ export default function Index({ overlayMode }: any) {
                               <span className="text-gray-500">&middot;</span>
                               <div className="relative inline-flex h-7 w-7">
                                 {latestWhisper.uuid && !isWriting && (
-                                  <AudioPlayer isAutoplay={false} whisperUuid={latestWhisper.uuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />
+                                  <AudioPlayer isAutoplay={!!isAudioAutoPlay} whisperUuid={latestWhisper.uuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />
                                 )}
                               </div>
                             </div>
