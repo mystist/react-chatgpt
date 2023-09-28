@@ -30,7 +30,9 @@ export const messages = {
   add: 'Add',
   training: 'Training',
   delete: 'Delete',
-  upload: 'Upload'
+  upload: 'Upload',
+  holdToSpeak: 'Hold to Speak',
+  slideUpToCancel: 'Slide Up to Cancel'
 }
 
 export const i18n = transformI18n(messages)

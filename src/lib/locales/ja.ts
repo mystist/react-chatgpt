@@ -30,7 +30,9 @@ export const messages = {
   add: '追加します',
   training: '訓練します',
   delete: '削除します',
-  upload: 'アップロードします'
+  upload: 'アップロードします',
+  holdToSpeak: 'おさえて話します',
+  slideUpToCancel: 'スライドアップキャンセルです'
 }
 
 export const i18n = transformI18n(messages)

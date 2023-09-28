@@ -25,12 +25,14 @@ export const messages = {
   chatMode: '对话模式',
   fileUpTo: '接受最大30MB的PDF文件',
   addNewFile: '添加新文件',
-  trainingIncomplete: '训练未完成',
+  trainingIncomplete: '尚未完成训练',
   completed: '完成',
   add: '添加',
   training: '训练',
   delete: '删除',
-  upload: '上传'
+  upload: '上传',
+  holdToSpeak: '按住说话',
+  slideUpToCancel: '向上滑动取消'
 }
 
 export const i18n = transformI18n(messages)

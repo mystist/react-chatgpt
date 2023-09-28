@@ -598,7 +598,7 @@ export default function Index({ overlayMode }: any) {
                   </ul>
                 }
               </div>
-              <div className="mt-4 bg-gray-100 px-4 py-6">
+              <div className="mt-4 bg-gray-100 px-4 py-6 sm:px-6">
                 <div className="flex flex-col space-y-3">
                   {isShowPanel && (
                     <div className="flex flex-col space-y-3">
