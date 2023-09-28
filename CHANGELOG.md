@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.65](https://github.com/mystist/react-chatgpt/compare/v0.0.64...v0.0.65) (2023-09-28)
+
+
+### Features
+
+* simulate hold to speak ([ee524e7](https://github.com/mystist/react-chatgpt/commit/ee524e706a1a59e2d15f0593c2409f1a7d6b693b))
+
 ### [0.0.64](https://github.com/mystist/react-chatgpt/compare/v0.0.63...v0.0.64) (2023-09-28)
 
 
