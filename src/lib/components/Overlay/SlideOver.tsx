@@ -7,7 +7,7 @@ import Conversation from '../Conversation'
 export default function Index({ isShow, i18n, close, overlayMode }: any) {
   return (
     <Transition.Root show={isShow} as={Fragment}>
-      <Dialog as="div" id="react-chatgpt" className="relative z-50" onClose={close}>
+      <Dialog as="div" id="react-chatgpt" onClose={close} style={{ position: 'relative', zIndex: 50 }}>
         <div className="fixed inset-0" />
 
         <div className="fixed inset-0 overflow-hidden">
