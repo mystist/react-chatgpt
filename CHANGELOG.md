@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.64](https://github.com/mystist/react-chatgpt/compare/v0.0.63...v0.0.64) (2023-09-28)
+
+
+### Features
+
+* support is audio auto play ([42631f8](https://github.com/mystist/react-chatgpt/commit/42631f81ec4d83b3c670ecf96cfccae06d1d9227))
+
 ### [0.0.63](https://github.com/mystist/react-chatgpt/compare/v0.0.62...v0.0.63) (2023-09-28)
 
 
