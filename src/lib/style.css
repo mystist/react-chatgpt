@@ -7,7 +7,7 @@
 @layer components {
   #react-chatgpt {
     .btn {
-      @apply inline-flex w-full items-center justify-center rounded-md px-2.5 py-2 text-sm font-medium opacity-100 shadow-sm hover:opacity-90 focus-visible:outline-secondary-color;
+      @apply inline-flex w-full select-none items-center justify-center rounded-md px-2.5 py-2 text-sm font-medium opacity-100 shadow-sm hover:opacity-90 focus-visible:outline-secondary-color;
     }
     .btn-primary {
       @apply border bg-linear-color text-white;

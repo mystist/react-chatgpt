@@ -28,10 +28,6 @@ export default function Index({ onFinish, chatMode }: { onFinish: (content: any)
   const { mutate: whisper, isLoading: isWhispering } = useMutation(postWhisper)
 
   const initialize = useCallback(() => {
-    setRecorderState(null)
-    setAudioChunksState([])
-    setVolumeState(0)
-
     navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then((stream) => {
       const audioContext = new AudioContext()
       const source = audioContext.createMediaStreamSource(stream)
@@ -105,13 +101,24 @@ export default function Index({ onFinish, chatMode }: { onFinish: (content: any)
   }, [])
 
   const handlePointerDown = () => {
-    setIsPressing(true)
-    pressStartTime.current = Date.now()
+    if (isLoading) return
+
+    stop()
+    setRecorderState(null)
+    setAudioChunksState([])
+    setVolumeState(0)
 
     initialize()
+    pressStartTime.current = Date.now()
+
+    setTimeout(() => {
+      setIsPressing(true)
+    }, 500)
   }
 
   const handlePointerUp = () => {
+    if (isLoading) return
+
     stop()
 
     if (isPressing) {
@@ -122,6 +129,8 @@ export default function Index({ onFinish, chatMode }: { onFinish: (content: any)
   }
 
   const handleCancel = () => {
+    if (isLoading) return
+
     stop()
     setIsPressing(false)
   }
@@ -145,7 +154,7 @@ export default function Index({ onFinish, chatMode }: { onFinish: (content: any)
           onPointerUp={handlePointerUp}
           onPointerCancel={handleCancel}
           onPointerLeave={handleCancel}
-          className="btn btn-secondary h-full w-fit min-w-[80px] select-none"
+          className="btn btn-secondary h-full w-fit min-w-[80px]"
           style={{ WebkitTapHighlightColor: 'transparent' }}
         >
           {isLoading && <Spinner className="mr-2 text-gray-400" />}
@@ -158,6 +167,7 @@ export default function Index({ onFinish, chatMode }: { onFinish: (content: any)
             onFinish('')
           }}
           className="btn btn-secondary h-full w-fit min-w-[80px]"
+          style={{ WebkitTapHighlightColor: 'transparent' }}
         >
           <span>{i18n.cancel}</span>
         </button>
