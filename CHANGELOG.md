@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.67](https://github.com/mystist/react-chatgpt/compare/v0.0.66...v0.0.67) (2023-09-30)
+
+
+### Features
+
+* support stick on speaking mode ([1847eec](https://github.com/mystist/react-chatgpt/commit/1847eecd21e0d7024a178ac1c2da2a25fab4f397))
+
 ### [0.0.66](https://github.com/mystist/react-chatgpt/compare/v0.0.65...v0.0.66) (2023-09-30)
 
 
