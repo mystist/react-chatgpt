@@ -1,3 +1,4 @@
+import { LanguageIcon, XCircleIcon } from '@heroicons/react/20/solid'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation } from 'react-query'
 
@@ -11,13 +12,14 @@ import Spinner from '../Spinner'
 const thresholdInPercent = 0.4
 const silentPercent = 0.2 // This value should align with the animation keyframes 50% value, which is 20% for now
 
-export default function Index({ onFinish, chatMode }: { onFinish: (content: any) => void; chatMode: string }) {
+export default function Index({ onFinish, chatMode, close }: { onFinish: (content: any) => void; chatMode: string; close: () => void }) {
   const [volumeState, setVolumeState] = useState(0)
   const [recorderState, setRecorderState] = useState<null | MediaRecorder>(null)
   const [audioChunksState, setAudioChunksState] = useState([]) as any
   const [isDone, setIsDone] = useState(false)
-  const [isPressing, setIsPressing] = useState(false)
-  const pressStartTime = useRef<number>(0)
+  const [isSpeaking, setIsSpeaking] = useState(false)
+  const speakingStartTime = useRef<number>(0)
+  const [infoMessage, setInfoMessage] = useState('')
 
   const i18n = useLocale()
 
@@ -88,7 +90,10 @@ export default function Index({ onFinish, chatMode }: { onFinish: (content: any)
       { blob: audioBlob, conversationUuid, chatMode },
       {
         onSuccess: (whisper: Whisper) => onFinish({ content: whisper.content, conversationUuid, whisperUuid: whisper.uuid }),
-        onError: () => onFinish({}),
+        onSettled: () => {
+          setIsDone(false)
+          setIsSpeaking(false)
+        },
       },
     )
   }, [audioChunksState, chatMode, conversation, isDone, isLoading, onFinish, whisper])
@@ -100,77 +105,88 @@ export default function Index({ onFinish, chatMode }: { onFinish: (content: any)
     })()
   }, [])
 
-  const handlePointerDown = () => {
+  const startSpeaking = () => {
     if (isLoading) return
 
     stop()
     setRecorderState(null)
     setAudioChunksState([])
     setVolumeState(0)
+    setInfoMessage('')
 
     initialize()
-    pressStartTime.current = Date.now()
+    speakingStartTime.current = Date.now()
 
-    setTimeout(() => {
-      setIsPressing(true)
-    }, 500)
+    setIsSpeaking(true)
   }
 
-  const handlePointerUp = () => {
+  const finishSpeaking = () => {
     if (isLoading) return
 
     stop()
 
-    if (isPressing) {
-      const duration = Date.now() - pressStartTime.current
-      if (duration >= 1500) setIsDone(true)
+    const duration = Date.now() - speakingStartTime.current
+    if (duration >= 2000) {
+      setIsDone(true)
+    } else {
+      setInfoMessage(i18n.speakingTimeTooShort)
+      setIsSpeaking(false)
     }
-    setIsPressing(false)
   }
 
-  const handleCancel = () => {
+  const cancel = () => {
     if (isLoading) return
 
     stop()
-    setIsPressing(false)
+    setIsSpeaking(false)
+    setInfoMessage('')
   }
 
   return (
     <>
-      <div className="flex h-10 items-center space-x-4">
-        <div className="flex h-full items-center rounded-full bg-linear-color px-3 py-2 text-white shadow-sm">
-          <div style={{ height: !isPressing ? 1 : isCatchingVoice ? `${(thresholdInPercent + volumeState) * 100}%` : `${silentPercent * 100}%` }} className="flex items-center">
-            <div className={classNames(isCatchingVoice && isPressing ? 'animation-delay-0 animate-sound-wave ' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
-            <div className={classNames(isCatchingVoice && isPressing ? 'animation-delay-300 animate-sound-wave' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
-            <div className={classNames(isCatchingVoice && isPressing ? 'animation-delay-600 animate-sound-wave' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
-            <div className={classNames(isCatchingVoice && isPressing ? 'animation-delay-900 animate-sound-wave' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
-            <div className={classNames(isCatchingVoice && isPressing ? 'animation-delay-600 animate-sound-wave' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
-            <div className={classNames(isCatchingVoice && isPressing ? 'animation-delay-300 animate-sound-wave' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
-            <div className={classNames(isCatchingVoice && isPressing ? 'animation-delay-0 animate-sound-wave' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
+      <div className="flex w-full flex-col space-y-4">
+        {infoMessage && (
+          <div className="flex w-full space-x-1">
+            <XCircleIcon className="h-5 w-5 text-red-400" />
+            <span className="text-sm text-red-700">{infoMessage}</span>
           </div>
+        )}
+        <div className="flex w-full justify-between">
+          <div className="flex h-10 space-x-4">
+            <div className="flex h-full items-center rounded-full bg-linear-color px-3 py-2 text-white shadow-sm">
+              <div style={{ height: !isSpeaking ? 1 : isCatchingVoice ? `${(thresholdInPercent + volumeState) * 100}%` : `${silentPercent * 100}%` }} className="flex items-center">
+                <div className={classNames(isCatchingVoice && isSpeaking ? 'animation-delay-0 animate-sound-wave ' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
+                <div className={classNames(isCatchingVoice && isSpeaking ? 'animation-delay-300 animate-sound-wave' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
+                <div className={classNames(isCatchingVoice && isSpeaking ? 'animation-delay-600 animate-sound-wave' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
+                <div className={classNames(isCatchingVoice && isSpeaking ? 'animation-delay-900 animate-sound-wave' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
+                <div className={classNames(isCatchingVoice && isSpeaking ? 'animation-delay-600 animate-sound-wave' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
+                <div className={classNames(isCatchingVoice && isSpeaking ? 'animation-delay-300 animate-sound-wave' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
+                <div className={classNames(isCatchingVoice && isSpeaking ? 'animation-delay-0 animate-sound-wave' : '', 'relative mx-1 h-full w-[2.5px] rounded-3xl bg-slate-100')}></div>
+              </div>
+            </div>
+            {!isSpeaking && (
+              <button onClick={startSpeaking} className="btn btn-secondary h-full w-fit min-w-[80px]">
+                <span>{i18n.startSpeaking}</span>
+              </button>
+            )}
+            {isSpeaking && (
+              <button onClick={finishSpeaking} className="btn btn-secondary h-full w-fit min-w-[80px]">
+                {isLoading && <Spinner className="mr-2 text-gray-400" />}
+                <span>{i18n.finishSpeaking}</span>
+              </button>
+            )}
+            {isSpeaking && !isLoading && (
+              <button type="button" onClick={cancel} className="btn btn-secondary h-full w-fit min-w-[80px]">
+                <span>{i18n.cancel}</span>
+              </button>
+            )}
+          </div>
+          {!isSpeaking && (
+            <button onClick={close} className="btn btn-secondary h-full w-fit">
+              <LanguageIcon className="h-5 w-5" />
+            </button>
+          )}
         </div>
-        <button
-          onPointerDown={handlePointerDown}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handleCancel}
-          onPointerLeave={handleCancel}
-          className="btn btn-secondary h-full w-fit min-w-[80px]"
-          style={{ WebkitTapHighlightColor: 'transparent' }}
-        >
-          {isLoading && <Spinner className="mr-2 text-gray-400" />}
-          {isPressing ? <span>{i18n.slideUpToCancel}</span> : <span>{i18n.holdToSpeak}</span>}
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            stop()
-            onFinish('')
-          }}
-          className="btn btn-secondary h-full w-fit min-w-[80px]"
-          style={{ WebkitTapHighlightColor: 'transparent' }}
-        >
-          <span>{i18n.cancel}</span>
-        </button>
       </div>
     </>
   )

@@ -31,8 +31,9 @@ export const messages = {
   training: '训练',
   delete: '删除',
   upload: '上传',
-  holdToSpeak: '按住说话',
-  slideUpToCancel: '向上滑动取消'
+  startSpeaking: '开始说话',
+  finishSpeaking: '说完了',
+  speakingTimeTooShort: '说话时间太短',
 }
 
 export const i18n = transformI18n(messages)

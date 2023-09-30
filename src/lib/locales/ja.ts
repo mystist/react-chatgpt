@@ -31,8 +31,9 @@ export const messages = {
   training: '訓練します',
   delete: '削除します',
   upload: 'アップロードします',
-  holdToSpeak: 'おさえて話します',
-  slideUpToCancel: 'スライドアップキャンセルです'
+  startSpeaking: '話し始めます',
+  finishSpeaking: '言いました',
+  speakingTimeTooShort: '話す時間が短すぎます',
 }
 
 export const i18n = transformI18n(messages)

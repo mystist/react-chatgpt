@@ -53,7 +53,7 @@ export default function Index({ overlayMode }: any) {
 
   const i18n = useLocale()
 
-  const [isSpeaking, setIsSpeaking] = useState(false)
+  const [isSpeakingMode, setIsSpeakingMode] = useState(false)
   const [isThinking, setIsThinking] = useState(false)
   const [isWriting, setIsWriting] = useState(false)
   const [isImeComposing, setIsImeComposing] = useState(false)
@@ -152,8 +152,6 @@ export default function Index({ overlayMode }: any) {
 
   const fetchWhispersAndReply = useCallback(
     ({ content, conversationUuid, whisperUuid }: any) => {
-      setIsSpeaking(false)
-
       if (!content) return
 
       setLatestWhisperContentState(content)
@@ -230,13 +228,16 @@ export default function Index({ overlayMode }: any) {
     return whispers.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))[0]
   }, [whispers])
 
-  const onSpeaking = useCallback(() => {
+  const updateReplies = useCallback(() => {
+    refetchReplies().then(() => setLatestReplyContentState(''))
+  }, [refetchReplies])
+
+  const useSpeakingMode = useCallback(() => {
     if (isWriting || isThinking) return
 
-    setIsSpeaking(true)
-
-    refetchReplies().then(() => setLatestReplyContentState(''))
-  }, [isThinking, isWriting, refetchReplies])
+    setIsSpeakingMode(true)
+    updateReplies()
+  }, [isThinking, isWriting, updateReplies])
 
   useEffect(() => {
     if (!introRef || !introRef.current) return
@@ -255,7 +256,7 @@ export default function Index({ overlayMode }: any) {
       if (!content || !content.trim() || isWriting || isThinking) return
 
       resetField('content')
-      refetchReplies().then(() => setLatestReplyContentState(''))
+      updateReplies()
 
       whisperByText(
         { content, conversationUuid: conversationUuidState, chatMode },
@@ -266,7 +267,7 @@ export default function Index({ overlayMode }: any) {
         },
       )
     },
-    [isWriting, isThinking, resetField, refetchReplies, whisperByText, conversationUuidState, chatMode, fetchWhispersAndReply],
+    [isWriting, isThinking, resetField, updateReplies, whisperByText, conversationUuidState, chatMode, fetchWhispersAndReply],
   )
 
   const onSelectQuestion = useCallback(
@@ -682,8 +683,17 @@ export default function Index({ overlayMode }: any) {
                   )}
 
                   <div className="flex min-w-0 flex-1">
-                    {isSpeaking && <SoundWave onFinish={fetchWhispersAndReply} chatMode={chatMode} />}
-                    {!isSpeaking && (
+                    {isSpeakingMode && (
+                      <SoundWave
+                        onFinish={(data: any) => {
+                          fetchWhispersAndReply(data)
+                          updateReplies()
+                        }}
+                        chatMode={chatMode}
+                        close={() => setIsSpeakingMode(false)}
+                      />
+                    )}
+                    {!isSpeakingMode && (
                       <div className="relative w-full">
                         <form onSubmit={handleSubmit(send)} className="flex space-x-3">
                           <div className="relative flex min-h-[40px] flex-1">
@@ -726,7 +736,7 @@ export default function Index({ overlayMode }: any) {
                                 'block w-full resize-none rounded-md border-0 py-1.5 pr-10 text-sm leading-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]',
                               )}
                             />
-                            <button type="button" onClick={onSpeaking} className="absolute right-1 rounded-full p-2 text-primary-color opacity-100 hover:opacity-90">
+                            <button type="button" onClick={useSpeakingMode} className="absolute right-1 rounded-full p-2 text-primary-color opacity-100 hover:opacity-90">
                               <MicrophoneIcon className="h-6 w-6" aria-hidden="true" />
                             </button>
                           </div>

@@ -31,8 +31,9 @@ export const messages = {
   training: 'Training',
   delete: 'Delete',
   upload: 'Upload',
-  holdToSpeak: 'Hold to Speak',
-  slideUpToCancel: 'Slide Up to Cancel'
+  startSpeaking: 'Start Speaking',
+  finishSpeaking: 'Finish Speaking',
+  speakingTimeTooShort: 'Speaking time too short',
 }
 
 export const i18n = transformI18n(messages)
