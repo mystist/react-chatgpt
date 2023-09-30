@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.66](https://github.com/mystist/react-chatgpt/compare/v0.0.65...v0.0.66) (2023-09-30)
+
+
+### Bug Fixes
+
+* avoid multi audio contenxt instance and  help people hold longer to get full voice ([8b5399d](https://github.com/mystist/react-chatgpt/commit/8b5399df81f5a93f98b8d28e15c6f290cd6740b2))
+
 ### [0.0.65](https://github.com/mystist/react-chatgpt/compare/v0.0.64...v0.0.65) (2023-09-28)
 
 
