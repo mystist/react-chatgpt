@@ -1,13 +1,14 @@
 export interface Configuration {
-  avatarPath: string
-  videoPath: string
   agentName: string
-  questions: string[]
+  videoPath: string
+  avatarPath?: string
+  questions?: string[]
   introduction?: string
   disclaimer?: string
   disclaimerPath?: string
   isUseEmbedding?: boolean
   isAudioAutoPlay?: boolean
+  tongue?: boolean
   sectionType?: 'all' | 'points' | ' summary'
   prompt?: { system?: string; user?: string }
 }
