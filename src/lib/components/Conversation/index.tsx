@@ -351,8 +351,10 @@ export default function Index({ overlayMode }: any) {
   )
 
   const getMermaidCode = useCallback((content: string) => {
+    const matchInner = content.match(/```mermaid\n([\s\S]*?)```/)
     const match = content.match(/<blockquote>\n([\s\S]*?)<\/blockquote>/)
-    const mermaidContent = match ? match[1] : ''
+
+    const mermaidContent = matchInner ? matchInner[1] : match ? match[1] : ''
 
     return mermaidContent
   }, [])
