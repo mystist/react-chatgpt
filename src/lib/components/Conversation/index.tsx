@@ -350,13 +350,17 @@ export default function Index({ overlayMode }: any) {
     [identifier, mutateUpload, refetchReferences, userUuid],
   )
 
-  const getMermaidCode = useCallback((content: string) => {
-    const matchInner = content.match(/```mermaid\n([\s\S]*?)```/)
-    const match = content.match(/<blockquote>\n([\s\S]*?)<\/blockquote>/)
+  const getMermaidCodes = useCallback((content: string) => {
+    const regex = content.indexOf('```mermaid') !== -1 ? /```mermaid\n([\s\S]*?)```/g : /<blockquote>\n([\s\S]*?)<\/blockquote>/g
 
-    const mermaidContent = matchInner ? matchInner[1] : match ? match[1] : ''
+    let match
+    const contents = []
 
-    return mermaidContent
+    while ((match = regex.exec(content)) !== null) {
+      contents.push(match[1])
+    }
+
+    return contents
   }, [])
 
   useEffect(() => {
@@ -493,7 +497,9 @@ export default function Index({ overlayMode }: any) {
                                         {item.content}
                                       </ReactMarkdown>
                                     </div>
-                                    {getMermaidCode(item.content) && <MermaidChart code={getMermaidCode(item.content)} />}
+                                    {getMermaidCodes(item.content).map((code: string, index: number) => (
+                                      <MermaidChart key={index} code={code} />
+                                    ))}
                                   </div>
                                   {!!item.createdAt && (
                                     <div className="mt-2 flex items-center space-x-4 text-sm">
@@ -561,7 +567,13 @@ export default function Index({ overlayMode }: any) {
                                   {latestReplyContentState + (isWriting && !latestReplyContentState.includes('<') ? caretHtml : '')}
                                 </ReactMarkdown>
 
-                                {!isWriting && getMermaidCode(latestReplyContentState) && <MermaidChart code={getMermaidCode(latestReplyContentState)} />}
+                                {!isWriting && (
+                                  <>
+                                    {getMermaidCodes(latestReplyContentState).map((code: string, index: number) => (
+                                      <MermaidChart key={index} code={code} />
+                                    ))}
+                                  </>
+                                )}
                               </div>
                             </div>
 
