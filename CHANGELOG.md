@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.71](https://github.com/mystist/react-chatgpt/compare/v0.0.70...v0.0.71) (2023-10-24)
+
+
+### Features
+
+* support copy content ([0d4c456](https://github.com/mystist/react-chatgpt/commit/0d4c456a2a8b350d2525f47f0ffd2b362240a1a8))
+* support multi mermaid chart ([76280a0](https://github.com/mystist/react-chatgpt/commit/76280a0401b696635d9df1158b4ffa42158eb766))
+
 ### [0.0.70](https://github.com/mystist/react-chatgpt/compare/v0.0.69...v0.0.70) (2023-10-23)
 
 ### [0.0.69](https://github.com/mystist/react-chatgpt/compare/v0.0.68...v0.0.69) (2023-10-22)
