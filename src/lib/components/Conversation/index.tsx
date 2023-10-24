@@ -18,6 +18,7 @@ import { deleteReference, getReferences, postReply, postSection, postUpload, pos
 import { classNames, getAgreement, getConversationUuid, getIdentifier, getUserUuid, setAgreement, timeSince } from '../../utils'
 import AiAvatar from '../AiAvatar'
 import AudioPlayer from '../AudioPlayer'
+import Clipboard from '../Clipboard'
 import Divider from '../Divider'
 import MermaidChart from '../MermaidChart'
 import SoundWave from '../SoundWave'
@@ -67,6 +68,7 @@ export default function Index({ overlayMode }: any) {
   const [isShowPanel, setIsShowPanel] = useState(false)
   const [isLoadingSectionIndex, setIsLoadingSectionIndex] = useState(-1)
   const [selectedReferences, setSelectedReferences] = useState([])
+  const [currentCopiedIndexState, setCurrentCopiedIndexState] = useState(-1)
 
   const [latestWhisperContentState, setLatestWhisperContentState] = useState('')
   const [latestReplyContentState, setLatestReplyContentState] = useState('')
@@ -257,6 +259,7 @@ export default function Index({ overlayMode }: any) {
 
       resetField('content')
       updateReplies()
+      setCurrentCopiedIndexState(-1)
 
       whisperByText(
         { content, conversationUuid: conversationUuidState, chatMode },
@@ -504,14 +507,17 @@ export default function Index({ overlayMode }: any) {
                                   {!!item.createdAt && (
                                     <div className="mt-2 flex items-center space-x-4 text-sm">
                                       <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
-                                      {tongue && item.whisperUuid && (
-                                        <>
-                                          <span className="text-gray-500">&middot;</span>
-                                          <div className="relative inline-flex h-7 w-7">
-                                            <AudioPlayer whisperUuid={item.whisperUuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />
-                                          </div>
-                                        </>
-                                      )}
+                                      <span className="text-gray-500">&middot;</span>
+                                      <button
+                                        className="flex"
+                                        onClick={() => {
+                                          navigator.clipboard.writeText(item.content)
+                                          setCurrentCopiedIndexState(index)
+                                        }}
+                                      >
+                                        <Clipboard className="h-9 w-9 stroke-gray-600" isCopied={currentCopiedIndexState === index} />
+                                      </button>
+                                      {tongue && item.whisperUuid && <AudioPlayer whisperUuid={item.whisperUuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />}
                                     </div>
                                   )}
                                 </div>
@@ -579,14 +585,21 @@ export default function Index({ overlayMode }: any) {
 
                             <div className="mt-2 flex items-center space-x-4 text-sm">
                               <span className="text-gray-500">{timeSince(new Date().getTime(), i18n)}</span>
+                              <span className="text-gray-500">&middot;</span>
+                              <button
+                                className="flex"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(latestReplyContentState)
+                                  setCurrentCopiedIndexState(65535)
+                                }}
+                              >
+                                <Clipboard className="h-9 w-9 stroke-gray-600" isCopied={currentCopiedIndexState === 65535} />
+                              </button>
                               {tongue && (
                                 <>
-                                  <span className="text-gray-500">&middot;</span>
-                                  <div className="relative inline-flex h-7 w-7">
-                                    {latestWhisper.uuid && !isWriting && (
-                                      <AudioPlayer isAutoplay={!!isAudioAutoPlay} whisperUuid={latestWhisper.uuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />
-                                    )}
-                                  </div>
+                                  {latestWhisper.uuid && !isWriting && (
+                                    <AudioPlayer isAutoplay={!!isAudioAutoPlay} whisperUuid={latestWhisper.uuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />
+                                  )}
                                 </>
                               )}
                             </div>
