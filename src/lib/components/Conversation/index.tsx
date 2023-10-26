@@ -531,9 +531,7 @@ export default function Index({ overlayMode }: any) {
                                   <div className="flex flex-col items-end">
                                     <div className="flex rounded-2xl bg-opacity-[0.85] bg-linear-color px-4 py-2">
                                       <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate text-white prose-p:my-0 prose-thead:whitespace-nowrap')}>
-                                        {item.content.split('\n').map((p: string, index: number) => (
-                                          <p key={index}>{p}</p>
-                                        ))}
+                                        {item.content && typeof item.content === 'string' && item.content.split('\n').map((p: string, index: number) => <p key={index}>{p}</p>)}
                                       </div>
                                     </div>
                                     <div className="mt-2 flex items-center justify-end space-x-4 text-sm">
