@@ -2,7 +2,6 @@ import { nanoid } from 'nanoid/non-secure'
 
 import { localStorageEnhanced } from './local-storage-enhanced'
 
-const sessionDuration = 20 * 60 * 1000
 const oneDay = 24 * 60 * 60 * 1000
 const oneWeek = 7 * oneDay
 
@@ -57,7 +56,7 @@ export const getOrCreateUserUuid = () => {
   return userUuid
 }
 
-export const setUserUuid = (userUuid: string, duration = sessionDuration) => {
+export const setUserUuid = (userUuid: string, duration = oneDay) => {
   const key = getUserUuidKey()
 
   localStorageEnhanced.setWithExpiry(key, userUuid, duration)
