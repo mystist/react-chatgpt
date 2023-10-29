@@ -11,6 +11,7 @@ export interface Configuration {
   tongue?: boolean
   sectionType?: 'all' | 'points' | ' summary'
   prompt?: { system?: string; user?: string }
+  newConversationRound?: number
 }
 
 export interface Talk {

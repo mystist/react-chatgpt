@@ -80,7 +80,7 @@ export default function Index({ overlayMode }: any) {
 
   const identifier = getIdentifier()
   const userUuid = getUserUuid()
-  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, isUseEmbedding, prompt, sectionType, isAudioAutoPlay, tongue } = useConfiguration()
+  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, isUseEmbedding, prompt, sectionType, isAudioAutoPlay, tongue, newConversationRound: cNewConversationRound } = useConfiguration()
 
   const {
     data: [conversation, previousConversation],
@@ -422,6 +422,15 @@ export default function Index({ overlayMode }: any) {
     },
     [selectedReferences],
   )
+
+  const isConversationFull = useCallback(() => {
+    if (!cNewConversationRound || !talks || talks.length === 0) return false
+
+    let newConversationRound = 50
+    if (cNewConversationRound && +cNewConversationRound >= 10 && +cNewConversationRound <= 100) newConversationRound = +cNewConversationRound
+
+    return talks.length + 1 >= newConversationRound * 2
+  }, [cNewConversationRound, talks])
 
   return (
     <>
@@ -789,7 +798,7 @@ export default function Index({ overlayMode }: any) {
                               </>
                             ) : (
                               <>
-                                {!isConversationUuidAsParam && (
+                                {!isConversationUuidAsParam && !isConversationFull() && (
                                   <>
                                     {isUseEmbedding || (prompt && !prompt.user) ? (
                                       <button onClick={newChat} className="btn btn-secondary h-full w-fit min-w-[80px]">
