@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.74](https://github.com/mystist/react-chatgpt/compare/v0.0.73...v0.0.74) (2023-10-29)
+
+
+### Features
+
+* should disable send button when new conversation from backend service ([3d4ecc3](https://github.com/mystist/react-chatgpt/commit/3d4ecc3cca6fdffa382dd37fe84aacc6de0424e0))
+
 ### [0.0.73](https://github.com/mystist/react-chatgpt/compare/v0.0.72...v0.0.73) (2023-10-26)
 
 
