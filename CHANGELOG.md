@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.75](https://github.com/mystist/react-chatgpt/compare/v0.0.74...v0.0.75) (2023-10-30)
+
+
+### Bug Fixes
+
+* tweka type check ([ef0ced2](https://github.com/mystist/react-chatgpt/commit/ef0ced2eb84f72e06565d2e5b96459812de70f3c))
+
 ### [0.0.74](https://github.com/mystist/react-chatgpt/compare/v0.0.73...v0.0.74) (2023-10-29)
 
 
