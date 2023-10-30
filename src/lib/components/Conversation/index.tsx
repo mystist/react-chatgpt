@@ -354,6 +354,8 @@ export default function Index({ overlayMode }: any) {
   )
 
   const getMermaidCodes = useCallback((content: string) => {
+    if (typeof content !== 'string') return []
+
     const regex = content.indexOf('```mermaid') !== -1 ? /```mermaid\n([\s\S]*?)```/g : /<blockquote>\n([\s\S]*?)<\/blockquote>/g
 
     let match
