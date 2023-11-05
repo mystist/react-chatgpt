@@ -512,7 +512,7 @@ export default function Index({ overlayMode }: any) {
                                       </ReactMarkdown>
                                     </div>
                                     {getMermaidCodes(item.content).map((code: string, index: number) => (
-                                      <MermaidChart key={index} code={code} />
+                                      <MermaidChart key={index} code={code} index={index} />
                                     ))}
                                   </div>
                                   {!!item.createdAt && (
@@ -585,7 +585,7 @@ export default function Index({ overlayMode }: any) {
                                 {!isWriting && (
                                   <>
                                     {getMermaidCodes(latestReplyContentState).map((code: string, index: number) => (
-                                      <MermaidChart key={index} code={code} />
+                                      <MermaidChart key={index} code={code} index={index} />
                                     ))}
                                   </>
                                 )}

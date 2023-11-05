@@ -1,14 +1,17 @@
 import mermaid from 'mermaid'
 import { useEffect } from 'react'
 
-mermaid.initialize({
-  startOnLoad: true,
-})
-
-const Mermaid = ({ code }: any) => {
+const Mermaid = ({ code, index }: any) => {
   useEffect(() => {
-    mermaid.contentLoaded()
-  }, [])
+    setTimeout(() => {
+      if (index === 0) {
+        mermaid.initialize({
+          startOnLoad: true,
+        })
+        mermaid.contentLoaded()
+      }
+    }, 500)
+  }, [index])
 
   return <div className="mermaid">{code}</div>
 }
