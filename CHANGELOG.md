@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.76](https://github.com/mystist/react-chatgpt/compare/v0.0.75...v0.0.76) (2023-11-05)
+
+
+### Bug Fixes
+
+* should initialize mermaid only once ([2dc956b](https://github.com/mystist/react-chatgpt/commit/2dc956bda3ed051a54c1e2425cbcefafd91e2748))
+
 ### [0.0.75](https://github.com/mystist/react-chatgpt/compare/v0.0.74...v0.0.75) (2023-10-30)
 
 
