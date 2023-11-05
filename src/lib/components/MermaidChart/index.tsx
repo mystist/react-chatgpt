@@ -1,7 +1,7 @@
 import mermaid from 'mermaid'
 import { useEffect } from 'react'
 
-const Mermaid = ({ code, index }: any) => {
+const Mermaid = ({ code, index = 0 }: any) => {
   useEffect(() => {
     setTimeout(() => {
       if (index === 0) {
