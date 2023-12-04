@@ -34,6 +34,7 @@ export const messages = {
   startSpeaking: '話し始めます',
   finishSpeaking: '言いました',
   speakingTimeTooShort: '話す時間が短すぎます',
+  browseInSite: '構内を見て回ります',
 }
 
 export const i18n = transformI18n(messages)

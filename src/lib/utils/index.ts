@@ -80,3 +80,26 @@ export const getAgreement = () => localStorageEnhanced.getWithExpiry('react-chat
 export const setConversationUuid = (value: string) => localStorageEnhanced.setItem('react-chatgpt-conversation', value)
 export const getConversationUuid = () => localStorageEnhanced.getItem('react-chatgpt-conversation') || ''
 export const removeConversationUuid = () => localStorageEnhanced.removeItem('react-chatgpt-conversation')
+
+export const isValidSite = (str: string) => {
+  return /[a-zA-Z]{1}\.[a-zA-Z]{2}/.test(str)
+}
+
+export const replaceOrAppendSitePrefix = (content: string, siteVal: string) => {
+  const pattern = /\/site:[^\s]+/
+  const regex = new RegExp(pattern)
+  const prefix = `/site:${siteVal}`
+
+  if (regex.test(content)) {
+    return content.replace(regex, prefix)
+  } else {
+    return `${prefix} ${content}`
+  }
+}
+
+export const removeSitePrefix = (content: string) => {
+  const pattern = /\/site:[^\s]+/
+  const regex = new RegExp(pattern)
+
+  return content.replace(regex, '').trim()
+}

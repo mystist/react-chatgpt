@@ -15,7 +15,7 @@ import { useReplies } from '../../hooks/useReplies'
 import { useWhispers } from '../../hooks/useWhispers'
 import { Talk, Whisper } from '../../interfaces'
 import { deleteReference, getReferences, postReply, postSection, postUpload, postWhisperByText } from '../../requests'
-import { classNames, getAgreement, getConversationUuid, getIdentifier, getUserUuid, setAgreement, timeSince } from '../../utils'
+import { classNames, getAgreement, getConversationUuid, getIdentifier, getUserUuid, isValidSite, removeSitePrefix, replaceOrAppendSitePrefix, setAgreement, timeSince } from '../../utils'
 import AiAvatar from '../AiAvatar'
 import AudioPlayer from '../AudioPlayer'
 import Clipboard from '../Clipboard'
@@ -77,10 +77,11 @@ export default function Index({ overlayMode }: any) {
   const [previousConversationUuidState, setPreviousConversationUuidState] = useState('')
   const [isNewConversation, setIsNewConversation] = useState(false)
   const [isNewChat, setIsNewChat] = useState(false)
+  const [siteState, setSiteState] = useState('')
 
   const identifier = getIdentifier()
   const userUuid = getUserUuid()
-  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, isUseEmbedding, prompt, sectionType, isAudioAutoPlay, tongue, newConversationRound: cNewConversationRound } = useConfiguration()
+  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, isUseEmbedding, prompt, sectionType, isAudioAutoPlay, tongue, newConversationRound: cNewConversationRound, isEnableBrowseInSite } = useConfiguration()
 
   const {
     data: [conversation, previousConversation],
@@ -98,7 +99,7 @@ export default function Index({ overlayMode }: any) {
   const { mutate: mutateSection } = useMutation(postSection)
   const { mutate: mutateDeleteReference } = useMutation(deleteReference)
 
-  const { register, handleSubmit, resetField, setValue, watch } = useForm()
+  const { register, handleSubmit, resetField, setValue, watch, getValues } = useForm()
   const { mutate: whisperByText, isLoading } = useMutation(postWhisperByText)
   const watchedContent = watch('content')
 
@@ -278,9 +279,13 @@ export default function Index({ overlayMode }: any) {
       const val = e.currentTarget.innerText.trim()
       if (!val) return
 
-      setValue('content', val)
+      if (siteState) {
+        setValue('content', replaceOrAppendSitePrefix(val, siteState))
+      } else {
+        setValue('content', val)
+      }
     },
-    [setValue],
+    [setValue, siteState],
   )
 
   const agree = useCallback(() => {
@@ -433,6 +438,23 @@ export default function Index({ overlayMode }: any) {
 
     return talks.length + 1 >= newConversationRound * 2
   }, [cNewConversationRound, talks])
+
+  const onSiteChange = useCallback(
+    (e: any) => {
+      const siteVal = e.currentTarget.value.replace(/\s+/g, '')
+      const content = getValues()['content'] || ''
+
+      if (isValidSite(siteVal)) {
+        setSiteState(siteVal)
+        setValue('content', replaceOrAppendSitePrefix(content, siteVal))
+      } else {
+        setSiteState('')
+
+        if (!siteVal) setValue('content', removeSitePrefix(content))
+      }
+    },
+    [getValues, setValue],
+  )
 
   return (
     <>
@@ -645,6 +667,31 @@ export default function Index({ overlayMode }: any) {
               </div>
               <div className="mt-4 bg-gray-100 px-4 py-6 sm:px-6">
                 <div className="flex flex-col space-y-3">
+                  {isEnableBrowseInSite && (
+                    <div className="flex flex-col">
+                      <span
+                        className={classNames(
+                          siteState ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-gray-50 text-gray-600 ring-gray-500/10',
+                          'inline-flex w-fit items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset',
+                        )}
+                      >
+                        {i18n.browseInSite}
+                      </span>
+                      <div className="mt-1">
+                        <div className="flex rounded-md bg-white shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                          <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">https://</span>
+                          <input
+                            type="text"
+                            className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                            placeholder="apple.com"
+                            autoComplete="off"
+                            {...register('site', { onChange: onSiteChange })}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {isShowPanel && (
                     <div className="flex flex-col space-y-3">
                       <ul role="list" className="max-h-[247px] flex-col divide-y divide-gray-100 overflow-y-auto rounded-md border border-gray-200 bg-white">

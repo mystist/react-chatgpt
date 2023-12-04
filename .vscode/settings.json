@@ -5,5 +5,8 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "C_Cpp.errorSquiggles": "disabled",
-  "cSpell.words": ["chatgpt", "mystist", "tailwindcss"]
+  "cSpell.words": ["chatgpt", "mystist", "tailwindcss"],
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

@@ -34,6 +34,7 @@ export const messages = {
   startSpeaking: 'Start Speaking',
   finishSpeaking: 'Finish Speaking',
   speakingTimeTooShort: 'Speaking time too short',
+  browseInSite: 'Browse in site',
 }
 
 export const i18n = transformI18n(messages)

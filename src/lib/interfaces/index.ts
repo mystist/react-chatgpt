@@ -12,6 +12,7 @@ export interface Configuration {
   sectionType?: 'all' | 'points' | ' summary'
   prompt?: { system?: string; user?: string }
   newConversationRound?: number
+  isEnableBrowseInSite?: boolean
 }
 
 export interface Talk {

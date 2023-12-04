@@ -34,6 +34,7 @@ export const messages = {
   startSpeaking: '开始说话',
   finishSpeaking: '说完了',
   speakingTimeTooShort: '说话时间太短',
+  browseInSite: '在站内浏览',
 }
 
 export const i18n = transformI18n(messages)
