@@ -1,6 +1,6 @@
 {
   "name": "@mystist/react-chatgpt",
-  "version": "0.0.78",
+  "version": "0.0.79",
   "type": "module",
   "scripts": {
     "dev": "vite",
