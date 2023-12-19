@@ -65,7 +65,7 @@ export default function Index({ overlayMode }: any) {
   const [contentBreakCount, setContentBreakCount] = useState(0)
   const [chatMode, setChatMode] = useState('task')
   const [newFile, setNewFile] = useState<{ title: string; file: File } | null>(null)
-  const [isShowPanel, setIsShowPanel] = useState(false)
+  const [isShowPanel, setIsShowPanel] = useState(true)
   const [isLoadingSectionIndex, setIsLoadingSectionIndex] = useState(-1)
   const [selectedReferences, setSelectedReferences] = useState([])
   const [currentCopiedIndexState, setCurrentCopiedIndexState] = useState(-1)
