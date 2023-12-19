@@ -65,7 +65,7 @@ export default function Index({ overlayMode }: any) {
   const [contentBreakCount, setContentBreakCount] = useState(0)
   const [chatMode, setChatMode] = useState('task')
   const [newFile, setNewFile] = useState<{ title: string; file: File } | null>(null)
-  const [isShowPanel, setIsShowPanel] = useState(true)
+  const [isShowPanel, setIsShowPanel] = useState(false)
   const [isLoadingSectionIndex, setIsLoadingSectionIndex] = useState(-1)
   const [selectedReferences, setSelectedReferences] = useState([])
   const [currentCopiedIndexState, setCurrentCopiedIndexState] = useState(-1)
@@ -373,13 +373,9 @@ export default function Index({ overlayMode }: any) {
     return contents
   }, [])
 
-  useEffect(() => {
-    if (prompt && !prompt.user) setChatMode('chat')
-  }, [prompt])
-
   const training = useCallback(
     ({ code, index }: any) => {
-      if (!code) return
+      if (!code || isLoadingSectionIndex !== -1) return
 
       setIsLoadingSectionIndex(index)
       mutateSection(
@@ -392,7 +388,7 @@ export default function Index({ overlayMode }: any) {
         },
       )
     },
-    [identifier, mutateSection, refetchReferences, userUuid],
+    [identifier, isLoadingSectionIndex, mutateSection, refetchReferences, userUuid],
   )
 
   const doDelete = useCallback(
@@ -455,6 +451,12 @@ export default function Index({ overlayMode }: any) {
     },
     [getValues, setValue],
   )
+
+  useEffect(() => {
+    if (prompt && !prompt.user) setChatMode('chat')
+
+    if (sectionType) setIsShowPanel(true)
+  }, [prompt, sectionType])
 
   return (
     <>
@@ -703,7 +705,9 @@ export default function Index({ overlayMode }: any) {
                                 <div className="mr-3.5 flex w-0 flex-1 items-center">
                                   <div className="flex min-w-0 flex-1 justify-between gap-2">
                                     <span className="truncate">{item.title}</span>
-                                    {item.hasCompleted ? (
+                                    {sectionType === 'content' ? (
+                                      <span className="flex flex-shrink-0 items-center text-gray-400">{isLoadingSectionIndex === index && <Spinner className="!h-4 !w-4 text-gray-400" />}</span>
+                                    ) : item.hasCompleted ? (
                                       <span className="flex-shrink-0 text-gray-400">
                                         <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">{i18n.completed}</span>
                                       </span>
@@ -716,7 +720,7 @@ export default function Index({ overlayMode }: any) {
                                   </div>
                                 </div>
                                 <div className="flex justify-center">
-                                  {item.hasCompleted ? (
+                                  {item.hasCompleted || (sectionType === 'content' && item.section.length > 0) ? (
                                     <button onClick={() => add(item)} className="-mx-1 -my-2.5 block px-1 py-2.5 pr-3.5 text-gray-500 hover:text-gray-900" title={i18n.add}>
                                       <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
                                     </button>

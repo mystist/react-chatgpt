@@ -9,7 +9,7 @@ export interface Configuration {
   isUseEmbedding?: boolean
   isAudioAutoPlay?: boolean
   tongue?: boolean
-  sectionType?: 'all' | 'points' | ' summary'
+  sectionType?: 'content' | 'summary' | 'points'
   prompt?: { system?: string; user?: string }
   newConversationRound?: number
   isEnableBrowseInSite?: boolean
