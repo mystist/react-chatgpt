@@ -19,7 +19,6 @@ import { classNames, getAgreement, getConversationUuid, getIdentifier, getUserUu
 import AiAvatar from '../AiAvatar'
 import AudioPlayer from '../AudioPlayer'
 import Clipboard from '../Clipboard'
-import Divider from '../Divider'
 import MermaidChart from '../MermaidChart'
 import SoundWave from '../SoundWave'
 import Spinner from '../Spinner'
@@ -74,7 +73,6 @@ export default function Index({ overlayMode }: any) {
   const [latestReplyContentState, setLatestReplyContentState] = useState('')
 
   const [conversationUuidState, setConversationUuidState] = useState('')
-  const [previousConversationUuidState, setPreviousConversationUuidState] = useState('')
   const [isNewConversation, setIsNewConversation] = useState(false)
   const [isNewChat, setIsNewChat] = useState(false)
   const [siteState, setSiteState] = useState('')
@@ -84,15 +82,12 @@ export default function Index({ overlayMode }: any) {
   const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, prompt, sectionType, isAudioAutoPlay, tongue, newConversationRound: cNewConversationRound, isEnableBrowseInSite } = useConfiguration()
 
   const {
-    data: [conversation, previousConversation],
+    data: [conversation],
     refetch: refetchConversation,
   } = useConversation({ isCreate: isNewConversation })
 
   const { data: whispers, refetch: refetchWhispers } = useWhispers(conversationUuidState)
   const { data: replies, refetch: refetchReplies } = useReplies(conversationUuidState)
-
-  const { data: previousWhispers } = useWhispers(previousConversationUuidState)
-  const { data: previousReplies } = useReplies(previousConversationUuidState)
 
   const { mutate: reply } = useMutation(postReply)
   const { mutate: mutateUpload, isLoading: isLoadingUpload } = useMutation(postUpload)
@@ -109,8 +104,7 @@ export default function Index({ overlayMode }: any) {
 
   useEffect(() => {
     if (conversation) setConversationUuidState(conversation.uuid)
-    if (previousConversation) setPreviousConversationUuidState(previousConversation.uuid)
-  }, [conversation, previousConversation])
+  }, [conversation])
 
   const isSafari = useCallback(() => /^((?!chrome|android).)*safari/i.test(navigator.userAgent), [])
 
@@ -198,18 +192,6 @@ export default function Index({ overlayMode }: any) {
       .concat(replies)
       .sort((a: Talk, b: Talk) => (a.createdAt > b.createdAt ? 1 : -1))
   }, [whispers, replies])
-
-  const previousTalks = useMemo(() => {
-    const talks: Talk[] = []
-
-    if (!previousWhispers || !previousReplies) return talks
-
-    return talks
-      .concat(previousWhispers)
-      .concat(previousReplies)
-      .sort((a: Talk, b: Talk) => (a.createdAt > b.createdAt ? 1 : -1))
-      .slice(-2 * 1)
-  }, [previousWhispers, previousReplies])
 
   const introTalks = useMemo(() => {
     if (!conversationUuidState || !introduction) return []
@@ -508,82 +490,78 @@ export default function Index({ overlayMode }: any) {
                         </div>
                       </li>
                     )}
-                    {introTalks
-                      .concat(previousTalks)
-                      .concat(talks)
-                      .map((item: any, index: number) => (
-                        <Fragment key={index}>
-                          <li>
-                            {item.role === 'assistant' && (
-                              <div className="flex space-x-3">
-                                <div className="flex-shrink-0">
-                                  <div className="relative flex flex-col">
-                                    <AiAvatar whisperUuid={item.whisperUuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} />
-                                  </div>
-                                </div>
-                                <div>
-                                  <div className="text-sm">
-                                    <span className="font-medium text-gray-900">{agentName}</span>
-                                  </div>
-                                  <div className="mt-2 flex w-fit flex-col rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
-                                    <div
-                                      className={classNames(
-                                        overlayMode === 'slide-over' ? '' : 'lg:prose-base',
-                                        'prose prose-sm prose-slate prose-blockquote:hidden prose-pre:whitespace-pre-line prose-thead:whitespace-pre-line prose-td:break-all',
-                                      )}
-                                    >
-                                      <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
-                                        {item.content}
-                                      </ReactMarkdown>
-                                    </div>
-                                    {getMermaidCodes(item.content).map((code: string, index: number) => (
-                                      <MermaidChart key={index} code={code} index={index} />
-                                    ))}
-                                  </div>
-                                  {!!item.createdAt && (
-                                    <div className="mt-2 flex items-center space-x-4 text-sm">
-                                      <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
-                                      <span className="text-gray-500">&middot;</span>
-                                      <button
-                                        className="flex"
-                                        onClick={() => {
-                                          navigator.clipboard.writeText(item.content)
-                                          setCurrentCopiedIndexState(index)
-                                        }}
-                                      >
-                                        <Clipboard className="h-9 w-9 stroke-gray-600" isCopied={currentCopiedIndexState === index} />
-                                      </button>
-                                      {tongue && item.whisperUuid && <AudioPlayer whisperUuid={item.whisperUuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />}
-                                    </div>
-                                  )}
+                    {introTalks.concat(talks).map((item: any, index: number) => (
+                      <Fragment key={index}>
+                        <li>
+                          {item.role === 'assistant' && (
+                            <div className="flex space-x-3">
+                              <div className="flex-shrink-0">
+                                <div className="relative flex flex-col">
+                                  <AiAvatar whisperUuid={item.whisperUuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} />
                                 </div>
                               </div>
-                            )}
+                              <div>
+                                <div className="text-sm">
+                                  <span className="font-medium text-gray-900">{agentName}</span>
+                                </div>
+                                <div className="mt-2 flex w-fit flex-col rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
+                                  <div
+                                    className={classNames(
+                                      overlayMode === 'slide-over' ? '' : 'lg:prose-base',
+                                      'prose prose-sm prose-slate prose-blockquote:hidden prose-pre:whitespace-pre-line prose-thead:whitespace-pre-line prose-td:break-all',
+                                    )}
+                                  >
+                                    <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
+                                      {item.content}
+                                    </ReactMarkdown>
+                                  </div>
+                                  {getMermaidCodes(item.content).map((code: string, index: number) => (
+                                    <MermaidChart key={index} code={code} index={index} />
+                                  ))}
+                                </div>
+                                {!!item.createdAt && (
+                                  <div className="mt-2 flex items-center space-x-4 text-sm">
+                                    <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
+                                    <span className="text-gray-500">&middot;</span>
+                                    <button
+                                      className="flex"
+                                      onClick={() => {
+                                        navigator.clipboard.writeText(item.content)
+                                        setCurrentCopiedIndexState(index)
+                                      }}
+                                    >
+                                      <Clipboard className="h-9 w-9 stroke-gray-600" isCopied={currentCopiedIndexState === index} />
+                                    </button>
+                                    {tongue && item.whisperUuid && <AudioPlayer whisperUuid={item.whisperUuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
 
-                            {item.role === 'user' && (
-                              <>
-                                {index === introTalks.length + previousTalks.length + talks.length - 1 && <div ref={divRef} />}
-                                <div className="flex justify-end space-x-3">
-                                  <div className="flex flex-col items-end">
-                                    <div className="flex rounded-2xl bg-opacity-[0.85] bg-linear-color px-4 py-2">
-                                      <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate text-white prose-p:my-0 prose-thead:whitespace-nowrap')}>
-                                        {item.content && typeof item.content === 'string' && item.content.split('\n').map((p: string, index: number) => <p key={index}>{p}</p>)}
-                                      </div>
-                                    </div>
-                                    <div className="mt-2 flex items-center justify-end space-x-4 text-sm">
-                                      <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
+                          {item.role === 'user' && (
+                            <>
+                              {index === introTalks.length + talks.length - 1 && <div ref={divRef} />}
+                              <div className="flex justify-end space-x-3">
+                                <div className="flex flex-col items-end">
+                                  <div className="flex rounded-2xl bg-opacity-[0.85] bg-linear-color px-4 py-2">
+                                    <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate text-white prose-p:my-0 prose-thead:whitespace-nowrap')}>
+                                      {item.content && typeof item.content === 'string' && item.content.split('\n').map((p: string, index: number) => <p key={index}>{p}</p>)}
                                     </div>
                                   </div>
-                                  <div className="flex-shrink-0">
-                                    <DefaultAvatar />
+                                  <div className="mt-2 flex items-center justify-end space-x-4 text-sm">
+                                    <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
                                   </div>
                                 </div>
-                              </>
-                            )}
-                          </li>
-                          {previousTalks.length > 0 && index - 1 === previousTalks.length - 1 && <Divider className="top-2" text={i18n.newConversation} />}
-                        </Fragment>
-                      ))}
+                                <div className="flex-shrink-0">
+                                  <DefaultAvatar />
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </li>
+                      </Fragment>
+                    ))}
                     {latestReplyContentState && latestWhisper && (
                       <li>
                         <div className="flex space-x-3">
