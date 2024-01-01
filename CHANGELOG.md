@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.80](https://github.com/mystist/react-chatgpt/compare/v0.0.79...v0.0.80) (2024-01-01)
+
+
+### Features
+
+* detect the chat mode automatically ([e5bac17](https://github.com/mystist/react-chatgpt/commit/e5bac17525609654f325e36584369dbcce5b9e7e))
+* no need to fetch previous conversation any more when new chat ([8f133b3](https://github.com/mystist/react-chatgpt/commit/8f133b38106661337188c8c54cf5261c1ada821e))
+
 ### [0.0.79](https://github.com/mystist/react-chatgpt/compare/v0.0.78...v0.0.79) (2023-12-19)
 
 
