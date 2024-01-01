@@ -1,5 +1,5 @@
-import { Dialog, Menu, Transition } from '@headlessui/react'
-import { ChatBubbleBottomCenterTextIcon, CheckCircleIcon, ChevronDownIcon, PaperClipIcon } from '@heroicons/react/20/solid'
+import { Dialog, Transition } from '@headlessui/react'
+import { PaperClipIcon } from '@heroicons/react/20/solid'
 import { ExclamationTriangleIcon, FireIcon, MicrophoneIcon, MinusCircleIcon, PlusCircleIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -81,7 +81,7 @@ export default function Index({ overlayMode }: any) {
 
   const identifier = getIdentifier()
   const userUuid = getUserUuid()
-  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, isUseEmbedding, prompt, sectionType, isAudioAutoPlay, tongue, newConversationRound: cNewConversationRound, isEnableBrowseInSite } = useConfiguration()
+  const { agentName, questions, introduction, disclaimer, disclaimerPath, videoPath, prompt, sectionType, isAudioAutoPlay, tongue, newConversationRound: cNewConversationRound, isEnableBrowseInSite } = useConfiguration()
 
   const {
     data: [conversation, previousConversation],
