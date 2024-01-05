@@ -19,14 +19,15 @@ export const useConfiguration = () => {
     }
   }, [identifier, rawConfiguration])
 
-  const { data } = useQuery('configuration', getConfigurationFn, { enabled: !!identifier, cacheTime: 100 })
+  const { data } = useQuery(`configuration:${identifier}`, getConfigurationFn, { enabled: !!identifier, cacheTime: 100 })
 
   useEffect(() => {
     if (data) {
-      setConfig(JSON.stringify(data))
       setDataState(data)
     }
   }, [data])
+
+  if (data) setConfig(JSON.stringify(data))
 
   return dataState
 }

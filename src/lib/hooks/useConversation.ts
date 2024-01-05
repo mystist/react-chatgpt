@@ -3,19 +3,20 @@ import { useQuery } from 'react-query'
 
 import { Conversation } from '../interfaces'
 import { getLatestConversationList } from '../requests'
-import { getConversationUuid, getOrCreateUserUuid } from '../utils'
+import { getConversationUuid, getIdentifier, getOrCreateUserUuid } from '../utils'
 
 export const useConversation = ({ isCreate = false } = {}) => {
   const [dataState, setDataState] = useState<Conversation[]>([])
 
   const userUuid = getOrCreateUserUuid()
   const conversationUuid = getConversationUuid()
+  const identifier = getIdentifier()
 
   const getLatestConversationFn = useCallback(() => {
     return getLatestConversationList({ userUuid, isCreate })
   }, [isCreate, userUuid])
 
-  const { data, refetch } = useQuery(`conversation:${userUuid}:${conversationUuid || 'latest-and-previous'}`, getLatestConversationFn, { cacheTime: 100, enabled: !conversationUuid }) as any
+  const { data, refetch } = useQuery(`conversation:${identifier}:${userUuid}:${conversationUuid || 'latest-and-previous'}`, getLatestConversationFn, { cacheTime: 100, enabled: !conversationUuid }) as any
 
   useEffect(() => {
     if (conversationUuid && userUuid) {
@@ -23,7 +24,6 @@ export const useConversation = ({ isCreate = false } = {}) => {
     } else if (data) {
       setDataState(data)
     }
-
   }, [conversationUuid, data, userUuid])
 
   return { data: dataState, refetch }
