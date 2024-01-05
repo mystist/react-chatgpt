@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 import { useLocale } from '../../hooks/useLocale'
@@ -47,6 +47,14 @@ export default function Index({ status, setStatus, identifier, lang = 'en', over
       return 'slide-over'
     }
   }, [isMd, overlayMode])
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', cleanup)
+
+    return () => {
+      window.removeEventListener('beforeunload', cleanup)
+    }
+  }, [cleanup])
 
   return (
     <>
