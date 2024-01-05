@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.81](https://github.com/mystist/react-chatgpt/compare/v0.0.80...v0.0.81) (2024-01-05)
+
+
+### Bug Fixes
+
+* should use memoized component to avoid unnecessary re-render ([e6a5d54](https://github.com/mystist/react-chatgpt/commit/e6a5d54fd60c04f84f0ec7890f0a0984f2bdc6d3))
+
 ### [0.0.80](https://github.com/mystist/react-chatgpt/compare/v0.0.79...v0.0.80) (2024-01-01)
 
 
