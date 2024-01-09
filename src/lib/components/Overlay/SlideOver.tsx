@@ -1,13 +1,18 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { ChatBubbleLeftEllipsisIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Fragment } from 'react'
+import { Fragment, useCallback } from 'react'
 
 import Conversation from '../Conversation'
 
 export default function Index({ isShow, i18n, close, overlayMode }: any) {
+  const onClose = useCallback(() => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    return close ? close() : (() => {})()
+  }, [close])
+
   return (
     <Transition.Root show={isShow} as={Fragment}>
-      <Dialog as="div" id="react-chatgpt" onClose={close} style={{ position: 'relative', zIndex: 50 }}>
+      <Dialog as="div" id="react-chatgpt" onClose={onClose} style={{ position: 'relative', zIndex: 50 }}>
         <div className="fixed inset-0" />
 
         <div className="fixed inset-0 overflow-hidden">
@@ -31,11 +36,13 @@ export default function Index({ isShow, i18n, close, overlayMode }: any) {
                           <span>{i18n.aiAgent}</span>
                         </Dialog.Title>
 
-                        <div className="ml-3 flex h-6 items-center">
-                          <button type="button" className="rounded-md text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onClick={close}>
-                            <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                          </button>
-                        </div>
+                        {close && (
+                          <div className="ml-3 flex h-6 items-center">
+                            <button type="button" className="rounded-md text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onClick={onClose}>
+                              <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="flex-1">

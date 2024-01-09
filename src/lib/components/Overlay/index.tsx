@@ -29,9 +29,9 @@ export default function Index({ status, setStatus, identifier, lang = 'en', over
   }
 
   const close = useCallback(() => {
-    cleanup()
-
     setStatus('')
+
+    cleanup()
   }, [cleanup, setStatus])
 
   const isShow = useMemo(() => {
@@ -58,8 +58,8 @@ export default function Index({ status, setStatus, identifier, lang = 'en', over
 
   return (
     <>
-      {mode === 'modal' && <Modal isShow={isShow} i18n={i18n} close={close} overlayMode={mode} />}
-      {mode === 'slide-over' && <SlideOver isShow={isShow} i18n={i18n} close={close} overlayMode={mode} />}
+      {mode === 'modal' && <Modal isShow={isShow} i18n={i18n} close={setStatus ? close : null} overlayMode={mode} />}
+      {mode === 'slide-over' && <SlideOver isShow={isShow} i18n={i18n} close={setStatus ? close : null} overlayMode={mode} />}
     </>
   )
 }
