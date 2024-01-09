@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.84](https://github.com/mystist/react-chatgpt/compare/v0.0.83...v0.0.84) (2024-01-09)
+
+
+### Bug Fixes
+
+* should be full screen even without conversations ([4c5ad7f](https://github.com/mystist/react-chatgpt/commit/4c5ad7f277ba39d6eb9a1981b317565a0a1efd11))
+
 ### [0.0.83](https://github.com/mystist/react-chatgpt/compare/v0.0.82...v0.0.83) (2024-01-09)
 
 
