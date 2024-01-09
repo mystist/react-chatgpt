@@ -29,7 +29,7 @@ export default function Index({ isShow, i18n, close, overlayMode }: any) {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className={classNames(close ? 'max-w-6xl' : '', 'w-full transform overflow-hidden rounded-lg bg-gray-50 text-left shadow-xl transition-all')}>
+              <Dialog.Panel className={classNames(close ? 'max-w-6xl' : 'min-h-screen', 'flex h-full w-full transform flex-col overflow-hidden rounded-lg bg-gray-50 text-left shadow-xl transition-all')}>
                 <div className="sm:flex sm:items-start">
                   <div className="mx-6 flex w-full items-center justify-between pb-5 pt-6 text-center">
                     <Dialog.Title className="flex items-center space-x-3 font-medium leading-6 text-gray-700">
@@ -44,7 +44,7 @@ export default function Index({ isShow, i18n, close, overlayMode }: any) {
                     )}
                   </div>
                 </div>
-                <div className="flex-1">
+                <div className="flex h-full flex-1 flex-col">
                   <Conversation overlayMode={overlayMode} />
                 </div>
               </Dialog.Panel>

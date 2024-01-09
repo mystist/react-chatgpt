@@ -444,7 +444,7 @@ export default function Index({ overlayMode }: any) {
   return (
     <>
       {agentName && (
-        <div className="flex h-full">
+        <div className="flex h-full flex-1">
           <section className="w-full">
             <div className="flex h-full flex-col justify-between bg-white shadow sm:overflow-hidden sm:rounded-lg">
               <div className="px-4 py-6 sm:px-6">
