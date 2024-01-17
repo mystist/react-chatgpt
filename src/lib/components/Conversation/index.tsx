@@ -118,6 +118,10 @@ export default function Index({ overlayMode }: any) {
     }, 70)
   }, [])
 
+  useEffect(() => {
+    scroll()
+  }, [scroll])
+
   const onMessage = useCallback(
     ({ message, isFinish }: any) => {
       if (!isFinish) {
@@ -493,6 +497,8 @@ export default function Index({ overlayMode }: any) {
                     {introTalks.concat(talks).map((item: any, index: number) => (
                       <Fragment key={index}>
                         <li>
+                          {index === introTalks.length + talks.length - 1 && <div ref={divRef} />}
+
                           {item.role === 'assistant' && (
                             <div className="flex space-x-3">
                               <div className="flex-shrink-0">
@@ -541,7 +547,6 @@ export default function Index({ overlayMode }: any) {
 
                           {item.role === 'user' && (
                             <>
-                              {index === introTalks.length + talks.length - 1 && <div ref={divRef} />}
                               <div className="flex justify-end space-x-3">
                                 <div className="flex flex-col items-end">
                                   <div className="flex rounded-2xl bg-opacity-[0.85] bg-linear-color px-4 py-2">
