@@ -50,6 +50,7 @@ const PulseSpinner = () => (
 export default function Index({ overlayMode }: any) {
   const divRef = useRef<HTMLDivElement | null>(null)
   const introRef = useRef<any>()
+  const fieldRef = useRef<HTMLTextAreaElement | null>(null)
 
   const i18n = useLocale()
 
@@ -93,9 +94,10 @@ export default function Index({ overlayMode }: any) {
   const { mutate: mutateUpload, isLoading: isLoadingUpload } = useMutation(postUpload)
   const { mutate: mutateSection } = useMutation(postSection)
   const { mutate: mutateDeleteReference } = useMutation(deleteReference)
+  const { mutate: whisperByText, isLoading } = useMutation(postWhisperByText)
 
   const { register, handleSubmit, resetField, setValue, watch, getValues } = useForm()
-  const { mutate: whisperByText, isLoading } = useMutation(postWhisperByText)
+  const { ref: registerContentRef, ...registerContentRest } = register('content')
   const watchedContent = watch('content')
 
   const { data: references, refetch: refetchReferences } = useQuery('references', () => getReferences({ identifier, userUuid }), { enabled: isShowPanel && !!userUuid })
@@ -185,7 +187,7 @@ export default function Index({ overlayMode }: any) {
   const talks = useMemo(() => {
     const talks: Talk[] = []
 
-    if (!whispers || !replies) return talks
+    if (whispers.length === 0) return talks
 
     return talks
       .concat(whispers)
@@ -441,429 +443,437 @@ export default function Index({ overlayMode }: any) {
     if (sectionType) setIsShowPanel(true)
   }, [prompt, sectionType])
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (fieldRef.current) {
+        fieldRef.current.focus()
+      }
+    }, 50) // wait till next animation frame
+  }, [talks])
+
   return (
     <>
-      {agentName && (
-        <div className="flex h-full flex-1">
-          <section className="w-full">
-            <div className="flex h-full flex-col justify-between bg-white shadow sm:overflow-hidden sm:rounded-lg">
-              <div className="px-4 py-6 sm:px-6">
-                {
-                  <ul role="list" className="space-y-8">
-                    {videoPath && (
-                      <li>
-                        <div className="flex space-x-3">
-                          <div className="z-20 flex-shrink-0">
-                            <AiAvatar />
+      <div className="flex h-full flex-1">
+        <section className="w-full">
+          <div className="flex h-full flex-col justify-between bg-white shadow sm:overflow-hidden sm:rounded-lg">
+            <div className="px-4 py-6 sm:px-6">
+              {
+                <ul role="list" className="space-y-8">
+                  {videoPath && (
+                    <li>
+                      <div className="flex space-x-3">
+                        <div className="z-20 flex-shrink-0">
+                          <AiAvatar />
+                        </div>
+                        <div className="z-10">
+                          <div className="text-sm">
+                            <span className="font-medium text-gray-900">{agentName}</span>
                           </div>
-                          <div className="z-10">
-                            <div className="text-sm">
-                              <span className="font-medium text-gray-900">{agentName}</span>
-                            </div>
-                            <div className="relative mt-1 max-w-md overflow-hidden rounded text-sm text-gray-700">
-                              <video className="w-full" ref={introRef} onEnded={() => setIsIntroPlaying(false)}>
-                                <source src={videoPath} type="video/mp4" />
-                              </video>
-                            </div>
-                            <div className="mt-4 flex items-center space-x-4 text-sm">
-                              <span className="text-gray-500">{i18n.intro}</span>
-                              <span className="text-gray-500">&middot;</span>
-                              <div className="relative inline-flex h-7 w-7">
-                                <button onClick={() => setIsIntroPlaying((prev) => !prev)} className="group absolute flex h-full w-full flex-shrink-0 rounded-full bg-linear-color opacity-100 hover:opacity-90">
-                                  {isIntroPlaying ? (
-                                    <svg aria-hidden="true" viewBox="0 0 22 28" className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 transform fill-gray-200">
-                                      <path
-                                        fillRule="evenodd"
-                                        clipRule="evenodd"
-                                        d="M1.5 0C0.671573 0 0 0.671572 0 1.5V26.5C0 27.3284 0.671573 28 1.5 28H4.5C5.32843 28 6 27.3284 6 26.5V1.5C6 0.671573 5.32843 0 4.5 0H1.5ZM17.5 0C16.6716 0 16 0.671572 16 1.5V26.5C16 27.3284 16.6716 28 17.5 28H20.5C21.3284 28 22 27.3284 22 26.5V1.5C22 0.671573 21.3284 0 20.5 0H17.5Z"
-                                      ></path>
-                                    </svg>
-                                  ) : (
-                                    <svg aria-hidden="true" viewBox="0 0 36 36" className="absolute left-1/2 top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 transform fill-gray-200">
-                                      <path d="M33.75 16.701C34.75 17.2783 34.75 18.7217 33.75 19.299L11.25 32.2894C10.25 32.8668 9 32.1451 9 30.9904L9 5.00962C9 3.85491 10.25 3.13323 11.25 3.71058L33.75 16.701Z"></path>
-                                    </svg>
-                                  )}
-                                </button>
-                              </div>
+                          <div className="relative mt-1 max-w-md overflow-hidden rounded text-sm text-gray-700">
+                            <video className="w-full" ref={introRef} onEnded={() => setIsIntroPlaying(false)}>
+                              <source src={videoPath} type="video/mp4" />
+                            </video>
+                          </div>
+                          <div className="mt-4 flex items-center space-x-4 text-sm">
+                            <span className="text-gray-500">{i18n.intro}</span>
+                            <span className="text-gray-500">&middot;</span>
+                            <div className="relative inline-flex h-7 w-7">
+                              <button onClick={() => setIsIntroPlaying((prev) => !prev)} className="group absolute flex h-full w-full flex-shrink-0 rounded-full bg-linear-color opacity-100 hover:opacity-90">
+                                {isIntroPlaying ? (
+                                  <svg aria-hidden="true" viewBox="0 0 22 28" className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 transform fill-gray-200">
+                                    <path
+                                      fillRule="evenodd"
+                                      clipRule="evenodd"
+                                      d="M1.5 0C0.671573 0 0 0.671572 0 1.5V26.5C0 27.3284 0.671573 28 1.5 28H4.5C5.32843 28 6 27.3284 6 26.5V1.5C6 0.671573 5.32843 0 4.5 0H1.5ZM17.5 0C16.6716 0 16 0.671572 16 1.5V26.5C16 27.3284 16.6716 28 17.5 28H20.5C21.3284 28 22 27.3284 22 26.5V1.5C22 0.671573 21.3284 0 20.5 0H17.5Z"
+                                    ></path>
+                                  </svg>
+                                ) : (
+                                  <svg aria-hidden="true" viewBox="0 0 36 36" className="absolute left-1/2 top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 transform fill-gray-200">
+                                    <path d="M33.75 16.701C34.75 17.2783 34.75 18.7217 33.75 19.299L11.25 32.2894C10.25 32.8668 9 32.1451 9 30.9904L9 5.00962C9 3.85491 10.25 3.13323 11.25 3.71058L33.75 16.701Z"></path>
+                                  </svg>
+                                )}
+                              </button>
                             </div>
                           </div>
                         </div>
-                      </li>
-                    )}
-                    {introTalks.concat(talks).map((item: any, index: number) => (
-                      <Fragment key={index}>
-                        <li>
-                          {item.role === 'assistant' && (
-                            <div className="flex space-x-3">
-                              <div className="flex-shrink-0">
-                                <div className="relative flex flex-col">
-                                  <AiAvatar whisperUuid={item.whisperUuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} />
-                                </div>
-                              </div>
-                              <div>
-                                <div className="text-sm">
-                                  <span className="font-medium text-gray-900">{agentName}</span>
-                                </div>
-                                <div className="mt-2 flex w-fit flex-col rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
-                                  <div
-                                    className={classNames(
-                                      overlayMode === 'slide-over' ? '' : 'lg:prose-base',
-                                      'prose prose-sm prose-slate prose-blockquote:hidden prose-pre:whitespace-pre-line prose-thead:whitespace-pre-line prose-td:break-all',
-                                    )}
-                                  >
-                                    <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
-                                      {item.content}
-                                    </ReactMarkdown>
-                                  </div>
-                                  {getMermaidCodes(item.content).map((code: string, index: number) => (
-                                    <MermaidChart key={index} code={code} index={index} />
-                                  ))}
-                                </div>
-                                {!!item.createdAt && (
-                                  <div className="mt-2 flex items-center space-x-4 text-sm">
-                                    <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
-                                    <span className="text-gray-500">&middot;</span>
-                                    <button
-                                      className="flex"
-                                      onClick={() => {
-                                        navigator.clipboard.writeText(item.content)
-                                        setCurrentCopiedIndexState(index)
-                                      }}
-                                    >
-                                      <Clipboard className="h-9 w-9 stroke-gray-600" isCopied={currentCopiedIndexState === index} />
-                                    </button>
-                                    {tongue && item.whisperUuid && <AudioPlayer whisperUuid={item.whisperUuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />}
-                                  </div>
-                                )}
+                      </div>
+                    </li>
+                  )}
+                  {introTalks.concat(talks).map((item: any, index: number) => (
+                    <Fragment key={index}>
+                      <li>
+                        {item.role === 'assistant' && (
+                          <div className="flex space-x-3">
+                            <div className="flex-shrink-0">
+                              <div className="relative flex flex-col">
+                                <AiAvatar whisperUuid={item.whisperUuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} />
                               </div>
                             </div>
-                          )}
-
-                          {item.role === 'user' && (
-                            <>
-                              {index === introTalks.length + talks.length - 1 && <div ref={divRef} />}
-                              <div className="flex justify-end space-x-3">
-                                <div className="flex flex-col items-end">
-                                  <div className="flex rounded-2xl bg-opacity-[0.85] bg-linear-color px-4 py-2">
-                                    <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate text-white prose-p:my-0 prose-thead:whitespace-nowrap')}>
-                                      {item.content && typeof item.content === 'string' && item.content.split('\n').map((p: string, index: number) => <p key={index}>{p}</p>)}
-                                    </div>
-                                  </div>
-                                  <div className="mt-2 flex items-center justify-end space-x-4 text-sm">
-                                    <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
-                                  </div>
-                                </div>
-                                <div className="flex-shrink-0">
-                                  <DefaultAvatar />
-                                </div>
+                            <div>
+                              <div className="text-sm">
+                                <span className="font-medium text-gray-900">{agentName}</span>
                               </div>
-                            </>
-                          )}
-                        </li>
-                      </Fragment>
-                    ))}
-                    {latestReplyContentState && latestWhisper && (
-                      <li>
-                        <div className="flex space-x-3">
-                          <div className="flex-shrink-0">
-                            <div className="relative flex flex-col">
-                              <AiAvatar whisperUuid={latestWhisper.uuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} />
+                              <div className="mt-2 flex w-fit flex-col rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
+                                <div
+                                  className={classNames(
+                                    overlayMode === 'slide-over' ? '' : 'lg:prose-base',
+                                    'prose prose-sm prose-slate prose-blockquote:hidden prose-pre:whitespace-pre-line prose-thead:whitespace-pre-line prose-td:break-all',
+                                  )}
+                                >
+                                  <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
+                                    {item.content}
+                                  </ReactMarkdown>
+                                </div>
+                                {getMermaidCodes(item.content).map((code: string, index: number) => (
+                                  <MermaidChart key={index} code={code} index={index} />
+                                ))}
+                              </div>
+                              {!!item.createdAt && (
+                                <div className="mt-2 flex items-center space-x-4 text-sm">
+                                  <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
+                                  <span className="text-gray-500">&middot;</span>
+                                  <button
+                                    className="flex"
+                                    onClick={() => {
+                                      navigator.clipboard.writeText(item.content)
+                                      setCurrentCopiedIndexState(index)
+                                    }}
+                                  >
+                                    <Clipboard className="h-9 w-9 stroke-gray-600" isCopied={currentCopiedIndexState === index} />
+                                  </button>
+                                  {tongue && item.whisperUuid && <AudioPlayer whisperUuid={item.whisperUuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />}
+                                </div>
+                              )}
                             </div>
                           </div>
-                          <div>
-                            <div className="text-sm">
-                              <span className="font-medium text-gray-900">{agentName}</span>
-                            </div>
-                            <div className="mt-2 flex w-fit flex-col rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
-                              <div
-                                className={classNames(
-                                  overlayMode === 'slide-over' ? '' : 'lg:prose-base',
-                                  'prose prose-sm prose-slate prose-blockquote:hidden prose-pre:whitespace-pre-line prose-thead:whitespace-pre-line prose-td:break-all',
-                                )}
-                              >
-                                <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
-                                  {latestReplyContentState + (isWriting && !latestReplyContentState.includes('<') ? caretHtml : '')}
-                                </ReactMarkdown>
+                        )}
 
-                                {!isWriting && (
-                                  <>
-                                    {getMermaidCodes(latestReplyContentState).map((code: string, index: number) => (
-                                      <MermaidChart key={index} code={code} index={index} />
-                                    ))}
-                                  </>
-                                )}
+                        {item.role === 'user' && (
+                          <>
+                            {index === introTalks.length + talks.length - 1 && <div ref={divRef} />}
+                            <div className="flex justify-end space-x-3">
+                              <div className="flex flex-col items-end">
+                                <div className="flex rounded-2xl bg-opacity-[0.85] bg-linear-color px-4 py-2">
+                                  <div className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate text-white prose-p:my-0 prose-thead:whitespace-nowrap')}>
+                                    {item.content && typeof item.content === 'string' && item.content.split('\n').map((p: string, index: number) => <p key={index}>{p}</p>)}
+                                  </div>
+                                </div>
+                                <div className="mt-2 flex items-center justify-end space-x-4 text-sm">
+                                  <span className="text-gray-500">{timeSince(item.createdAt, i18n)}</span>
+                                </div>
+                              </div>
+                              <div className="flex-shrink-0">
+                                <DefaultAvatar />
                               </div>
                             </div>
+                          </>
+                        )}
+                      </li>
+                    </Fragment>
+                  ))}
+                  {latestReplyContentState && latestWhisper && (
+                    <li>
+                      <div className="flex space-x-3">
+                        <div className="flex-shrink-0">
+                          <div className="relative flex flex-col">
+                            <AiAvatar whisperUuid={latestWhisper.uuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} />
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm">
+                            <span className="font-medium text-gray-900">{agentName}</span>
+                          </div>
+                          <div className="mt-2 flex w-fit flex-col rounded-2xl bg-gray-100 px-4 py-2 text-gray-700">
+                            <div
+                              className={classNames(overlayMode === 'slide-over' ? '' : 'lg:prose-base', 'prose prose-sm prose-slate prose-blockquote:hidden prose-pre:whitespace-pre-line prose-thead:whitespace-pre-line prose-td:break-all')}
+                            >
+                              <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
+                                {latestReplyContentState + (isWriting && !latestReplyContentState.includes('<') ? caretHtml : '')}
+                              </ReactMarkdown>
 
-                            <div className="mt-2 flex items-center space-x-4 text-sm">
-                              <span className="text-gray-500">{timeSince(new Date().getTime(), i18n)}</span>
-                              <span className="text-gray-500">&middot;</span>
-                              <button
-                                className="flex"
-                                onClick={() => {
-                                  navigator.clipboard.writeText(latestReplyContentState)
-                                  setCurrentCopiedIndexState(65535)
-                                }}
-                              >
-                                <Clipboard className="h-9 w-9 stroke-gray-600" isCopied={currentCopiedIndexState === 65535} />
-                              </button>
-                              {tongue && (
+                              {!isWriting && (
                                 <>
-                                  {latestWhisper.uuid && !isWriting && (
-                                    <AudioPlayer isAutoplay={!!isAudioAutoPlay} whisperUuid={latestWhisper.uuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />
-                                  )}
+                                  {getMermaidCodes(latestReplyContentState).map((code: string, index: number) => (
+                                    <MermaidChart key={index} code={code} index={index} />
+                                  ))}
                                 </>
                               )}
                             </div>
                           </div>
-                        </div>
-                      </li>
-                    )}
-                    {isThinking && (
-                      <li>
-                        <div className="flex space-x-3">
-                          <div className="flex-shrink-0">
-                            <div className="relative">
-                              <AiAvatar />
-                              <span className="absolute bottom-0 right-0 flex h-3 w-3">
-                                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-linear-color opacity-50"></span>
-                                <span className="relative inline-flex h-3 w-3 rounded-full bg-linear-color opacity-70"></span>
-                              </span>
-                            </div>
+
+                          <div className="mt-2 flex items-center space-x-4 text-sm">
+                            <span className="text-gray-500">{timeSince(new Date().getTime(), i18n)}</span>
+                            <span className="text-gray-500">&middot;</span>
+                            <button
+                              className="flex"
+                              onClick={() => {
+                                navigator.clipboard.writeText(latestReplyContentState)
+                                setCurrentCopiedIndexState(65535)
+                              }}
+                            >
+                              <Clipboard className="h-9 w-9 stroke-gray-600" isCopied={currentCopiedIndexState === 65535} />
+                            </button>
+                            {tongue && (
+                              <>
+                                {latestWhisper.uuid && !isWriting && (
+                                  <AudioPlayer isAutoplay={!!isAudioAutoPlay} whisperUuid={latestWhisper.uuid} nowPlayingWhisperUuidState={nowPlayingWhisperUuidState} setNowPlayingWhisperUuidState={setNowPlayingWhisperUuidState} />
+                                )}
+                              </>
+                            )}
                           </div>
-                          <div className="flex w-full max-w-xs flex-col">
-                            <div className="flex items-baseline space-x-1 text-sm">
-                              <span className="font-medium text-gray-900">{agentName}</span>
-                              <span className="text-xs text-gray-500">{i18n.isThinking}...</span>
-                            </div>
-                            <div className="mt-2 text-sm text-gray-700">
-                              <PulseSpinner />
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    )}
-                  </ul>
-                }
-              </div>
-              <div className="mt-4 bg-gray-100 px-4 py-6 sm:px-6">
-                <div className="flex flex-col space-y-3">
-                  {isEnableBrowseInSite && (
-                    <div className="flex flex-col">
-                      <span
-                        className={classNames(
-                          siteState ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-gray-50 text-gray-600 ring-gray-500/10',
-                          'inline-flex w-fit items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset',
-                        )}
-                      >
-                        {i18n.browseInSite}
-                      </span>
-                      <div className="mt-1">
-                        <div className="flex rounded-md bg-white shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                          <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">https://</span>
-                          <input
-                            type="text"
-                            className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                            placeholder="apple.com"
-                            autoComplete="off"
-                            {...register('site', { onChange: onSiteChange })}
-                          />
                         </div>
                       </div>
-                    </div>
+                    </li>
                   )}
+                  {isThinking && (
+                    <li>
+                      <div className="flex space-x-3">
+                        <div className="flex-shrink-0">
+                          <div className="relative">
+                            <AiAvatar />
+                            <span className="absolute bottom-0 right-0 flex h-3 w-3">
+                              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-linear-color opacity-50"></span>
+                              <span className="relative inline-flex h-3 w-3 rounded-full bg-linear-color opacity-70"></span>
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex w-full max-w-xs flex-col">
+                          <div className="flex items-baseline space-x-1 text-sm">
+                            <span className="font-medium text-gray-900">{agentName}</span>
+                            <span className="text-xs text-gray-500">{i18n.isThinking}...</span>
+                          </div>
+                          <div className="mt-2 text-sm text-gray-700">
+                            <PulseSpinner />
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  )}
+                </ul>
+              }
+            </div>
+            <div className="mt-4 bg-gray-100 px-4 py-6 sm:px-6">
+              <div className="flex flex-col space-y-3">
+                {isEnableBrowseInSite && (
+                  <div className="flex flex-col">
+                    <span
+                      className={classNames(
+                        siteState ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-gray-50 text-gray-600 ring-gray-500/10',
+                        'inline-flex w-fit items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset',
+                      )}
+                    >
+                      {i18n.browseInSite}
+                    </span>
+                    <div className="mt-1">
+                      <div className="flex rounded-md bg-white shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                        <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">https://</span>
+                        <input
+                          type="text"
+                          className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                          placeholder="apple.com"
+                          autoComplete="off"
+                          {...register('site', { onChange: onSiteChange })}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
 
-                  {isShowPanel && (
-                    <div className="flex flex-col space-y-3">
-                      <ul role="list" className="max-h-[247px] flex-col divide-y divide-gray-100 overflow-y-auto rounded-md border border-gray-200 bg-white">
-                        {references &&
-                          references
-                            .sort((a: any, b: any) => (a.updatedAt > b.updatedAt ? 1 : -1))
-                            .map((item: any, index: number) => (
-                              <li key={index} className="flex items-center justify-between px-4 py-3 text-sm leading-6">
-                                <div className="mr-3.5 flex w-0 flex-1 items-center">
-                                  <div className="flex min-w-0 flex-1 justify-between gap-2">
-                                    <span className="truncate">{item.title}</span>
-                                    {sectionType === 'content' ? (
-                                      <span className="flex flex-shrink-0 items-center text-gray-400">{isLoadingSectionIndex === index && <Spinner className="!h-4 !w-4 text-gray-400" />}</span>
-                                    ) : item.hasCompleted ? (
-                                      <span className="flex-shrink-0 text-gray-400">
-                                        <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">{i18n.completed}</span>
-                                      </span>
-                                    ) : (
-                                      <span className="flex flex-shrink-0 items-center text-gray-400">
-                                        {isLoadingSectionIndex === index && <Spinner className="mr-2 !h-4 !w-4 text-gray-400" />}
-                                        <span className="inline-flex items-center rounded-full bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">{i18n.trainingIncomplete}</span>
-                                      </span>
-                                    )}
-                                  </div>
-                                </div>
-                                <div className="flex justify-center">
-                                  {item.hasCompleted || (sectionType === 'content' && item.section.length > 0) ? (
-                                    <button onClick={() => add(item)} className="-mx-1 -my-2.5 block px-1 py-2.5 pr-3.5 text-gray-500 hover:text-gray-900" title={i18n.add}>
-                                      <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
-                                    </button>
+                {isShowPanel && (
+                  <div className="flex flex-col space-y-3">
+                    <ul role="list" className="max-h-[247px] flex-col divide-y divide-gray-100 overflow-y-auto rounded-md border border-gray-200 bg-white">
+                      {references &&
+                        references
+                          .sort((a: any, b: any) => (a.updatedAt > b.updatedAt ? 1 : -1))
+                          .map((item: any, index: number) => (
+                            <li key={index} className="flex items-center justify-between px-4 py-3 text-sm leading-6">
+                              <div className="mr-3.5 flex w-0 flex-1 items-center">
+                                <div className="flex min-w-0 flex-1 justify-between gap-2">
+                                  <span className="truncate">{item.title}</span>
+                                  {sectionType === 'content' ? (
+                                    <span className="flex flex-shrink-0 items-center text-gray-400">{isLoadingSectionIndex === index && <Spinner className="!h-4 !w-4 text-gray-400" />}</span>
+                                  ) : item.hasCompleted ? (
+                                    <span className="flex-shrink-0 text-gray-400">
+                                      <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">{i18n.completed}</span>
+                                    </span>
                                   ) : (
-                                    <button onClick={() => training({ code: item.code, index })} className="-mx-1 -my-2.5 block px-1 py-2.5 pr-3.5 text-gray-500 hover:text-gray-900" title={i18n.training}>
-                                      <FireIcon className="h-5 w-5" aria-hidden="true" />
+                                    <span className="flex flex-shrink-0 items-center text-gray-400">
+                                      {isLoadingSectionIndex === index && <Spinner className="mr-2 !h-4 !w-4 text-gray-400" />}
+                                      <span className="inline-flex items-center rounded-full bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">{i18n.trainingIncomplete}</span>
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="flex justify-center">
+                                {item.hasCompleted || (sectionType === 'content' && item.section.length > 0) ? (
+                                  <button onClick={() => add(item)} className="-mx-1 -my-2.5 block px-1 py-2.5 pr-3.5 text-gray-500 hover:text-gray-900" title={i18n.add}>
+                                    <PlusCircleIcon className="h-5 w-5" aria-hidden="true" />
+                                  </button>
+                                ) : (
+                                  <button onClick={() => training({ code: item.code, index })} className="-mx-1 -my-2.5 block px-1 py-2.5 pr-3.5 text-gray-500 hover:text-gray-900" title={i18n.training}>
+                                    <FireIcon className="h-5 w-5" aria-hidden="true" />
+                                  </button>
+                                )}
+                                <button onClick={() => doDelete(item.code)} className="-mx-1 -my-2.5 block px-1 py-2.5 text-gray-500 hover:text-gray-900" title={i18n.delete}>
+                                  <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+                                </button>
+                              </div>
+                            </li>
+                          ))}
+
+                      {newFile && (
+                        <li key={newFile.title} className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
+                          <div className="flex w-0 flex-1 items-center">
+                            <div className="flex min-w-0 flex-1 justify-between gap-2">
+                              <span className="truncate">{newFile.title}</span>
+                            </div>
+                          </div>
+                          {isLoadingUpload ? (
+                            <Spinner className="mr-2 !h-4 !w-4 text-gray-400" />
+                          ) : (
+                            <button onClick={() => upload(newFile)} className="flex items-center pl-1 font-medium text-indigo-600 hover:text-indigo-500">
+                              {i18n.upload}
+                            </button>
+                          )}
+                        </li>
+                      )}
+                      <li className="flex items-center space-x-4 py-3 pl-4 pr-5 text-sm leading-6">
+                        <label htmlFor="file" className="flex cursor-pointer items-center space-x-2 text-sm font-medium leading-6 text-indigo-600 hover:text-indigo-500">
+                          <span>+ {i18n.addNewFile}</span>
+                          <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                          <input id="file" type="file" accept=".pdf" className="sr-only invisible" tabIndex={-1} onChange={(e: any) => addFile(e.target.files[0])} />
+                        </label>
+                        <span className="text-xs">{i18n.fileUpTo}</span>
+                      </li>
+                    </ul>
+                    <div className="flex-wrap items-baseline space-y-2">
+                      {selectedReferences.map((item: any, index: number) => (
+                        <span key={index} className="mr-2 inline-flex items-center gap-x-0.5 rounded-md bg-blue-100 px-2 py-1 text-sm text-blue-700">
+                          {item.title}
+                          <button type="button" onClick={() => remove(item.code)} className="group relative -mr-1 h-4 w-4 rounded-sm hover:bg-blue-600/20">
+                            <svg viewBox="0 0 14 14" className="h-4 w-4 stroke-blue-800/50 group-hover:stroke-blue-800/75">
+                              <path d="M4 4l6 6m0-6l-6 6" />
+                            </svg>
+                            <span className="absolute -inset-1" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex min-w-0 flex-1">
+                  {isSpeakingMode && (
+                    <SoundWave
+                      onFinish={(data: any) => {
+                        fetchWhispersAndReply(data)
+                        updateReplies()
+                      }}
+                      chatMode={chatMode}
+                      close={() => setIsSpeakingMode(false)}
+                    />
+                  )}
+                  {!isSpeakingMode && (
+                    <div className="relative w-full">
+                      <form onSubmit={handleSubmit(send)} className="flex space-x-3">
+                        <div className="relative flex min-h-[40px] flex-1">
+                          {sectionType && (
+                            <>
+                              {isShowPanel ? (
+                                <button type="button" onClick={() => setIsShowPanel(false)} className="absolute left-0.5 rounded-full p-2 text-gray-500 hover:text-gray-400">
+                                  <MinusCircleIcon className="h-6 w-6" aria-hidden="true" />
+                                </button>
+                              ) : (
+                                <button type="button" onClick={() => setIsShowPanel(true)} className="absolute left-0.5 rounded-full p-2 text-gray-500 hover:text-gray-400">
+                                  <PlusCircleIcon className="h-6 w-6" aria-hidden="true" />
+                                </button>
+                              )}
+                            </>
+                          )}
+
+                          <textarea
+                            defaultValue={''}
+                            rows={contentBreakCount + 1}
+                            {...registerContentRest}
+                            name="content"
+                            ref={(e) => {
+                              registerContentRef(e)
+                              fieldRef.current = e
+                            }}
+                            onKeyDown={(e) => {
+                              if (isImeComposing || e.key === 'Escape') {
+                                e.stopPropagation()
+                                return
+                              }
+
+                              if (e.key === 'Enter') {
+                                if (shouldShowDisclaimer()) {
+                                  showDisclaimer(e)
+                                } else if (!e.shiftKey) {
+                                  handleSubmit(send)()
+                                }
+                              }
+                            }}
+                            onCompositionStart={() => setIsImeComposing(true)}
+                            onCompositionEnd={() => setIsImeComposing(false)}
+                            className={classNames(
+                              sectionType ? 'pl-10' : '',
+                              'block w-full resize-none rounded-md border-0 py-1.5 pr-10 text-sm leading-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]',
+                            )}
+                          />
+                          <button type="button" onClick={useSpeakingMode} className="absolute right-1 rounded-full p-2 text-primary-color opacity-100 hover:opacity-90">
+                            <MicrophoneIcon className="h-6 w-6" aria-hidden="true" />
+                          </button>
+                        </div>
+                        <div className="flex h-10">
+                          {isShowSend ? (
+                            <>
+                              {shouldShowDisclaimer() ? (
+                                <button type="button" onClick={showDisclaimer} className="btn btn-primary h-full w-fit min-w-[80px]" tabIndex={1}>
+                                  <span>{i18n.send}</span>
+                                </button>
+                              ) : (
+                                <button type="submit" className="btn btn-primary h-full w-fit min-w-[80px]">
+                                  {isLoading && <Spinner className="mr-2 text-gray-400" />}
+                                  <span>{i18n.send}</span>
+                                </button>
+                              )}
+                            </>
+                          ) : (
+                            <>
+                              {!isConversationUuidAsParam && !isConversationFull() && (
+                                <>
+                                  {chatMode && (
+                                    <button onClick={newChat} className="btn btn-secondary h-full w-fit min-w-[80px]">
+                                      <PlusIcon className="mr-1 h-5 w-5 text-gray-500" />
+                                      {i18n.newChat}
                                     </button>
                                   )}
-                                  <button onClick={() => doDelete(item.code)} className="-mx-1 -my-2.5 block px-1 py-2.5 text-gray-500 hover:text-gray-900" title={i18n.delete}>
-                                    <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-                                  </button>
-                                </div>
-                              </li>
-                            ))}
-
-                        {newFile && (
-                          <li key={newFile.title} className="flex items-center justify-between space-x-1 px-4 py-3 text-sm leading-6">
-                            <div className="flex w-0 flex-1 items-center">
-                              <div className="flex min-w-0 flex-1 justify-between gap-2">
-                                <span className="truncate">{newFile.title}</span>
-                              </div>
-                            </div>
-                            {isLoadingUpload ? (
-                              <Spinner className="mr-2 !h-4 !w-4 text-gray-400" />
-                            ) : (
-                              <button onClick={() => upload(newFile)} className="flex items-center pl-1 font-medium text-indigo-600 hover:text-indigo-500">
-                                {i18n.upload}
+                                </>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </form>
+                      {questions && questions.length > 0 && (
+                        <div className="my-2 max-h-[156px] overflow-y-auto">
+                          <div className="flex flex-wrap gap-x-3 gap-y-4 pt-4">
+                            {questions.map((item: any, index: number) => (
+                              <button key={index} type="button" className="rounded-full bg-gray-200 px-4 py-2 text-left text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:opacity-80" onClick={onSelectQuestion}>
+                                {item}
                               </button>
-                            )}
-                          </li>
-                        )}
-                        <li className="flex items-center space-x-4 py-3 pl-4 pr-5 text-sm leading-6">
-                          <label htmlFor="file" className="flex cursor-pointer items-center space-x-2 text-sm font-medium leading-6 text-indigo-600 hover:text-indigo-500">
-                            <span>+ {i18n.addNewFile}</span>
-                            <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                            <input id="file" type="file" accept=".pdf" className="sr-only invisible" tabIndex={-1} onChange={(e: any) => addFile(e.target.files[0])} />
-                          </label>
-                          <span className="text-xs">{i18n.fileUpTo}</span>
-                        </li>
-                      </ul>
-                      <div className="flex-wrap items-baseline space-y-2">
-                        {selectedReferences.map((item: any, index: number) => (
-                          <span key={index} className="mr-2 inline-flex items-center gap-x-0.5 rounded-md bg-blue-100 px-2 py-1 text-sm text-blue-700">
-                            {item.title}
-                            <button type="button" onClick={() => remove(item.code)} className="group relative -mr-1 h-4 w-4 rounded-sm hover:bg-blue-600/20">
-                              <svg viewBox="0 0 14 14" className="h-4 w-4 stroke-blue-800/50 group-hover:stroke-blue-800/75">
-                                <path d="M4 4l6 6m0-6l-6 6" />
-                              </svg>
-                              <span className="absolute -inset-1" />
-                            </button>
-                          </span>
-                        ))}
-                      </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
-
-                  <div className="flex min-w-0 flex-1">
-                    {isSpeakingMode && (
-                      <SoundWave
-                        onFinish={(data: any) => {
-                          fetchWhispersAndReply(data)
-                          updateReplies()
-                        }}
-                        chatMode={chatMode}
-                        close={() => setIsSpeakingMode(false)}
-                      />
-                    )}
-                    {!isSpeakingMode && (
-                      <div className="relative w-full">
-                        <form onSubmit={handleSubmit(send)} className="flex space-x-3">
-                          <div className="relative flex min-h-[40px] flex-1">
-                            {sectionType && (
-                              <>
-                                {isShowPanel ? (
-                                  <button type="button" onClick={() => setIsShowPanel(false)} className="absolute left-0.5 rounded-full p-2 text-gray-500 hover:text-gray-400">
-                                    <MinusCircleIcon className="h-6 w-6" aria-hidden="true" />
-                                  </button>
-                                ) : (
-                                  <button type="button" onClick={() => setIsShowPanel(true)} className="absolute left-0.5 rounded-full p-2 text-gray-500 hover:text-gray-400">
-                                    <PlusCircleIcon className="h-6 w-6" aria-hidden="true" />
-                                  </button>
-                                )}
-                              </>
-                            )}
-
-                            <textarea
-                              defaultValue={''}
-                              rows={contentBreakCount + 1}
-                              {...register('content')}
-                              onKeyDown={(e) => {
-                                if (isImeComposing || e.key === 'Escape') {
-                                  e.stopPropagation()
-                                  return
-                                }
-
-                                if (e.key === 'Enter') {
-                                  if (shouldShowDisclaimer()) {
-                                    showDisclaimer(e)
-                                  } else if (!e.shiftKey) {
-                                    handleSubmit(send)()
-                                  }
-                                }
-                              }}
-                              onCompositionStart={() => setIsImeComposing(true)}
-                              onCompositionEnd={() => setIsImeComposing(false)}
-                              className={classNames(
-                                sectionType ? 'pl-10' : '',
-                                'block w-full resize-none rounded-md border-0 py-1.5 pr-10 text-sm leading-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]',
-                              )}
-                            />
-                            <button type="button" onClick={useSpeakingMode} className="absolute right-1 rounded-full p-2 text-primary-color opacity-100 hover:opacity-90">
-                              <MicrophoneIcon className="h-6 w-6" aria-hidden="true" />
-                            </button>
-                          </div>
-                          <div className="flex h-10">
-                            {isShowSend ? (
-                              <>
-                                {shouldShowDisclaimer() ? (
-                                  <button type="button" onClick={showDisclaimer} className="btn btn-primary h-full w-fit min-w-[80px]" tabIndex={1}>
-                                    <span>{i18n.send}</span>
-                                  </button>
-                                ) : (
-                                  <button type="submit" className="btn btn-primary h-full w-fit min-w-[80px]">
-                                    {isLoading && <Spinner className="mr-2 text-gray-400" />}
-                                    <span>{i18n.send}</span>
-                                  </button>
-                                )}
-                              </>
-                            ) : (
-                              <>
-                                {!isConversationUuidAsParam && !isConversationFull() && (
-                                  <>
-                                    {chatMode && (
-                                      <button onClick={newChat} className="btn btn-secondary h-full w-fit min-w-[80px]">
-                                        <PlusIcon className="mr-1 h-5 w-5 text-gray-500" />
-                                        {i18n.newChat}
-                                      </button>
-                                    )}
-                                  </>
-                                )}
-                              </>
-                            )}
-                          </div>
-                        </form>
-                        {questions && questions.length > 0 && (
-                          <div className="my-2 max-h-[156px] overflow-y-auto">
-                            <div className="flex flex-wrap gap-x-3 gap-y-4 pt-4">
-                              {questions.map((item: any, index: number) => (
-                                <button key={index} type="button" className="rounded-full bg-gray-200 px-4 py-2 text-left text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:opacity-80" onClick={onSelectQuestion}>
-                                  {item}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
                 </div>
               </div>
             </div>
-          </section>
-        </div>
-      )}
+          </div>
+        </section>
+      </div>
 
       <Transition.Root show={isShowClaim} as={Fragment}>
         <Dialog as="div" id="react-chatgpt" className="relative z-50" onClose={setIsShowClaim}>
