@@ -497,8 +497,6 @@ export default function Index({ overlayMode }: any) {
                     {introTalks.concat(talks).map((item: any, index: number) => (
                       <Fragment key={index}>
                         <li>
-                          {index === introTalks.length + talks.length - 1 && <div ref={divRef} />}
-
                           {item.role === 'assistant' && (
                             <div className="flex space-x-3">
                               <div className="flex-shrink-0">
@@ -775,7 +773,7 @@ export default function Index({ overlayMode }: any) {
                     {!isSpeakingMode && (
                       <div className="relative w-full">
                         <form onSubmit={handleSubmit(send)} className="flex space-x-3">
-                          <div className="relative flex min-h-[40px] flex-1">
+                          <div ref={divRef} className="relative flex min-h-[40px] flex-1">
                             {sectionType && (
                               <>
                                 {isShowPanel ? (
@@ -791,6 +789,7 @@ export default function Index({ overlayMode }: any) {
                             )}
 
                             <textarea
+                              autoFocus
                               defaultValue={''}
                               rows={contentBreakCount + 1}
                               {...register('content')}
