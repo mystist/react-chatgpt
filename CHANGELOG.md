@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.85](https://github.com/mystist/react-chatgpt/compare/v0.0.84...v0.0.85) (2024-01-18)
+
+
+### Features
+
+* focus on the input field ([03bca9d](https://github.com/mystist/react-chatgpt/commit/03bca9d2c292b85c649440654c77324bdaa6aad9))
+
 ### [0.0.84](https://github.com/mystist/react-chatgpt/compare/v0.0.83...v0.0.84) (2024-01-09)
 
 
