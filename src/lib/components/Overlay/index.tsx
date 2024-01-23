@@ -3,10 +3,11 @@ import { useMediaQuery } from 'react-responsive'
 
 import { useLocale } from '../../hooks/useLocale'
 import { removeConfig, removeConversationUuid, removeIdentifier, removeLang, setConversationUuid, setIdentifier, setLang, setUserUuid } from '../../utils'
+import { setConfig } from '../../utils'
 import Modal from './Modal'
 import SlideOver from './SlideOver'
 
-export default function Index({ status, setStatus, identifier, lang = 'en', overlayMode = 'auto', userUuid = '', conversationUuid = '' }: any) {
+export default function Index({ status, setStatus, identifier, lang = 'en', overlayMode = 'auto', userUuid = '', conversationUuid = '', configuration = null }: any) {
   const i18n = useLocale(lang)
 
   const isMd = useMediaQuery({ query: '(min-width: 768px)' })
@@ -26,6 +27,7 @@ export default function Index({ status, setStatus, identifier, lang = 'en', over
 
     if (userUuid) setUserUuid(userUuid)
     if (conversationUuid) setConversationUuid(conversationUuid)
+    if (configuration) setConfig(JSON.stringify(configuration))
   }
 
   const close = useCallback(() => {
