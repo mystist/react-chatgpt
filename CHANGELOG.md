@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.88](https://github.com/mystist/react-chatgpt/compare/v0.0.87...v0.0.88) (2024-01-24)
+
+
+### Features
+
+* remove clean up function ([f42829a](https://github.com/mystist/react-chatgpt/commit/f42829ad28a7805854c9e3fbe8673cd78994d01d))
+
+
+### Bug Fixes
+
+* cannot use the agent in two browser tabs at the same time ([a77017b](https://github.com/mystist/react-chatgpt/commit/a77017bfa2108bb2130f69fa73a59d53ccaa7569))
+
 ### [0.0.87](https://github.com/mystist/react-chatgpt/compare/v0.0.86...v0.0.87) (2024-01-23)
 
 
