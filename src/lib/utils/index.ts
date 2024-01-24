@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid/non-secure'
 
-import { localStorageEnhanced } from './local-storage-enhanced'
+import { localStorageEnhanced, sessionStorageEnhanced } from './storage-enhanced'
 
 const oneDay = 24 * 60 * 60 * 1000
 const oneWeek = 7 * oneDay
@@ -62,24 +62,24 @@ export const setUserUuid = (userUuid: string, duration = oneDay) => {
   localStorageEnhanced.setWithExpiry(key, userUuid, duration)
 }
 
-export const setIdentifier = (value: string) => localStorageEnhanced.setItem('react-chatgpt-identifier', value)
-export const getIdentifier = () => localStorageEnhanced.getItem('react-chatgpt-identifier') || ''
-export const removeIdentifier = () => localStorageEnhanced.removeItem('react-chatgpt-identifier')
+export const setIdentifier = (value: string) => sessionStorageEnhanced.setItem('react-chatgpt-identifier', value)
+export const getIdentifier = () => sessionStorageEnhanced.getItem('react-chatgpt-identifier') || ''
+export const removeIdentifier = () => sessionStorageEnhanced.removeItem('react-chatgpt-identifier')
 
-export const setConfig = (value: string) => localStorageEnhanced.setItem('react-chatgpt-configuration', value)
-export const getConfig = () => localStorageEnhanced.getItem('react-chatgpt-configuration') || ''
-export const removeConfig = () => localStorageEnhanced.removeItem('react-chatgpt-configuration')
+export const setConfig = (value: string) => sessionStorageEnhanced.setItem('react-chatgpt-configuration', value)
+export const getConfig = () => sessionStorageEnhanced.getItem('react-chatgpt-configuration') || ''
+export const removeConfig = () => sessionStorageEnhanced.removeItem('react-chatgpt-configuration')
 
-export const setLang = (value: string) => localStorageEnhanced.setItem('react-chatgpt-lang', value)
-export const getLang = () => localStorageEnhanced.getItem('react-chatgpt-lang') || ''
-export const removeLang = () => localStorageEnhanced.removeItem('react-chatgpt-lang')
+export const setLang = (value: string) => sessionStorageEnhanced.setItem('react-chatgpt-lang', value)
+export const getLang = () => sessionStorageEnhanced.getItem('react-chatgpt-lang') || ''
+export const removeLang = () => sessionStorageEnhanced.removeItem('react-chatgpt-lang')
 
 export const setAgreement = (value: string) => localStorageEnhanced.setWithExpiry('react-chatgpt-agreement', value, oneDay)
 export const getAgreement = () => localStorageEnhanced.getWithExpiry('react-chatgpt-agreement') || ''
 
-export const setConversationUuid = (value: string) => localStorageEnhanced.setItem('react-chatgpt-conversation', value)
-export const getConversationUuid = () => localStorageEnhanced.getItem('react-chatgpt-conversation') || ''
-export const removeConversationUuid = () => localStorageEnhanced.removeItem('react-chatgpt-conversation')
+export const setConversationUuid = (value: string) => sessionStorageEnhanced.setItem('react-chatgpt-conversation', value)
+export const getConversationUuid = () => sessionStorageEnhanced.getItem('react-chatgpt-conversation') || ''
+export const removeConversationUuid = () => sessionStorageEnhanced.removeItem('react-chatgpt-conversation')
 
 export const isValidSite = (str: string) => {
   return /[a-zA-Z]{1}\.[a-zA-Z]{2}/.test(str)
