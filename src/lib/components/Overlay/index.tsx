@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 import { useLocale } from '../../hooks/useLocale'
-import { removeConfig, removeConversationUuid, removeIdentifier, removeLang, setConversationUuid, setIdentifier, setLang, setUserUuid } from '../../utils'
+import { setConversationUuid, setIdentifier, setLang, setUserUuid } from '../../utils'
 import { setConfig } from '../../utils'
 import Modal from './Modal'
 import SlideOver from './SlideOver'
@@ -12,16 +12,7 @@ export default function Index({ status, setStatus, identifier, lang = 'en', over
 
   const isMd = useMediaQuery({ query: '(min-width: 768px)' })
 
-  const cleanup = useCallback(() => {
-    removeLang()
-    removeConversationUuid()
-    removeIdentifier()
-    removeConfig()
-  }, [])
-
   if (status && identifier) {
-    cleanup()
-
     setIdentifier(identifier)
     setLang(lang)
 
@@ -32,9 +23,7 @@ export default function Index({ status, setStatus, identifier, lang = 'en', over
 
   const close = useCallback(() => {
     setStatus('')
-
-    cleanup()
-  }, [cleanup, setStatus])
+  }, [setStatus])
 
   const isShow = useMemo(() => {
     return !!identifier && !!status
@@ -49,14 +38,6 @@ export default function Index({ status, setStatus, identifier, lang = 'en', over
       return 'slide-over'
     }
   }, [isMd, overlayMode])
-
-  useEffect(() => {
-    window.addEventListener('beforeunload', cleanup)
-
-    return () => {
-      window.removeEventListener('beforeunload', cleanup)
-    }
-  }, [cleanup])
 
   return (
     <>
