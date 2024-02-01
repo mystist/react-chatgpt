@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.89](https://github.com/mystist/react-chatgpt/compare/v0.0.88...v0.0.89) (2024-02-01)
+
+
+### Bug Fixes
+
+* bring back clean up as there are cases to switch between agents in single one page ([e18c9c3](https://github.com/mystist/react-chatgpt/commit/e18c9c3173164ab038df422d41e134d54c0ed674))
+* should only set cache when configuration data changes from react query ([0d14314](https://github.com/mystist/react-chatgpt/commit/0d143141312d7650b3fd370e46206c631de5b720))
+
 ### [0.0.88](https://github.com/mystist/react-chatgpt/compare/v0.0.87...v0.0.88) (2024-01-24)
 
 
