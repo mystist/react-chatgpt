@@ -24,10 +24,10 @@ export const useConfiguration = () => {
   useEffect(() => {
     if (data) {
       setDataState(data)
+
+      setConfig(JSON.stringify(data))
     }
   }, [data])
-
-  if (data) setConfig(JSON.stringify(data))
 
   return dataState
 }
