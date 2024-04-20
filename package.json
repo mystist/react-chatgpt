@@ -8,8 +8,7 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:changed": "git diff --name-only --cached --relative | grep -E '\\.tsx?$' | xargs eslint --max-warnings 0",
     "preview": "vite preview",
-    "bump-version": "standard-version",
-    "release-to-github": "yarn build && standard-version && git push --follow-tags  && npm publish"
+    "bump-version": "standard-version"
   },
   "main": "./dist/react-chatgpt.umd.js",
   "module": "./dist/react-chatgpt.es.js",
