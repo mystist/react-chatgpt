@@ -1,0 +1,50 @@
+name: Release to npm packages
+on:
+  push:
+    branches:
+      - main
+      - main-test
+  workflow_dispatch:
+    inputs:
+      force_build:
+        description: 'Manual release main branches'
+        required: false
+        default: 'false'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Check for '[release]' in commit message
+        id: check_release_message
+        run: echo "::set-output name=RELEASE::$(git log -1 --pretty=format:%s | grep -q '\[release\]' && echo 'true' || echo 'false')"
+
+      - name: Build package
+        if: steps.check_release_message.outputs.RELEASE == 'true' || github.event.inputs.force_build == 'true'
+        run: yarn build
+      
+      - name: Bump version and push
+        if: steps.check_release_message.outputs.RELEASE == 'true' || github.event.inputs.force_build == 'true'
+        run: |
+          git config --global user.email "gjl87910lq@gmail.com"
+          git config --global user.name "GitHub Actions"
+          yarn run bump-version
+          git push --follow-tags
+          
+      - name: Publish to npm
+        if: steps.check_release_message.outputs.RELEASE == 'true' || github.event.inputs.force_build == 'true'
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

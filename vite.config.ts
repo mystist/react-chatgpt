@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
+    define: { 'process.env.NODE_ENV': '"`${env.NODE_ENV}`"' },
     server: {
       proxy: {
         '/gpt-service': env.VITE_API_BASE_URL,
