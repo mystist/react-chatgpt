@@ -9,10 +9,7 @@
     "lint:changed": "git diff --name-only --cached --relative | grep -E '\\.tsx?$' | xargs eslint --max-warnings 0",
     "preview": "vite preview",
     "bump-version": "standard-version",
-    "release-to-github": "yarn build && standard-version && git push --follow-tags && yarn preprepack && npm publish",
-    "preprepack": "cp package.json package.json.bak",
-    "prepack": "json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
-    "postpublish": "mv package.json.bak package.json"
+    "release-to-github": "yarn build && standard-version && git push --follow-tags  && npm publish"
   },
   "main": "./dist/react-chatgpt.umd.js",
   "module": "./dist/react-chatgpt.es.js",
