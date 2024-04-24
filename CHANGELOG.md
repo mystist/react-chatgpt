@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.94](https://github.com/mystist/react-chatgpt/compare/v0.0.93...v0.0.94) (2024-04-24)
+
+
+### Features
+
+* release to npm workflow and umd files ([5fcb74a](https://github.com/mystist/react-chatgpt/commit/5fcb74a468600715e235c4615f109ed577775e96))
+* use default color for avatar ([c0e7745](https://github.com/mystist/react-chatgpt/commit/c0e774591a069697c70b762e588950c0e8d5cc1a))
+
+
+### Bug Fixes
+
+* fix script. ([94fae97](https://github.com/mystist/react-chatgpt/commit/94fae97e84ca7a6833afbb4999a2b3619c1b3bc4))
+* fix the workflow using github token ([b5fdb8e](https://github.com/mystist/react-chatgpt/commit/b5fdb8ef00c75ec9b0e56f20a774ab2eb0c9b58e))
+
 ### [0.0.93](https://github.com/mystist/react-chatgpt/compare/v0.0.92...v0.0.93) (2024-02-25)
 
 
