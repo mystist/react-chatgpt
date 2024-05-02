@@ -803,7 +803,7 @@ export default function Index({ overlayMode }: any) {
                             onCompositionEnd={() => setIsImeComposing(false)}
                             className={classNames(
                               sectionType ? 'pl-10' : '',
-                              'block w-full resize-none rounded-md border-0 py-1.5 pr-10 text-sm leading-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]',
+                              'block w-full resize-none rounded-md border-0 py-1.5 pl-2 pr-10 text-sm leading-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1.25px]',
                             )}
                           />
                           <button type="button" onClick={useSpeakingMode} className="absolute right-1 rounded-full p-2 text-primary-color opacity-100 hover:opacity-90">

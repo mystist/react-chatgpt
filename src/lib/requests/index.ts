@@ -2,6 +2,12 @@ import axios from 'axios'
 
 import { getIdentifier, getLang } from '../utils'
 
+
+export const setHost = (host: string) => {
+  request.defaults.baseURL = `${host}${baseUrl}`
+  requestEmbedding.defaults.baseURL = `${host}/embedding-service`
+}
+
 export const baseUrl = '/gpt-service'
 
 export const request = axios.create({ baseURL: baseUrl })

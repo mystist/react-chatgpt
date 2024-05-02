@@ -1,9 +1,9 @@
 import '../style.css'
 
-import { memo } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
-import Overlay from './Overlay'
+import { setHost } from '../requests'
+import ReactChatGPTIntegration, { MemoizedOverlay } from './ReactChatGptIntegration'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,12 +14,12 @@ const queryClient = new QueryClient({
   },
 })
 
-const MemoizedOverlay = memo(Overlay)
-
-export default function Index(props: any) {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <MemoizedOverlay {...props} />
-    </QueryClientProvider>
-  )
+export default function ReactChatGPT(props: any) {
+  const { mode, host, ...rest } = props
+  if (host) {
+    console.log('host', host)
+    setHost(host)
+  }
+  return <QueryClientProvider client={queryClient}>{mode === 'auto' ? <ReactChatGPTIntegration {...rest} /> : <MemoizedOverlay {...rest} />}</QueryClientProvider>
 }
+
