@@ -2,14 +2,12 @@ import React, { memo, useState } from 'react'
 
 import { setIdentifier, setLang } from '../../utils'
 import AiAvatar from '../AiAvatar'
-import Overlay from '../Overlay'
+import Overlay, { OverlayProps } from '../Overlay'
 
 export const MemoizedOverlay = memo(Overlay)
 
-interface ReactChatGPTIntegrationProps {
+export interface ReactChatGPTIntegrationProps extends OverlayProps {
   defaultStatus: 'open' | ''
-  identifier: string
-  lang?: string
 }
 
 export default function ReactChatGPTIntegration(props: ReactChatGPTIntegrationProps) {
