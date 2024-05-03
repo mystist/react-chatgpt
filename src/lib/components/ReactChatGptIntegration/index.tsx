@@ -18,6 +18,7 @@ export default function ReactChatGPTIntegration(props: OverlayProps) {
   return (
     <>
       <div
+        id="react-chatgpt"
         onClick={(e) => {
           setStatus('open')
           e.preventDefault()
