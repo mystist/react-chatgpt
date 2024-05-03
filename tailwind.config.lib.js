@@ -3,6 +3,8 @@
 
 /** @type {import('tailwindcss').Config} */
 
+import { isolateInsideOfContainer, scopedPreflightStyles } from 'tailwindcss-scoped-preflight'
+
 export const sharedConfig = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
@@ -40,6 +42,9 @@ export default {
       strategy: 'class',
     }),
     require('@tailwindcss/typography'),
+    scopedPreflightStyles({
+      isolationStrategy: isolateInsideOfContainer('#react-chatgpt'),
+    }),
   ],
   important: '#react-chatgpt',
   corePlugins: {
