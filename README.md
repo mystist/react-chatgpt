@@ -17,13 +17,6 @@ Embedding your chatgpt agent into your react application, option in tailwindcss,
 ## Quick start
 
 ```sh
-vim ~/.npmrc
-
-//npm.pkg.github.com/:_authToken=<Your Personal Access Token>
-//@mystist:registry=https://npm.pkg.github.com/
-```
-
-```sh
 yarn add @mystist/react-chatgpt
 ```
 
@@ -45,7 +38,9 @@ import dynamic from 'next/dynamic'
 export const ReactChatGPT = dynamic(() => import('@mystist/react-chatgpt').then((module) => module.ReactChatGPT as any), { ssr: false })
 ```
 
-Sample Agent component:
+Render chat with self controlled component, you can controll the open/closed status by yourself
+
+Sample:
 `./components/Agent/index.tsx`
 
 ```tsx
@@ -86,9 +81,18 @@ export default function Index() {
 }
 ```
 
+Start chat with avatar automatically
+```tsx
+
+<ReactChatGPT mode="auto" identifier={identifier} lang={lang} />
+```
+
 ## Options
 
-- `status`: The React state represent the opening of the ReactChatGPT component.
+- `mode`<''(default) | 'auto'>: The usage mode for react chat.
+  - `auto`: mode will render the chat with avatar and controlled the open/closed status automatically
+  - without mode, you can controll the status by your self.
+- `status`<'' | 'open'>: The React state represent the opening of the ReactChatGPT component.
 - `setStatus`: The React state set function controls the opening of the ReactChatGPT component.
 - `identifier`: To retrieve the specified data from the API endpoint with this identifier param.
 - `lang`: Specify the language, such as 'en' for English, 'zh' for Chinese, and 'ja' for Japanese.

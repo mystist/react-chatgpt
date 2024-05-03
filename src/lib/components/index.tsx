@@ -1,9 +1,11 @@
 import '../style.css'
 
-import { memo } from 'react'
+import { SetStateAction } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
-import Overlay from './Overlay'
+import { setHost } from '../requests'
+import { OverlayProps } from './Overlay'
+import ReactChatGPTIntegration, { MemoizedOverlay } from './ReactChatGptIntegration'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,12 +16,26 @@ const queryClient = new QueryClient({
   },
 })
 
-const MemoizedOverlay = memo(Overlay)
+export type ReactChatGPTProps = (
+  | {
+      mode?: never
+      status: 'open' | ''
+      setStatus: (value: SetStateAction<'open' | ''>) => void
+    }
+  | {
+      mode: 'auto'
+      status?: never
+      setStatus?: never
+    }
+) & {
+  host?: string
+} & Exclude<OverlayProps, 'status' | 'setStatus'>
 
-export default function Index(props: any) {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <MemoizedOverlay {...props} />
-    </QueryClientProvider>
-  )
+export default function ReactChatGPT(props: ReactChatGPTProps) {
+  const { mode, host, ...rest } = props
+  if (host) {
+    setHost(host)
+  }
+  return <QueryClientProvider client={queryClient}>{mode === 'auto' ? <ReactChatGPTIntegration {...rest} /> : <MemoizedOverlay {...rest} />}</QueryClientProvider>
 }
+

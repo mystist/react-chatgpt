@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { SetStateAction, useCallback, useEffect, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 import { useLocale } from '../../hooks/useLocale'
@@ -7,7 +7,18 @@ import { setConfig } from '../../utils'
 import Modal from './Modal'
 import SlideOver from './SlideOver'
 
-export default function Index({ status, setStatus, identifier, lang = 'en', overlayMode = 'auto', userUuid = '', conversationUuid = '', configuration = null }: any) {
+export interface OverlayProps {
+  identifier: string
+  status?: 'open' | ''
+  setStatus?: (value: SetStateAction<'open' | ''>) => void
+  lang?: string
+  overlayMode?: 'auto' | 'modal' | 'slide-over'
+  userUuid?: string
+  conversationUuid?: string
+  configuration?: any
+}
+
+export default function Index({ status, setStatus, identifier, lang = 'en', overlayMode = 'auto', userUuid = '', conversationUuid = '', configuration = null }: OverlayProps) {
   const i18n = useLocale(lang)
 
   const isMd = useMediaQuery({ query: '(min-width: 768px)' })
@@ -31,7 +42,7 @@ export default function Index({ status, setStatus, identifier, lang = 'en', over
   }
 
   const close = useCallback(() => {
-    setStatus('')
+    setStatus?.('')
 
     cleanup()
   }, [cleanup, setStatus])
