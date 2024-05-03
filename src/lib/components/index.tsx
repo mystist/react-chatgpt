@@ -22,7 +22,6 @@ export interface ReactChatGPTProps extends ReactChatGPTIntegrationProps {
 export default function ReactChatGPT(props: ReactChatGPTProps) {
   const { mode, host, ...rest } = props
   if (host) {
-    console.log('host', host)
     setHost(host)
   }
   return <QueryClientProvider client={queryClient}>{mode === 'startWithAvatar' ? <ReactChatGPTIntegration {...rest} /> : <MemoizedOverlay {...rest} />}</QueryClientProvider>
