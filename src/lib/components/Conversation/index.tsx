@@ -659,7 +659,7 @@ export default function Index({ overlayMode }: any) {
                         <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">https://</span>
                         <input
                           type="text"
-                          className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                          className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 focus:outline-none"
                           placeholder="apple.com"
                           autoComplete="off"
                           {...register('site', { onChange: onSiteChange })}
