@@ -1,7 +1,7 @@
 import { PauseCircleIcon, PlayCircleIcon } from '@heroicons/react/24/outline'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { baseUrl } from '../../requests'
+import { baseUrl, getHost } from '../../requests'
 import { getIdentifier } from '../../utils'
 
 export default function Index({ isAutoplay = false, whisperUuid, nowPlayingWhisperUuidState, setNowPlayingWhisperUuidState }: any) {
@@ -54,7 +54,7 @@ export default function Index({ isAutoplay = false, whisperUuid, nowPlayingWhisp
           <button onClick={playPause} className="h-6 w-6">
             {isPlaying ? <PauseCircleIcon className="h-full w-full stroke-primary-color" /> : <PlayCircleIcon className="h-full w-full stroke-gray-600" />}
           </button>
-          <audio src={`${baseUrl}/uploads/outputs/${whisperUuid}-output.wav`} ref={audioRef} onEnded={onEnded} className="hidden"></audio>
+          <audio src={`${getHost()}${baseUrl}/uploads/outputs/${whisperUuid}-output.wav`} ref={audioRef} onEnded={onEnded} className="hidden"></audio>
         </>
       )}
     </>

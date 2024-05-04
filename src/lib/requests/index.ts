@@ -2,13 +2,16 @@ import axios from 'axios'
 
 import { getIdentifier, getLang } from '../utils'
 
+export const baseUrl = '/gpt-service'
 
+let HOST = ''
 export const setHost = (host: string) => {
+  HOST = host
   request.defaults.baseURL = `${host}${baseUrl}`
   requestEmbedding.defaults.baseURL = `${host}/embedding-service`
 }
 
-export const baseUrl = '/gpt-service'
+export const getHost = () => HOST
 
 export const request = axios.create({ baseURL: baseUrl })
 export const requestEmbedding = axios.create({ baseURL: '/embedding-service' })
@@ -63,7 +66,11 @@ export const getReplies = async (conversationUuid: string) => {
 }
 
 export const postReply = async ({ conversationUuid, whisperUuid, content, identifier, onMessage, onConversationFull, chatMode, userUuid, referenceCodesStr }: any) => {
-  const eventSource = new EventSource(`${baseUrl}/api/sentence/outputs/create?conversationUuid=${conversationUuid}&inputUuid=${whisperUuid}&content=${encodeURIComponent(content)}&identifier=${identifier}&chatMode=${chatMode}&clientIdentifier=${userUuid}&referenceCodesStr=${referenceCodesStr}`)
+  const eventSource = new EventSource(
+    `${getHost()}${baseUrl}/api/sentence/outputs/create?conversationUuid=${conversationUuid}&inputUuid=${whisperUuid}&content=${encodeURIComponent(
+      content,
+    )}&identifier=${identifier}&chatMode=${chatMode}&clientIdentifier=${userUuid}&referenceCodesStr=${referenceCodesStr}`,
+  )
 
   eventSource.onmessage = (e) => {
     try {

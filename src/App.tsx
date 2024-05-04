@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { ReactChatGPT } from './lib'
 
 function App() {
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState<'open' | ''>('')
 
   return (
     <div id="react-chatgpt" className="flex min-h-screen items-center justify-center">

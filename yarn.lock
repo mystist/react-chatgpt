@@ -4122,6 +4122,11 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
+tailwindcss-scoped-preflight@^3.2.5:
+  version "3.2.5"
+  resolved "https://registry.yarnpkg.com/tailwindcss-scoped-preflight/-/tailwindcss-scoped-preflight-3.2.5.tgz#0a82092cb8b8c6745574ae194365d070eee5aeb6"
+  integrity sha512-vhh9csxo2CK+FJFIFQC6jVLabGnLLG75JAMTBFjlC4oz02tmAnCbgWZdAVTnW1cym2QJgZNAVcz0wbDPPKdxsw==
+
 tailwindcss@^3.3.2:
   version "3.3.2"
   resolved "https://registry.npmjs.org/tailwindcss/-/tailwindcss-3.3.2.tgz"
