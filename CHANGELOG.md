@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.95](https://github.com/mystist/react-chatgpt/compare/v0.0.94...v0.0.95) (2024-05-04)
+
+
+### Features
+
+* provide integration plan for chat. [release] ([5fd36e1](https://github.com/mystist/react-chatgpt/commit/5fd36e10e2cf06fb3e7b135a4255c902b3a8fbe5))
+* provide integration plan for chat. [release] ([7f051a9](https://github.com/mystist/react-chatgpt/commit/7f051a913b44446c1b37ede32836796b0243a2ac))
+
+
+### Bug Fixes
+
+* add scoped id. [release] ([d5f5fce](https://github.com/mystist/react-chatgpt/commit/d5f5fcef80aac010831802542b9fbec61b3f8593))
+* add type support. [release] ([af4ef8c](https://github.com/mystist/react-chatgpt/commit/af4ef8c0283b518d166ee9d5efffe06db616522f))
+* fix the build error. [release] ([ee56963](https://github.com/mystist/react-chatgpt/commit/ee5696340adf28bbbe0e04291dd915998769c48e))
+* fix the host for base url. [release] ([eec4566](https://github.com/mystist/react-chatgpt/commit/eec4566aa13a22f50c5254f0c64cd7d3b8bd83e3))
+* we need the prefight css but only under our own widget. ([ea62a09](https://github.com/mystist/react-chatgpt/commit/ea62a09ce2fed2e3006aa761c7ac9cb146257ffb))
+
 ### [0.0.94](https://github.com/mystist/react-chatgpt/compare/v0.0.93...v0.0.94) (2024-04-24)
 
 
